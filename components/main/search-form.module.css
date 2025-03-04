@@ -1,0 +1,24 @@
+.searchForm {
+  display: flex;
+  gap: 8px;
+}
+
+.searchButton {
+  display: flex;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.search-input-wrapper {
+  display: flex;
+  flex-grow: 1;
+  gap: 8px;
+}
+
+.searchInput {
+  border: 2px solid black;
+  width: 100%;
+  padding: 4px;
+}

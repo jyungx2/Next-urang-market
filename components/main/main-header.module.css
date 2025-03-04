@@ -1,0 +1,19 @@
+.header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 16px;
+}
