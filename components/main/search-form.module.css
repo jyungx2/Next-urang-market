@@ -1,24 +1,71 @@
 .searchForm {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
-.searchButton {
+.wrapper {
   display: flex;
-  gap: 8px;
-  background: none;
-  border: none;
+  align-items: center;
+  background-color: rgb(197, 197, 197);
+  padding: 4px;
+  width: 100%;
+}
+
+.searchFlexGrow {
+  flex-grow: 1;
+}
+
+.inputUnset,
+.textareaUnset,
+.buttonUnset {
+  all: unset;
+}
+
+.textareaCustom {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.checkboxCustom {
+  position: absolute;
+  pointer-events: none;
+}
+
+.locationBtn {
+  display: flex;
+  min-width: fit-content;
+  gap: 4px;
+  padding: 10px 12px;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid rgb(157, 157, 157);
+  border-radius: 40px;
   cursor: pointer;
 }
 
-.search-input-wrapper {
+.categoryButton {
   display: flex;
-  flex-grow: 1;
-  gap: 8px;
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
 }
 
 .searchInput {
-  border: 2px solid black;
+  display: block;
   width: 100%;
-  padding: 4px;
+  /* height: 40px; */
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.searchBtn {
+  display: block;
+  padding: 8px;
 }
