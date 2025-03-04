@@ -1,3 +1,4 @@
+import MainNav from "@/components/layout/main-nav";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -62,65 +63,7 @@ export default function Home() {
           <article>게시물</article>
         </main>
 
-        <nav className="navbar">
-          <ul className="navList">
-            <li className="navItem">
-              <Link href="/community" className="navLink">
-                <Image
-                  src="/icons/home.svg"
-                  alt="image"
-                  width={32}
-                  height={32}
-                />
-                홈
-              </Link>
-            </li>
-            <li className="navItem">
-              <Link href="/market" className="navLink">
-                <Image
-                  src="/icons/market.svg"
-                  alt="image"
-                  width={32}
-                  height={32}
-                />
-                사고팔고
-              </Link>
-            </li>
-            <li className="navItem">
-              <Link href="/work" className="navLink">
-                <Image
-                  src="/icons/work.svg"
-                  alt="image"
-                  width={32}
-                  height={32}
-                />
-                구인구직
-              </Link>
-            </li>
-            <li className="navItem">
-              <Link href="/stay" className="navLink">
-                <Image
-                  src="/icons/stay.svg"
-                  alt="image"
-                  width={32}
-                  height={32}
-                />
-                숙박
-              </Link>
-            </li>
-            <li className="navItem">
-              <Link href="/profile" className="navLink">
-                <Image
-                  src="/icons/profile.svg"
-                  alt="image"
-                  width={32}
-                  height={32}
-                />
-                프로필
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <MainNav />
       </div>
     </>
   );
