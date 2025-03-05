@@ -1,12 +1,23 @@
 .header {
   display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
-.div {
+.title {
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+
+.grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
 }
 
 .Link {
   margin-left: auto;
-  padding: 0 20px;
+  display: flex;
+  gap: 0.4rem;
+  margin-right: 1rem;
 }

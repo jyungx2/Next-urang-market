@@ -19,8 +19,12 @@ export default function Home() {
       <div className="container">
         <SearchForm />
         <Slider />
-        <PostsSection />
+        <PostsSection title="워홀준비" />
+        <PostsSection title="현지경험담" />
+        <PostsSection title="해외취업후기" />
       </div>
     </>
   );
 }
+
+// 1) 워홀준비섹션: getStaticProps()로 데이터 페칭 함수 작성 -> props로 넘기기
