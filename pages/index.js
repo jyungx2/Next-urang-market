@@ -1,5 +1,6 @@
 import MainHeader from "@/components/main/main-header";
 import SearchForm from "@/components/main/search-form";
+import Slider from "@/components/main/slider";
 import Head from "next/head";
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
       <div className="container">
         <main className="main">
           <SearchForm />
+          <Slider />
           <article>게시물</article>
         </main>
       </div>
