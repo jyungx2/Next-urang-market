@@ -3,7 +3,7 @@ import classes from "./layout.module.css";
 
 export default function Layout(props) {
   return (
-    <div className={classes.container}>
+    <div className={classes["layout-container"]}>
       <main>{props.children}</main>
       <MainNav />
     </div>

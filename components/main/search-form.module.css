@@ -1,15 +1,20 @@
-.searchForm {
+.container {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
+}
+
+.searchForm {
+  width: 100%;
 }
 
 .wrapper {
   display: flex;
   align-items: center;
-  background-color: rgb(197, 197, 197);
-  padding: 4px;
+  background-color: rgb(251, 251, 251);
+  padding: 2px;
   width: 100%;
+  border-radius: var(--size-2);
 }
 
 .searchFlexGrow {
@@ -39,8 +44,9 @@
   display: flex;
   min-width: fit-content;
   gap: 4px;
-  padding: 10px 12px;
+  padding: 12px;
   align-items: center;
+
   box-sizing: border-box;
   border: 1px solid rgb(157, 157, 157);
   border-radius: 40px;

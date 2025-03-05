@@ -13,9 +13,9 @@ export default function Home() {
         />
       </Head>
 
-      <div className="container">
-        <MainHeader />
+      <MainHeader />
 
+      <div className="container">
         <main className="main">
           <SearchForm />
           <article>게시물</article>
