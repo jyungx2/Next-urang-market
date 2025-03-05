@@ -1,4 +1,5 @@
 import MainHeader from "@/components/main/main-header";
+import PostsSection from "@/components/main/posts-section";
 import SearchForm from "@/components/main/search-form";
 import Slider from "@/components/main/slider";
 import Head from "next/head";
@@ -15,13 +16,10 @@ export default function Home() {
       </Head>
 
       <MainHeader />
-
       <div className="container">
-        <main className="main">
-          <SearchForm />
-          <Slider />
-          <article>게시물</article>
-        </main>
+        <SearchForm />
+        <Slider />
+        <PostsSection />
       </div>
     </>
   );

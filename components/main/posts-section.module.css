@@ -1,0 +1,12 @@
+.header {
+  display: flex;
+}
+
+.div {
+  display: grid;
+}
+
+.Link {
+  margin-left: auto;
+  padding: 0 20px;
+}
