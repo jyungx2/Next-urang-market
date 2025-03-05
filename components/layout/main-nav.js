@@ -7,7 +7,7 @@ export default function MainNav() {
     <nav className={classes.navbar}>
       <ul className={classes.navList}>
         <li className={classes.navItem}>
-          <Link href="/community" className={classes.navLink}>
+          <Link href="/" className={classes.navLink}>
             <Image src="/icons/home.svg" alt="image" width={24} height={24} />
             <span>홈</span>
           </Link>
@@ -19,7 +19,7 @@ export default function MainNav() {
           </Link>
         </li>
         <li className={classes.navItem}>
-          <Link href="/work" className={classes.navLink}>
+          <Link href="/job" className={classes.navLink}>
             <Image src="/icons/work.svg" alt="image" width={28} height={28} />
             <span>구인구직</span>
           </Link>

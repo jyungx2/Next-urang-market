@@ -1,4 +1,3 @@
-import MainNav from "@/components/layout/main-nav";
 import MainHeader from "@/components/main/main-header";
 import SearchForm from "@/components/main/search-form";
 import Head from "next/head";
