@@ -1,14 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import classes from "./main-nav.module.css";
+import { useRouter } from "next/router";
 
 export default function MainNav() {
+  const router = useRouter();
+  console.log(router.pathname);
+  const currentPath = router.pathname;
+
   return (
     <nav className={classes.navbar}>
       <ul className={classes.navList}>
         <li className={classes.navItem}>
           <Link href="/" className={classes.navLink}>
-            <Image src="/icons/home.svg" alt="image" width={24} height={24} />
+            <Image
+              src={
+                currentPath === "/"
+                  ? "/icons/home.svg"
+                  : "/icons/home-active.svg"
+              }
+              alt="image"
+              width={24}
+              height={24}
+            />
             <span>홈</span>
           </Link>
         </li>
