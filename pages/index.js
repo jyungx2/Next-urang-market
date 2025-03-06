@@ -2,10 +2,14 @@ import AdsSection from "@/components/main/ads-section";
 import MainHeader from "@/components/main/main-header";
 import PostsSection from "@/components/main/posts-section";
 import SearchForm from "@/components/main/search-form";
+import Sidebar from "@/components/main/sidebar";
 import Slider from "@/components/main/slider";
 import Head from "next/head";
+import { useState } from "react";
 
 export default function Home() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <>
       <Head>
@@ -16,13 +20,21 @@ export default function Home() {
         />
       </Head>
 
-      <MainHeader />
+      <div className="relative">
+        <MainHeader
+          onMenuClick={() => setIsSidebarOpen((prevState) => !prevState)}
+          isOpen={isSidebarOpen}
+        />
+        <Sidebar isOpen={isSidebarOpen} />
+      </div>
+
       <div className="container">
         <SearchForm />
         <Slider />
         <PostsSection title="워홀준비" />
         <AdsSection />
         <PostsSection title="현지경험담" />
+        <AdsSection />
         <PostsSection title="해외취업후기" />
       </div>
     </>

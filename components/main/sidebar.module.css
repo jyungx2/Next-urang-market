@@ -1,0 +1,28 @@
+.sidebar {
+  position: absolute; /* 홈페이지에 relative 포지션을 갖는 부모 div를 하나 추가해 해당 부모의 크기만큼 너비(640px)가 제한되고, 가운데 정렬될 수 있도록 */
+  top: 0; /* 헤더 아래에 위치 */
+  left: 0;
+  width: 100%; /* 전체 화면 덮기 */
+  /* max-width: 640px; 최대 너비 제한 => 뷰포트가 절대 기준인 fixed일 때는 필요*/
+  height: calc(100vh - 60px); /* 헤더 높이를 제외한 나머지 영역 */
+  background: #333;
+  color: white;
+  padding: 20px;
+  transition: transform 0.5s ease-in-out;
+  z-index: 99;
+
+  display: flex; /* ✅ 내부 요소를 꽉 차게 정렬 */
+  flex-direction: column; /* ✅ 리스트가 세로로 정렬되도록 설정 */
+  justify-content: flex-start; /* ✅ 리스트 아이템이 위에서부터 채워지도록 */
+
+  /* ✅ 초기 상태 (화면 위로 숨겨짐) */
+  transform: translateY(-100%);
+  opacity: 0; /* 완전히 보이지 않도록 설정 */
+
+  transition: transform 0.5s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.sidebar.open {
+  transform: translateY(60px); /* 🔥 열릴 때 아래로 슬라이드 */
+  opacity: 1; /* 서서히 나타남 */
+}
