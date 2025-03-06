@@ -5,10 +5,19 @@ import SearchForm from "@/components/main/search-form";
 import Sidebar from "@/components/main/sidebar";
 import Slider from "@/components/main/slider";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // 사이드바 오픈시, 스크롤 막는 코드
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = "hidden"; // ✅ 스크롤 막기
+    } else {
+      document.body.style.overflow = "auto"; // ✅ 스크롤 다시 활성화
+    }
+  }, [isSidebarOpen]);
 
   return (
     <>
