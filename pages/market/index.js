@@ -1,13 +1,15 @@
+import SubHeader from "@/components/layout/sub-header";
 import MainHeader from "@/components/main/main-header";
 import SearchForm from "@/components/main/search-form";
+import PostsList from "@/components/market/posts-list";
 
-export default function StayPage() {
+export default function MarketPage() {
   return (
-    <div className="container">
-      <main className="main">
-        <SearchForm />
-        <article>게시물</article>
-      </main>
-    </div>
+    <>
+      <SubHeader />
+      <div className="container">
+        <PostsList />
+      </div>
+    </>
   );
 }
