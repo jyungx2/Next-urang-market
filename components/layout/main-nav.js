@@ -2,14 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import classes from "./main-nav.module.css";
 import { useRouter } from "next/router";
+import { useSidebarStore } from "@/zustand/sidebarStore";
 
 export default function MainNav() {
   const router = useRouter();
-  console.log(router.pathname);
   const currentPath = router.pathname;
 
+  const isSidebarOpen = useSidebarStore((state) => state.isOpen);
+  // const { isOpen : isSidebarOpen } = useSidebarStore(); // 단축코드
+  console.log(isSidebarOpen);
+
   return (
-    <nav className={classes.navbar}>
+    <nav className={`${classes.navbar} ${isSidebarOpen && "-z-1"}`}>
       <ul className={classes.navList}>
         <li className={classes.navItem}>
           <Link href="/" className={classes.navLink}>

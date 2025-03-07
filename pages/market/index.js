@@ -1,10 +1,12 @@
 import SubHeader from "@/components/layout/sub-header";
 import Sidebar from "@/components/main/sidebar";
 import PostsList from "@/components/market/posts-list";
+import { useSidebarStore } from "@/zustand/sidebarStore";
 import { useEffect, useState } from "react";
 
 export default function MarketPage() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { isOpen: isSidebarOpen, toggleSidebar } = useSidebarStore();
   const [isSidebarOverall, setIsSidebarOverall] = useState(false);
 
   const DUMMY_DATA = [
@@ -25,7 +27,8 @@ export default function MarketPage() {
   ];
 
   const menuOpenHandler = () => {
-    setIsSidebarOpen((prevState) => !prevState);
+    // setIsSidebarOpen((prevState) => !prevState);
+    toggleSidebar();
     setIsSidebarOverall((prevState) => !prevState);
   };
 
