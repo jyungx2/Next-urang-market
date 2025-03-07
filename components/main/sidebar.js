@@ -3,11 +3,15 @@ import classes from "./sidebar.module.css";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function Sidebar({ isOpen }) {
+export default function Sidebar({ isOpen, isOverall }) {
   return (
     isOpen && (
       <>
-        <div className={`${classes.sidebar} ${isOpen ? classes.open : ""}`}>
+        <div
+          className={`${classes.sidebar} ${isOpen ? classes.open : ""} ${
+            isOverall ? classes.overall : ""
+          }`}
+        >
           <div className={classes.menuList}>
             <div className={classes.bundle}>
               <h1>현지거래</h1>

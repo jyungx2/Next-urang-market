@@ -1,8 +1,8 @@
 .sidebar {
   background-color: black;
   font-size: 2rem;
-  font-weight: 500;
-  position: absolute; /* 홈페이지에 relative 포지션을 갖는 부모 div를 하나 추가해 해당 부모의 크기만큼 너비(640px)가 제한되고, 가운데 정렬될 수 있도록 */
+  font-weight: 400;
+  /* position: absolute; 홈페이지에 relative 포지션을 갖는 부모 div를 하나 추가해 해당 부모의 크기만큼 너비(640px)가 제한되고, 가운데 정렬될 수 있도록 */
   top: 0; /* 헤더 아래에 위치 */
   left: 0;
   width: 100%; /* 전체 화면 덮기 */
@@ -19,15 +19,14 @@
   justify-content: flex-start; /* ✅ 리스트 아이템이 위에서부터 채워지도록 */
 
   /* ✅ 초기 상태 (화면 위로 숨겨짐) */
-  transform: translateY(-100%);
-  opacity: 0; /* 완전히 보이지 않도록 설정 */
-
+  /* transform: translateY(-100%); */
+  opacity: 0;
   transition: transform 0.5s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .sidebar.open {
-  transform: translateY(60px); /* 🔥 열릴 때 아래로 슬라이드 */
-  opacity: 1; /* 서서히 나타남 */
+  /* transform: translateY(10px); */
+  opacity: 1;
 }
 
 .menuList {
@@ -43,8 +42,12 @@
   font-size: 1.8rem;
 }
 
+.bundle h1 {
+  font-weight: 600;
+}
+
 .collection {
-  font-size: 2rem;
+  font-size: 1.6rem;
   display: grid;
   grid-template-columns: repeat(2, minmax(40px, 1fr));
   gap: 2rem;
