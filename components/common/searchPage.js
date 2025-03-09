@@ -30,7 +30,7 @@ export default function SearchPage() {
         </button>
       </div>
       <div className="flex flex-col gap-5">
-        <h1 className="font-bold">추천 검색어</h1>
+        <span className="font-medium">추천 검색어</span>
         <ul className="flex gap-4 overflow-x-scroll whitespace-nowrap scrollbar-hide flex-wrap">
           <li className={classes.searchWord}>밥솥</li>
           <li className={classes.searchWord}>노트북</li>
@@ -41,7 +41,13 @@ export default function SearchPage() {
         </ul>
       </div>
       <div className="flex flex-col gap-5">
-        <h1 className="font-bold">최근 검색어</h1>
+        <div className="flex justify-between">
+          <span className="font-medium">최근 검색어</span>
+          <button className="cursor-pointer font-extralight text-[var(--color-grey-600)]">
+            <span>모두삭제</span>
+          </button>
+        </div>
+
         <ul className="flex flex-col gap-6">
           <li className={classes.col}>
             <Image src="/icons/clock.svg" alt="icon" width={20} height={20} />
