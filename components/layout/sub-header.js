@@ -1,6 +1,9 @@
+import { useSearchStore } from "@/zustand/searchButton";
 import Image from "next/image";
 
 export default function SubHeader({ onMenuClick, isOverall }) {
+  const { toggleSearch } = useSearchStore();
+
   return isOverall ? (
     <div className="flex font-bold text-4xl top-0 p-8 text-white bg-[var(--color-black)] items-center justify-center relative">
       <button
@@ -31,7 +34,7 @@ export default function SubHeader({ onMenuClick, isOverall }) {
         <button className="cursor-pointer" onClick={onMenuClick}>
           <Image src="/icons/menu.svg" alt="menu-icon" width={28} height={28} />
         </button>
-        <button className="cursor-pointer">
+        <button className="cursor-pointer" onClick={toggleSearch}>
           <Image
             src="/icons/search.svg"
             alt="menu-icon"

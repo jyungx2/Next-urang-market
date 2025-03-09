@@ -1,0 +1,21 @@
+.searchWord {
+  border: 1px solid black;
+  border-radius: 32px;
+  padding: 4px 8px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.col {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.col span {
+  flex-grow: 1;
+}
+
+.col button {
+  cursor: pointer;
+}

@@ -1,6 +1,8 @@
+import SearchPage from "@/components/common/searchPage";
 import SubHeader from "@/components/layout/sub-header";
 import Sidebar from "@/components/main/sidebar";
 import PostsList from "@/components/market/posts-list";
+import { useSearchStore } from "@/zustand/searchButton";
 import { useSidebarStore } from "@/zustand/sidebarStore";
 import { useEffect, useState } from "react";
 
@@ -8,6 +10,9 @@ export default function MarketPage() {
   // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isOpen: isSidebarOpen, toggleSidebar } = useSidebarStore();
   const [isSidebarOverall, setIsSidebarOverall] = useState(false);
+
+  const { isOpen: isSearchOpen } = useSearchStore();
+  console.log(isSearchOpen);
 
   const DUMMY_DATA = [
     {
@@ -34,23 +39,32 @@ export default function MarketPage() {
 
   // 사이드바 오픈시, 스크롤 막는 코드
   useEffect(() => {
-    if (isSidebarOpen) {
+    if (isSidebarOpen || isSearchOpen) {
       document.body.style.overflow = "hidden"; // ✅ 스크롤 막기
     } else {
       document.body.style.overflow = "auto"; // ✅ 스크롤 다시 활성화
     }
-  }, [isSidebarOpen]);
+  }, [isSidebarOpen, isSearchOpen]);
 
   return (
     <>
-      <div className="relative">
-        <SubHeader onMenuClick={menuOpenHandler} isOverall={isSidebarOverall} />
-        <Sidebar isOpen={isSidebarOpen} isOverall={isSidebarOverall} />
-      </div>
+      <div
+        className={`transition-opacity duration-300 
+          ${isSearchOpen ? "hidden" : ""}`}
+      >
+        <div className="relative">
+          <SubHeader
+            onMenuClick={menuOpenHandler}
+            isOverall={isSidebarOverall}
+          />
+          <Sidebar isOpen={isSidebarOpen} isOverall={isSidebarOverall} />
+        </div>
 
-      <div className="container">
-        <PostsList posts={DUMMY_DATA} />
+        <div className="container">
+          <PostsList posts={DUMMY_DATA} />
+        </div>
       </div>
+      {isSearchOpen && <SearchPage />}
     </>
   );
 }

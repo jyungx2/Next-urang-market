@@ -107,3 +107,39 @@ body {
   background-color: var(--color-grey-700); /* 활성 상태 색상 */
   opacity: 1; /* 활성 상태 투명도 */
 }
+
+.inputUnset,
+.textareaUnset,
+.buttonUnset {
+  all: unset;
+}
+
+.textareaCustom {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.checkboxCustom {
+  position: absolute;
+  pointer-events: none;
+}
+
+.inputCustom {
+  display: block;
+  width: 100%;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+/* Webkit (Chrome, Safari) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+.scrollbar-hide {
+  scrollbar-width: none;
+}
