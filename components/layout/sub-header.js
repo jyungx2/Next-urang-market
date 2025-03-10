@@ -20,7 +20,7 @@ export default function SubHeader({ onMenuClick, isOverall }) {
       <h1 className="text-3xl">전체 서비스</h1>
     </div>
   ) : (
-    <div className="flex font-bold text-4xl sticky top-0 p-6 bg-[var(--color-secondary-50)]">
+    <div className="flex font-bold text-4xl sticky top-0 p-6 bg-[var(--color-bg)]">
       <div className="flex items-center gap-1 cursor-pointer">
         <span>계산 2동</span>
         <Image

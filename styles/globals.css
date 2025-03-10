@@ -33,7 +33,7 @@ img {
 }
 
 .container {
-  background-color: var(--color-secondary-50);
+  background-color: var(--color-bg);
   min-height: 100vh;
   min-width: 640px;
   padding: 16px;
@@ -54,16 +54,28 @@ body {
   --color-grey-800: hsl(276, 5%, 20%);
   --color-grey-900: hsl(280, 5%, 13%);
 
-  --color-primary-50: #e1f7f6;
-  --color-primary-100: #b4ebe6;
-  --color-primary-200: #85ded7;
-  --color-primary-300: #56d0c4;
-  --color-primary-400: #34c3b5;
-  --color-primary-500: #20b6a6;
-  --color-primary-600: #1ca898;
-  --color-primary-700: #199786;
+  --color-primary-50: #e2f3ff;
+  --color-primary-100: #b7e0ff;
+  --color-primary-200: #89cdfe;
+  --color-primary-300: #59b8fc;
+  --color-primary-400: #2fa9fc;
+  --color-primary-500: #009afa;
+  --color-primary-600: #008cec;
+  --color-primary-700: #007ad9;
+  --color-secondary-800: #0069c7;
+  --color-secondary-900: #004ba8;
 
-  --color-secondary-50: #f6f0f0;
+  --color-secondary-50: #e8fbef;
+  --color-secondary-100: #c7f4d7;
+  --color-secondary-300: #78e7a3;
+  --color-secondary-400: #56df8e;
+  --color-seoncdary-500: #30d77a;
+  --color-secondary-600: #26c76f;
+  --color-secondary-700: #18b361;
+  --color-secondary-800: #0ca156;
+  --color-secondary-900: #008040;
+
+  --color-bg: #fbfbfb;
 
   --color-success-100: #a2f0bc;
   --color-success-500: #12bd4b;

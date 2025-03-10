@@ -3,7 +3,11 @@ import classes from "./main-header.module.css";
 
 export default function MainHeader({ onMenuClick, isOpen }) {
   return (
-    <header className={isOpen ? classes.headerOpen : classes.headerClosed}>
+    <header
+      className={`${classes.header} ${
+        isOpen ? classes.headerOpen : classes.headerClosed
+      }`}
+    >
       <section className={classes["header-section"]}>
         <div>
           <Image src="/favicon.ico" alt="image" width={48} height={40} />

@@ -1,17 +1,16 @@
-.headerOpen {
+.header {
   position: sticky;
   top: 0;
-  background-color: var(--color-primary-100);
   padding: 0 var(--size-6);
   z-index: 100;
 }
 
+.headerOpen {
+  background-color: white;
+}
+
 .headerClosed {
-  position: sticky;
-  top: 0;
   background-color: var(--color-primary-100);
-  padding: 0 var(--size-6);
-  z-index: 100;
 }
 
 .header-section {

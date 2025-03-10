@@ -2,12 +2,14 @@ import Image from "next/image";
 
 export default function Profile() {
   return (
-    <div className="flex flex-col gap-4 bg-amber-100">
-      <header className="flex justify-between items-center bg-amber-300">
-        <h1 className="font-black text-[3rem]">Profile</h1>
-        <Image src="/icons/cog-6.svg" alt="icon" width={28} height={28} />
+    <div className="flex flex-col gap-8">
+      <header className="flex justify-between items-center">
+        <h1 className="font-bold text-[2.8rem]">My Profile</h1>
+        <button className="cursor-pointer">
+          <Image src="/icons/cog-6.svg" alt="icon" width={30} height={30} />
+        </button>
       </header>
-      <div className="flex gap-6 items-center bg-amber-600 p-4 rounded-2xl">
+      <div className="flex gap-6 items-center p-4 rounded-2xl bg-[var(--color-primary-50)]">
         <Image
           src="/images/example.jpg"
           alt="profile-image"
@@ -21,12 +23,14 @@ export default function Profile() {
             36.5℃
           </div>
         </div>
-        <Image
-          src="/icons/chevron-right.svg"
-          alt="profile-image"
-          width={26}
-          height={26}
-        />
+        <button className="cursor-pointer">
+          <Image
+            src="/icons/chevron-right.svg"
+            alt="profile-image"
+            width={26}
+            height={26}
+          />
+        </button>
       </div>
     </div>
   );

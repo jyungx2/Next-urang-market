@@ -9,7 +9,7 @@
   /* max-width: 640px; 최대 너비 제한 => 뷰포트가 절대 기준인 fixed일 때는 필요*/
   height: 100vh; /* 헤더 높이를 제외한 나머지 영역 */
   /* background: #333; */
-  color: var(--color-secondary-50);
+  color: var(--color-bg);
   padding: 20px;
   transition: transform 0.5s ease-in-out;
   z-index: 99;

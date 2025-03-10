@@ -6,7 +6,7 @@ export default function SearchPage() {
   const { toggleSearch } = useSearchStore();
 
   return (
-    <div className="flex flex-col gap-10 p-6 h-screen bg-[var(--color-secondary-50)]">
+    <div className="flex flex-col gap-10 p-6 h-screen bg-[var(--color-bg)]">
       <div className="flex items-center gap-4">
         <button className="cursor-pointer" onClick={toggleSearch}>
           <Image
