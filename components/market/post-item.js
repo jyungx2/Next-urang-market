@@ -15,8 +15,8 @@ export default function PostItem({ title, location, time, price }) {
           />
         </div>
 
-        <p className="text-[2rem]">
-          {location} - {time}
+        <p className="text-[1.6rem]">
+          {location} · {time}
         </p>
         <p className="font-bold text-3xl">{price}</p>
         <div className="flex gap-4 ml-auto mt-auto">
