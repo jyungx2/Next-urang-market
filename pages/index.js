@@ -4,13 +4,11 @@ import PostsSection from "@/components/main/posts-section";
 import SearchForm from "@/components/main/search-form";
 import Sidebar from "@/components/main/sidebar";
 import Slider from "@/components/main/slider";
-import { useSidebarStore } from "@/zustand/sidebarStore";
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { isOpen: isSidebarOpen, toggleSidebar } = useSidebarStore();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // 사이드바 오픈시, 스크롤 막는 코드
   useEffect(() => {
@@ -33,7 +31,7 @@ export default function Home() {
 
       <div className="relative">
         <MainHeader
-          onMenuClick={() => toggleSidebar()}
+          onMenuClick={() => setIsSidebarOpen((prevState) => !prevState)}
           isOpen={isSidebarOpen}
         />
         <Sidebar isOpen={isSidebarOpen} />

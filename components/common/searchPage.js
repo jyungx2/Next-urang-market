@@ -1,14 +1,15 @@
 import Image from "next/image";
 import classes from "./searchPage.module.css";
-import { useSearchStore } from "@/zustand/searchButton";
+import SearchPageContext from "@/store/searchPage-context";
+import { useContext } from "react";
 
 export default function SearchPage() {
-  const { toggleSearch } = useSearchStore();
+  const { toggleSearchPage } = useContext(SearchPageContext);
 
   return (
     <div className="flex flex-col gap-10 p-6 h-screen bg-[var(--color-bg)]">
       <div className="flex items-center gap-4">
-        <button className="cursor-pointer" onClick={toggleSearch}>
+        <button className="cursor-pointer" onClick={toggleSearchPage}>
           <Image
             src="/icons/chevron-left.svg"
             alt="icon"
@@ -25,7 +26,7 @@ export default function SearchPage() {
           />
         </div>
 
-        <button className="cursor-pointer" onClick={toggleSearch}>
+        <button className="cursor-pointer" onClick={toggleSearchPage}>
           닫기
         </button>
       </div>

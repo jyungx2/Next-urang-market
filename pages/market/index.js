@@ -2,17 +2,12 @@ import SearchPage from "@/components/common/searchPage";
 import SubHeader from "@/components/layout/sub-header";
 import Sidebar from "@/components/main/sidebar";
 import PostsList from "@/components/market/posts-list";
-import { useSearchStore } from "@/zustand/searchButton";
-import { useSidebarStore } from "@/zustand/sidebarStore";
-import { useEffect, useState } from "react";
+import SearchPageContext from "@/store/searchPage-context";
+import SidebarContext from "@/store/sidebar-context";
+import { useContext, useEffect } from "react";
 
 export default function MarketPage() {
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { isOpen: isSidebarOpen, toggleSidebar } = useSidebarStore();
-  const [isSidebarOverall, setIsSidebarOverall] = useState(false);
-
-  const { isOpen: isSearchOpen } = useSearchStore();
-  console.log(isSearchOpen);
+  const { isSearchOpen } = useContext(SearchPageContext);
 
   const DUMMY_DATA = [
     {
@@ -62,20 +57,14 @@ export default function MarketPage() {
     },
   ];
 
-  const menuOpenHandler = () => {
-    // setIsSidebarOpen((prevState) => !prevState);
-    toggleSidebar();
-    setIsSidebarOverall((prevState) => !prevState);
-  };
-
   // 사이드바 오픈시, 스크롤 막는 코드
   useEffect(() => {
-    if (isSidebarOpen || isSearchOpen) {
+    if (isSearchOpen) {
       document.body.style.overflow = "hidden"; // ✅ 스크롤 막기
     } else {
       document.body.style.overflow = "auto"; // ✅ 스크롤 다시 활성화
     }
-  }, [isSidebarOpen, isSearchOpen]);
+  }, [isSearchOpen]);
 
   return (
     <>
@@ -84,11 +73,8 @@ export default function MarketPage() {
           ${isSearchOpen ? "hidden" : ""}`}
       >
         <div className="relative">
-          <SubHeader
-            onMenuClick={menuOpenHandler}
-            isOverall={isSidebarOverall}
-          />
-          <Sidebar isOpen={isSidebarOpen} isOverall={isSidebarOverall} />
+          <SubHeader />
+          <Sidebar />
         </div>
 
         <div className="container">

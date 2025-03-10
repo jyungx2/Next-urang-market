@@ -1,17 +1,16 @@
-import MainHeader from "@/components/main/main-header";
 import classes from "./sidebar.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import { useContext } from "react";
+import SidebarContext from "@/store/sidebar-context";
 
-export default function Sidebar({ isOpen, isOverall }) {
+export default function Sidebar() {
+  const { isSidebarOpen, isSidebarOverall } = useContext(SidebarContext);
+
   return (
-    isOpen && (
+    (isSidebarOpen || isSidebarOverall) && (
       <>
-        <div
-          className={`${classes.sidebar} ${isOpen ? classes.open : ""} ${
-            isOverall ? classes.overall : ""
-          }`}
-        >
+        <div className={`${classes.sidebar}`}>
           <div className={classes.menuList}>
             <div className={classes.bundle}>
               <h1>현지거래</h1>
