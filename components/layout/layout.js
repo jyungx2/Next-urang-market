@@ -4,7 +4,7 @@ import classes from "./layout.module.css";
 export default function Layout(props) {
   return (
     <div className={classes["layout-container"]}>
-      <main>{props.children}</main>
+      <main className="h-screen">{props.children}</main>
       <MainNav />
     </div>
   );
