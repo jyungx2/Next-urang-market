@@ -21,6 +21,8 @@ export default function MarketPage() {
       location: "캐나다 캘거리",
       time: "2h",
       price: "2000원",
+      chatNum: 24,
+      likeNum: 10,
     },
     {
       id: 2,
@@ -28,6 +30,8 @@ export default function MarketPage() {
       location: "캐나다 벤쿠버",
       time: "10m",
       price: "40000원",
+      chatNum: 49,
+      likeNum: 8,
     },
   ];
 

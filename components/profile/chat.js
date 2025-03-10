@@ -1,7 +1,7 @@
 import ChatItem from "@/components/profile/chat-item";
 import Image from "next/image";
 
-export default function Chat() {
+export default function Chat({ chats }) {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -30,7 +30,15 @@ export default function Chat() {
         role="list"
         className="flex flex-col gap-10 rounded-2xl p-6 bg-[var(--color-primary-50)]"
       >
-        <ChatItem />
+        {chats.map((chat) => (
+          <ChatItem
+            key={chat.id}
+            username={chat.username}
+            location={chat.location}
+            since={chat.since}
+            content={chat.content}
+          />
+        ))}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function ChatItem() {
+export default function ChatItem({ username, location, since, content }) {
   return (
     <div role="listitem" className="flex items-center gap-6 cursor-pointer">
       <Image
@@ -12,13 +12,13 @@ export default function ChatItem() {
       />
       <div className="flex flex-col gap-2">
         <div className="flex gap-2 items-center">
-          <p className="font-bold text-[1.6rem]">권나라</p>
-          <span className="font-light text-[1.2rem]">캘거리 · 2w</span>
+          <p className="font-bold text-[1.6rem]">{username}</p>
+          <span className="font-light text-[1.2rem]">
+            {location} · {since}
+          </span>
         </div>
 
-        <p className="font-light text-[1.4rem] text-gray-700">
-          안녕하세요! 캘거리 어디쯤 사시나요?
-        </p>
+        <p className="font-light text-[1.4rem] text-gray-700">{content}</p>
       </div>
     </div>
   );
