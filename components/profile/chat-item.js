@@ -17,7 +17,6 @@ export default function ChatItem({ username, location, since, content }) {
             {location} · {since}
           </span>
         </div>
-
         <p className="font-light text-[1.4rem] text-gray-700">{content}</p>
       </div>
     </div>

@@ -33,6 +33,33 @@ export default function MarketPage() {
       chatNum: 49,
       likeNum: 8,
     },
+    {
+      id: 2,
+      title: "rice cooker",
+      location: "캐나다 벤쿠버",
+      time: "10m",
+      price: "40000원",
+      chatNum: 49,
+      likeNum: 8,
+    },
+    {
+      id: 2,
+      title: "rice cooker",
+      location: "캐나다 벤쿠버",
+      time: "10m",
+      price: "40000원",
+      chatNum: 49,
+      likeNum: 8,
+    },
+    {
+      id: 2,
+      title: "rice cooker",
+      location: "캐나다 벤쿠버",
+      time: "10m",
+      price: "40000원",
+      chatNum: 49,
+      likeNum: 8,
+    },
   ];
 
   const menuOpenHandler = () => {

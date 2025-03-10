@@ -11,7 +11,7 @@ export default function MyProfile() {
         className="aspect-square rounded-full object-cover"
       />
       <div className="flex items-center gap-4 grow">
-        <span className="font-bold text-[2.4rem]">금새롬</span>
+        <span className="font-bold text-[2.2rem]">금새롬</span>
         <div className="font-bold text-[1.4rem] bg-blue-400 rounded-2xl p-2 text-blue-50">
           36.5℃
         </div>
