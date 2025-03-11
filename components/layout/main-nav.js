@@ -2,14 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import classes from "./main-nav.module.css";
 import { useRouter } from "next/router";
-import { useContext } from "react";
-import SidebarContext from "@/store/sidebar-context";
 
 export default function MainNav() {
   const router = useRouter();
   const currentPath = router.pathname;
-
-  const { isSidebarOpen, isSidebarOverall } = useContext(SidebarContext);
 
   return (
     <nav className={`${classes.navbar}`}>

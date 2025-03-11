@@ -1,10 +1,10 @@
 import Image from "next/image";
 import classes from "./searchPage.module.css";
-import SearchPageContext from "@/store/searchPage-context";
+import UIContext from "@/store/ui-context";
 import { useContext } from "react";
 
 export default function SearchPage() {
-  const { toggleSearchPage } = useContext(SearchPageContext);
+  const { toggleSearchPage } = useContext(UIContext);
 
   return (
     <div className="flex flex-col gap-10 p-6 h-screen bg-[var(--color-bg)]">

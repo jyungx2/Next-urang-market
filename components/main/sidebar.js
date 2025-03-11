@@ -2,10 +2,10 @@ import classes from "./sidebar.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { useContext } from "react";
-import SidebarContext from "@/store/sidebar-context";
+import UIContext from "@/store/ui-context";
 
 export default function Sidebar() {
-  const { isSidebarOpen, isSidebarOverall } = useContext(SidebarContext);
+  const { isSidebarOpen, isSidebarOverall } = useContext(UIContext);
 
   return (
     (isSidebarOpen || isSidebarOverall) && (

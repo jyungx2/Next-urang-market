@@ -2,12 +2,11 @@ import SearchPage from "@/components/common/searchPage";
 import SubHeader from "@/components/layout/sub-header";
 import Sidebar from "@/components/main/sidebar";
 import PostsList from "@/components/market/posts-list";
-import SearchPageContext from "@/store/searchPage-context";
-import SidebarContext from "@/store/sidebar-context";
+import UIContext from "@/store/ui-context";
 import { useContext, useEffect } from "react";
 
 export default function MarketPage() {
-  const { isSearchOpen } = useContext(SearchPageContext);
+  const { isSearchOpen } = useContext(UIContext);
 
   const DUMMY_DATA = [
     {

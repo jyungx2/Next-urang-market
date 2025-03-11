@@ -1,10 +1,10 @@
 import Image from "next/image";
 import classes from "./main-header.module.css";
 import { useContext } from "react";
-import SidebarContext from "@/store/sidebar-context";
+import UIContext from "@/store/ui-context";
 
-export default function MainHeader({ onMenuClick, isOpen }) {
-  const { isSidebarOpen, toggleSidebar } = useContext(SidebarContext);
+export default function MainHeader({ isOpen }) {
+  const { isSidebarOpen, toggleSidebar } = useContext(UIContext);
   return (
     <header
       className={`${classes.header} ${

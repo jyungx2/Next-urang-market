@@ -1,11 +1,10 @@
-import SearchPageContext from "@/store/searchPage-context";
-import SidebarContext from "@/store/sidebar-context";
+import UIContext from "@/store/ui-context";
 import Image from "next/image";
 import { useContext } from "react";
 
 export default function SubHeader() {
-  const { isSidebarOverall, coverAll } = useContext(SidebarContext);
-  const { toggleSearchPage } = useContext(SearchPageContext);
+  const { isSidebarOverall, coverAll, toggleSearchPage } =
+    useContext(UIContext);
 
   return isSidebarOverall ? (
     <div className="flex font-bold text-4xl top-0 p-8 text-white bg-[var(--color-black)] items-center justify-center relative">

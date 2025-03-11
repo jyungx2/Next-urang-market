@@ -1,12 +1,11 @@
 import MainNav from "@/components/layout/main-nav";
 import classes from "./layout.module.css";
-import { useContext, useState } from "react";
-import SidebarContext from "@/store/sidebar-context";
-import SearchPageContext from "@/store/searchPage-context";
+import { useContext } from "react";
+import UIContext from "@/store/ui-context";
 
 export default function Layout(props) {
-  const { isSidebarOpen, isSidebarOverall } = useContext(SidebarContext);
-  const { isSearchOpen } = useContext(SearchPageContext);
+  const { isSidebarOpen, isSidebarOverall, isSearchOpen } =
+    useContext(UIContext);
 
   return (
     <div className={classes["layout-container"]}>
