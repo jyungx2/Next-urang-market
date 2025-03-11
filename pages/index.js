@@ -4,11 +4,12 @@ import PostsSection from "@/components/main/posts-section";
 import SearchForm from "@/components/main/search-form";
 import Sidebar from "@/components/common/sidebar";
 import Slider from "@/components/main/slider";
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import Head from "next/head";
+import UIContext from "@/store/ui-context";
 
 export default function Home() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { isSidebarOpen } = useContext(UIContext);
 
   // 사이드바 오픈시, 스크롤 막는 코드
   useEffect(() => {
@@ -29,23 +30,26 @@ export default function Home() {
         />
       </Head>
 
-      <div className="relative">
+      <div
+        className={`bg-[var(--color-bg)] min-h-screen min-w-[640px] p-6 pt-0 flex flex-col gap-7 ${
+          isSidebarOpen ? "hidden" : ""
+        }`}
+      >
         <MainHeader
           onMenuClick={() => setIsSidebarOpen((prevState) => !prevState)}
-          isOpen={isSidebarOpen}
         />
-        <Sidebar isOpen={isSidebarOpen} />
-      </div>
 
-      <div className="container">
-        <SearchForm />
-        <Slider />
-        <PostsSection title="워홀준비" />
-        <AdsSection />
-        <PostsSection title="현지경험담" />
-        <AdsSection />
-        <PostsSection title="해외취업후기" />
+        <div className="flex flex-col gap-10">
+          <SearchForm />
+          <Slider />
+          <PostsSection title="워홀준비" />
+          <AdsSection />
+          <PostsSection title="현지경험담" />
+          <AdsSection />
+          <PostsSection title="해외취업후기" />
+        </div>
       </div>
+      <Sidebar />
     </>
   );
 }

@@ -5,15 +5,15 @@ import { useContext } from "react";
 import UIContext from "@/store/ui-context";
 
 export default function Sidebar() {
-  const { isSidebarOpen, isSidebarOverall, coverAll } = useContext(UIContext);
+  const { isSidebarOpen, toggleSidebar } = useContext(UIContext);
 
   return (
-    (isSidebarOpen || isSidebarOverall) && (
+    isSidebarOpen && (
       <>
         <div className="flex font-bold text-4xl top-0 p-8 text-white bg-[var(--color-com-bg)] items-center justify-center relative">
           <button
             className="absolute left-0 p-4 cursor-pointer"
-            onClick={coverAll}
+            onClick={toggleSidebar}
           >
             <Image
               src="/icons/chevron-left-w.svg"

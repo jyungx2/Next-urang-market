@@ -4,7 +4,6 @@ const UIContext = createContext();
 
 export function UIContextProvider(props) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSidebarOverall, setisSidebarOverall] = useState(false);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -15,10 +14,6 @@ export function UIContextProvider(props) {
   // 사이드바
   const toggleSidebarHandler = () => {
     setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const coverAllHandler = () => {
-    setisSidebarOverall(!isSidebarOverall);
   };
 
   // 검색페이지
@@ -39,8 +34,6 @@ export function UIContextProvider(props) {
   const context = {
     isSidebarOpen,
     toggleSidebar: toggleSidebarHandler,
-    isSidebarOverall,
-    coverAll: coverAllHandler,
     isSearchOpen,
     toggleSearchPage: toggleSearchPageHandler,
     isSettingsOpen,

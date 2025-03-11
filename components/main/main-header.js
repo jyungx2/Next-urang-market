@@ -3,14 +3,11 @@ import classes from "./main-header.module.css";
 import { useContext } from "react";
 import UIContext from "@/store/ui-context";
 
-export default function MainHeader({ isOpen }) {
-  const { isSidebarOpen, toggleSidebar } = useContext(UIContext);
+export default function MainHeader() {
+  const { toggleSidebar } = useContext(UIContext);
+
   return (
-    <header
-      className={`${classes.header} ${
-        isOpen ? classes.headerOpen : classes.headerClosed
-      }`}
-    >
+    <header className={`${classes.header}`}>
       <section className={classes["header-section"]}>
         <div>
           <Image src="/favicon.ico" alt="image" width={48} height={40} />
@@ -18,7 +15,7 @@ export default function MainHeader({ isOpen }) {
         <div className={classes["header-right"]}>
           <button className={classes.menuBtn} onClick={toggleSidebar}>
             <Image
-              src={isSidebarOpen ? "/icons/xbtn.svg" : "/icons/menu.svg"}
+              src="/icons/menu.svg"
               alt="menu-icon"
               width={28}
               height={28}

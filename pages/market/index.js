@@ -9,7 +9,7 @@ import AddPost from "@/components/ui/add-post";
 import DropUp from "@/components/ui/drop-up";
 
 export default function MarketPage() {
-  const { isSidebarOverall, isSearchOpen, isNotificationOpen } =
+  const { isSidebarOpen, isSearchOpen, isNotificationOpen } =
     useContext(UIContext);
   const [isDropUpOpen, setIsDropUpOpen] = useState(false);
 
@@ -78,8 +78,8 @@ export default function MarketPage() {
     <>
       {/* 전체 페이지 Wrapper */}
       <div
-        className={`flex flex-col min-h-screen min-w-[640px] px-6 mx-auto relative bg-[var(--color-bg)] ${
-          isSidebarOverall || isSearchOpen || isNotificationOpen ? "hidden" : ""
+        className={`flex flex-col gap-2 min-h-screen min-w-[640px] px-6 mx-auto relative bg-[var(--color-bg)] ${
+          isSidebarOpen || isSearchOpen || isNotificationOpen ? "hidden" : ""
         }`}
       >
         {/* 헤더 (상단 고정) */}
@@ -96,7 +96,7 @@ export default function MarketPage() {
       </div>
 
       {/* 상태에 따라 표시되는 전역 UI들 */}
-      {isSidebarOverall && (
+      {isSidebarOpen && (
         <div className="bg-black bg-opacity-50 z-40">
           <Sidebar />
         </div>

@@ -3,15 +3,11 @@ import Image from "next/image";
 import { useContext } from "react";
 
 export default function SubHeader() {
-  const {
-    isSidebarOverall,
-    coverAll,
-    toggleSearchPage,
-    toggleNotificationPage,
-  } = useContext(UIContext);
+  const { toggleSidebar, toggleSearchPage, toggleNotificationPage } =
+    useContext(UIContext);
 
   return (
-    <div className="flex font-bold text-4xl sticky top-0 py-6 bg-[var(--color-bg)]">
+    <div className="flex font-bold text-4xl sticky top-0 py-8 bg-[var(--color-bg)]">
       <div className="flex items-center gap-1 cursor-pointer">
         <span>계산 2동</span>
         <Image
@@ -22,7 +18,7 @@ export default function SubHeader() {
         />
       </div>
       <div className="flex ml-auto gap-8">
-        <button className="cursor-pointer" onClick={coverAll}>
+        <button className="cursor-pointer" onClick={toggleSidebar}>
           <Image src="/icons/menu.svg" alt="menu-icon" width={28} height={28} />
         </button>
         <button className="cursor-pointer" onClick={toggleSearchPage}>
