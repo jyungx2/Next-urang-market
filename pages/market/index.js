@@ -78,7 +78,7 @@ export default function MarketPage() {
     <>
       {/* 전체 페이지 Wrapper */}
       <div
-        className={`flex flex-col gap-2 min-min-h-screen min-w-[640px] px-6 mx-auto relative bg-[var(--color-bg)] ${
+        className={`flex flex-col min-min-h-screen min-w-[640px] px-6 mx-auto relative bg-[var(--color-bg)] ${
           isSidebarOpen || isSearchOpen || isNotificationOpen ? "hidden" : ""
         }`}
       >
@@ -90,7 +90,7 @@ export default function MarketPage() {
         </header>
 
         {/* 메인 컨텐츠 (제품 리스트) */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto pb-6">
           <PostsList posts={DUMMY_DATA} />
         </main>
       </div>
