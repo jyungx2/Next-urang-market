@@ -1,6 +1,13 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function AddPost({ isOpen, onToggle }) {
+  const router = useRouter();
+
+  function linkToPostPage() {
+    router.push("/market/post");
+  }
+
   return (
     <>
       <div
@@ -23,7 +30,10 @@ export default function AddPost({ isOpen, onToggle }) {
             </button>
           </li>
           <li>
-            <button className="flex gap-3 items-center cursor-pointer text-white font-medium">
+            <button
+              onClick={linkToPostPage}
+              className="flex gap-3 items-center cursor-pointer text-white font-medium"
+            >
               <Image
                 src="/icons/inbox.svg"
                 alt="diverse"
