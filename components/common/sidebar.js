@@ -5,11 +5,26 @@ import { useContext } from "react";
 import UIContext from "@/store/ui-context";
 
 export default function Sidebar() {
-  const { isSidebarOpen, isSidebarOverall } = useContext(UIContext);
+  const { isSidebarOpen, isSidebarOverall, coverAll } = useContext(UIContext);
 
   return (
     (isSidebarOpen || isSidebarOverall) && (
       <>
+        <div className="flex font-bold text-4xl top-0 p-8 text-white bg-[var(--color-com-bg)] items-center justify-center relative">
+          <button
+            className="absolute left-0 p-4 cursor-pointer"
+            onClick={coverAll}
+          >
+            <Image
+              src="/icons/chevron-left-w.svg"
+              alt="back-icon"
+              width={30}
+              height={30}
+            />
+          </button>
+          <h1 className="text-[2.4rem]">전체 서비스</h1>
+        </div>
+
         <div className={`${classes.sidebar}`}>
           <div className={classes.menuList}>
             <div className={classes.bundle}>

@@ -3,11 +3,15 @@ import SubHeader from "@/components/market/sub-header";
 import Sidebar from "@/components/common/sidebar";
 import PostsList from "@/components/market/posts-list";
 import UIContext from "@/store/ui-context";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Notification from "@/components/common/notification";
+import AddPost from "@/components/ui/add-post";
+import DropUp from "@/components/ui/drop-up";
 
 export default function MarketPage() {
-  const { isSearchOpen, isNotificationOpen } = useContext(UIContext);
+  const { isSidebarOverall, isSearchOpen, isNotificationOpen } =
+    useContext(UIContext);
+  const [isDropUpOpen, setIsDropUpOpen] = useState(false);
 
   const DUMMY_DATA = [
     {
@@ -66,23 +70,47 @@ export default function MarketPage() {
     }
   }, [isSearchOpen]);
 
+  const toggleDropUp = () => {
+    setIsDropUpOpen(!isDropUpOpen);
+  };
+
   return (
     <>
+      {/* 전체 페이지 Wrapper */}
       <div
-        className={`transition-opacity duration-300 
-          ${isSearchOpen || isNotificationOpen ? "hidden" : ""}`}
+        className={`flex flex-col min-h-screen min-w-[640px] px-6 mx-auto relative bg-[var(--color-bg)] ${
+          isSidebarOverall || isSearchOpen || isNotificationOpen ? "hidden" : ""
+        }`}
       >
-        <div className="relative">
+        {/* 헤더 (상단 고정) */}
+        <header className="sticky top-0 left-0 w-full">
           <SubHeader />
+          <DropUp isOpen={isDropUpOpen} />
+          <AddPost onToggle={toggleDropUp} />
+        </header>
+
+        {/* 메인 컨텐츠 (제품 리스트) */}
+        <main className="flex-1 overflow-y-auto">
+          <PostsList posts={DUMMY_DATA} />
+        </main>
+      </div>
+
+      {/* 상태에 따라 표시되는 전역 UI들 */}
+      {isSidebarOverall && (
+        <div className="bg-black bg-opacity-50 z-40">
           <Sidebar />
         </div>
-
-        <div className="container">
-          <PostsList posts={DUMMY_DATA} />
+      )}
+      {isSearchOpen && (
+        <div className="bg-white z-50">
+          <SearchPage />
         </div>
-      </div>
-      {isSearchOpen && <SearchPage />}
-      {isNotificationOpen && <Notification />}
+      )}
+      {isNotificationOpen && (
+        <div className=" z-50">
+          <Notification />
+        </div>
+      )}
     </>
   );
 }

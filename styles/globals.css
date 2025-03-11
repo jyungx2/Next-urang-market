@@ -67,15 +67,16 @@ body {
 
   --color-secondary-50: #e8fbef;
   --color-secondary-100: #c7f4d7;
+  --color-secondary-200: #a3edbe;
   --color-secondary-300: #78e7a3;
   --color-secondary-400: #56df8e;
-  --color-seoncdary-500: #30d77a;
+  --color-secondary-500: #30d77a;
   --color-secondary-600: #26c76f;
   --color-secondary-700: #18b361;
   --color-secondary-800: #0ca156;
   --color-secondary-900: #008040;
 
-  --color-bg: #fbfbfb;
+  --color-bg: #f7f7f7;
   --color-com-bg: #313030;
 
   --color-success-100: #a2f0bc;

@@ -4,8 +4,8 @@ import PostsSection from "@/components/main/posts-section";
 import SearchForm from "@/components/main/search-form";
 import Sidebar from "@/components/common/sidebar";
 import Slider from "@/components/main/slider";
-import Head from "next/head";
 import { useEffect, useState } from "react";
+import Head from "next/head";
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
