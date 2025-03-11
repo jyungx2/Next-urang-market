@@ -7,7 +7,7 @@ export default function SearchPage() {
   const { toggleSearchPage } = useContext(UIContext);
 
   return (
-    <div className="flex flex-col gap-10 p-6 h-screen bg-[var(--color-bg)]">
+    <div className="flex flex-col gap-10 p-6 min-h-screen bg-[var(--color-bg)]">
       <div className="flex items-center gap-4">
         <button className="cursor-pointer" onClick={toggleSearchPage}>
           <Image

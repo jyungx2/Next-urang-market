@@ -6,7 +6,7 @@ export default function SettingsPage() {
   const { toggleSettingsPage } = useContext(UIContext);
 
   return (
-    <div className="h-screen flex flex-col gap-10 text-white bg-[var(--color-com-bg)] p-6">
+    <div className="min-h-screen flex flex-col gap-10 text-white bg-[var(--color-com-bg)] p-6">
       <header className="flex justify-center relative border-gray-300">
         <button
           className="absolute left-0 cursor-pointer"

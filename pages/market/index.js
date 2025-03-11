@@ -78,7 +78,7 @@ export default function MarketPage() {
     <>
       {/* 전체 페이지 Wrapper */}
       <div
-        className={`flex flex-col gap-2 min-h-screen min-w-[640px] px-6 mx-auto relative bg-[var(--color-bg)] ${
+        className={`flex flex-col gap-2 min-min-h-screen min-w-[640px] px-6 mx-auto relative bg-[var(--color-bg)] ${
           isSidebarOpen || isSearchOpen || isNotificationOpen ? "hidden" : ""
         }`}
       >

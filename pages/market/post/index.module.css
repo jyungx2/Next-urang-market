@@ -1,0 +1,74 @@
+.header {
+  background-color: var(--color-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+}
+
+.main {
+  background-color: var(--color-bg);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputBox label {
+  font-weight: bold;
+}
+
+.inputCustom {
+  all: unset;
+  border: 1px rgb(164, 164, 164) solid;
+  border-radius: 0.6rem;
+  padding: 0.8rem;
+  width: full;
+}
+
+.inputCustom:focus {
+  border: 2px rgb(0, 0, 0) solid;
+}
+
+.fileInputCustom {
+  display: none;
+}
+
+.cameraBox {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border: 1px rgb(164, 164, 164) solid;
+  padding: 0.8rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+}
+
+.btnCollection {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0.6rem 0;
+}
+
+.button {
+  border: 1px rgb(164, 164, 164) solid;
+  border-radius: 30px;
+  padding: 1rem;
+  color: var(--color-com-bg);
+}
+
+.button:focus {
+  color: var(--color-bg);
+  background-color: var(--color-com-bg);
+}

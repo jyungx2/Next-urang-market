@@ -31,7 +31,7 @@ export default function Home() {
       </Head>
 
       <div
-        className={`bg-[var(--color-bg)] min-h-screen min-w-[640px] p-6 pt-0 flex flex-col gap-7 ${
+        className={`bg-[var(--color-bg)] min-min-h-screen min-w-[640px] p-6 pt-0 flex flex-col gap-7 ${
           isSidebarOpen ? "hidden" : ""
         }`}
       >
