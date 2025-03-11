@@ -1,7 +1,11 @@
 import ChatItem from "@/components/profile/chat-item";
+import UIContext from "@/store/ui-context";
 import Image from "next/image";
+import { useContext } from "react";
 
 export default function Chat({ chats }) {
+  const { toggleNotificationPage } = useContext(UIContext);
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -20,7 +24,7 @@ export default function Chat({ chats }) {
             />
           </button>
 
-          <button className="cursor-pointer">
+          <button className="cursor-pointer" onClick={toggleNotificationPage}>
             <Image src="/icons/alarm.svg" alt="icon" width={24} height={24} />
           </button>
         </div>

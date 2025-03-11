@@ -1,12 +1,13 @@
 import SearchPage from "@/components/common/searchPage";
-import SubHeader from "@/components/layout/sub-header";
+import SubHeader from "@/components/market/sub-header";
 import Sidebar from "@/components/common/sidebar";
 import PostsList from "@/components/market/posts-list";
 import UIContext from "@/store/ui-context";
 import { useContext, useEffect } from "react";
+import Notification from "@/components/common/notification";
 
 export default function MarketPage() {
-  const { isSearchOpen } = useContext(UIContext);
+  const { isSearchOpen, isNotificationOpen } = useContext(UIContext);
 
   const DUMMY_DATA = [
     {
@@ -69,7 +70,7 @@ export default function MarketPage() {
     <>
       <div
         className={`transition-opacity duration-300 
-          ${isSearchOpen ? "hidden" : ""}`}
+          ${isSearchOpen || isNotificationOpen ? "hidden" : ""}`}
       >
         <div className="relative">
           <SubHeader />
@@ -81,6 +82,7 @@ export default function MarketPage() {
         </div>
       </div>
       {isSearchOpen && <SearchPage />}
+      {isNotificationOpen && <Notification />}
     </>
   );
 }

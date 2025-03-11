@@ -10,6 +10,8 @@ export function UIContextProvider(props) {
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
   // 사이드바
   const toggleSidebarHandler = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -29,6 +31,11 @@ export function UIContextProvider(props) {
     setIsSettingsOpen(!isSettingsOpen);
   };
 
+  // 알림페이지
+  const toggleNotificationPageHanlder = () => {
+    setIsNotificationOpen(!isNotificationOpen);
+  };
+
   const context = {
     isSidebarOpen,
     toggleSidebar: toggleSidebarHandler,
@@ -38,6 +45,8 @@ export function UIContextProvider(props) {
     toggleSearchPage: toggleSearchPageHandler,
     isSettingsOpen,
     toggleSettingsPage: toggleSettingsPageHandler,
+    isNotificationOpen,
+    toggleNotificationPage: toggleNotificationPageHanlder,
   };
 
   return (

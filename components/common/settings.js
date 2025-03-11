@@ -6,7 +6,7 @@ export default function SettingsPage() {
   const { toggleSettingsPage } = useContext(UIContext);
 
   return (
-    <div className="h-screen flex flex-col gap-10 text-white bg-black p-6">
+    <div className="h-screen flex flex-col gap-10 text-white bg-[var(--color-com-bg)] p-6">
       <header className="flex justify-center relative border-gray-300">
         <button
           className="absolute left-0 cursor-pointer"
@@ -19,7 +19,7 @@ export default function SettingsPage() {
             height={28}
           />
         </button>
-        <h1 className="font-bold text-[2.4rem]">환경설정</h1>
+        <h1 className="font-bold text-[2.4rem]">Settings</h1>
       </header>
       <main className="flex flex-col gap-20">
         <div className="flex flex-col gap-6 rounded-xl">

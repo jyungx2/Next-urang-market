@@ -3,11 +3,15 @@ import Image from "next/image";
 import { useContext } from "react";
 
 export default function SubHeader() {
-  const { isSidebarOverall, coverAll, toggleSearchPage } =
-    useContext(UIContext);
+  const {
+    isSidebarOverall,
+    coverAll,
+    toggleSearchPage,
+    toggleNotificationPage,
+  } = useContext(UIContext);
 
   return isSidebarOverall ? (
-    <div className="flex font-bold text-4xl top-0 p-8 text-white bg-[var(--color-black)] items-center justify-center relative">
+    <div className="flex font-bold text-4xl top-0 p-8 text-white bg-[var(--color-com-bg)] items-center justify-center relative">
       <button className="absolute left-0 p-4 cursor-pointer" onClick={coverAll}>
         <Image
           src="/icons/chevron-left-w.svg"
@@ -41,7 +45,7 @@ export default function SubHeader() {
             height={28}
           />
         </button>
-        <button className="cursor-pointer">
+        <button className="cursor-pointer" onClick={toggleNotificationPage}>
           <Image
             src="/icons/alarm.svg"
             alt="menu-icon"
