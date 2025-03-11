@@ -16,7 +16,7 @@ export default function SubHeader() {
           height={30}
         />
       </button>
-      <h1 className="text-3xl">전체 서비스</h1>
+      <h1 className="text-[2.4rem]">전체 서비스</h1>
     </div>
   ) : (
     <div className="flex font-bold text-4xl sticky top-0 p-6 bg-[var(--color-bg)]">

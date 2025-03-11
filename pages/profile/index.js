@@ -1,8 +1,13 @@
+import SettingsPage from "@/components/common/settings";
 import Chat from "@/components/profile/chat";
 import Profile from "@/components/profile/profile";
 import ProfileLayout from "@/pages/profile/layout";
+import UIContext from "@/store/ui-context";
+import { useContext } from "react";
 
 export default function ProfilePage() {
+  const { isSettingsOpen } = useContext(UIContext);
+
   const DUMMY_CHAT_DATA = [
     {
       id: 1,
@@ -71,8 +76,8 @@ export default function ProfilePage() {
 
   return (
     <ProfileLayout>
-      <Profile />
-      <Chat chats={DUMMY_CHAT_DATA} />
+      {!isSettingsOpen && <Profile />}
+      {!isSettingsOpen && <Chat chats={DUMMY_CHAT_DATA} />}
     </ProfileLayout>
   );
 }

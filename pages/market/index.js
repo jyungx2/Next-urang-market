@@ -1,6 +1,6 @@
 import SearchPage from "@/components/common/searchPage";
 import SubHeader from "@/components/layout/sub-header";
-import Sidebar from "@/components/main/sidebar";
+import Sidebar from "@/components/common/sidebar";
 import PostsList from "@/components/market/posts-list";
 import UIContext from "@/store/ui-context";
 import { useContext, useEffect } from "react";

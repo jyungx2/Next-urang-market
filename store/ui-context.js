@@ -8,6 +8,9 @@ export function UIContextProvider(props) {
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // 사이드바
   const toggleSidebarHandler = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -16,8 +19,14 @@ export function UIContextProvider(props) {
     setisSidebarOverall(!isSidebarOverall);
   };
 
+  // 검색페이지
   const toggleSearchPageHandler = () => {
     setIsSearchOpen(!isSearchOpen);
+  };
+
+  // 설정페이지
+  const toggleSettingsPageHandler = () => {
+    setIsSettingsOpen(!isSettingsOpen);
   };
 
   const context = {
@@ -27,6 +36,8 @@ export function UIContextProvider(props) {
     coverAll: coverAllHandler,
     isSearchOpen,
     toggleSearchPage: toggleSearchPageHandler,
+    isSettingsOpen,
+    toggleSettingsPage: toggleSettingsPageHandler,
   };
 
   return (

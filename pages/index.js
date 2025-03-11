@@ -2,7 +2,7 @@ import AdsSection from "@/components/main/ads-section";
 import MainHeader from "@/components/main/main-header";
 import PostsSection from "@/components/main/posts-section";
 import SearchForm from "@/components/main/search-form";
-import Sidebar from "@/components/main/sidebar";
+import Sidebar from "@/components/common/sidebar";
 import Slider from "@/components/main/slider";
 import Head from "next/head";
 import { useEffect, useState } from "react";
