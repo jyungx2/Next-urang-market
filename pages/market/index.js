@@ -6,7 +6,6 @@ import UIContext from "@/store/ui-context";
 import { useContext, useEffect, useState } from "react";
 import Notification from "@/components/common/notification";
 import AddPost from "@/components/ui/add-post";
-import DropUp from "@/components/ui/drop-up";
 
 export default function MarketPage() {
   const { isSidebarOpen, isSearchOpen, isNotificationOpen } =
@@ -85,8 +84,7 @@ export default function MarketPage() {
         {/* 헤더 (상단 고정) */}
         <header className="sticky top-0 left-0 w-full">
           <SubHeader />
-          <DropUp isOpen={isDropUpOpen} />
-          <AddPost onToggle={toggleDropUp} />
+          <AddPost isOpen={isDropUpOpen} onToggle={toggleDropUp} />
         </header>
 
         {/* 메인 컨텐츠 (제품 리스트) */}
