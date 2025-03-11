@@ -4,13 +4,18 @@ import { useContext } from "react";
 import UIContext from "@/store/ui-context";
 
 export default function Layout(props) {
-  const { isSidebarOpen, isSidebarOverall, isSearchOpen } =
+  const { isSidebarOpen, isSidebarOverall, isSearchOpen, isSettingsOpen } =
     useContext(UIContext);
 
   return (
     <div className={classes["layout-container"]}>
       <main>{props.children}</main>
-      {!(isSidebarOpen || isSearchOpen || isSidebarOverall) && <MainNav />}
+      {!(
+        isSidebarOpen ||
+        isSearchOpen ||
+        isSidebarOverall ||
+        isSettingsOpen
+      ) && <MainNav />}
     </div>
   );
 }
