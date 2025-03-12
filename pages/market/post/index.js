@@ -1,12 +1,17 @@
 import Image from "next/image";
 import classes from "./index.module.css";
 import ImagePicker from "@/components/market/image-picker";
+import { useRouter } from "next/router";
 
 export default function PostPage() {
+  const router = useRouter();
   return (
     <div className="flex flex-col gap-[2rem] min-min-h-screen p-6 bg-[var(--color-bg)]">
       <header className={classes.header}>
-        <button className="absolute top-0 left-0 cursor-pointer">
+        <button
+          className="absolute top-0 left-0 cursor-pointer"
+          onClick={() => router.push("/market")}
+        >
           <Image src="/icons/xbtn.svg" alt="btn" height={30} width={30} />
         </button>
         <h1 className="font-bold text-[2.4rem] text-[var(--color-com-bg)]">
