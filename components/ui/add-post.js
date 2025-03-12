@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 export default function AddPost({ isOpen, onToggle }) {
   const router = useRouter();
 
-  function linkToPostPage() {
-    router.push("/market/post");
+  function linkToPostPageHandler() {
+    router.push("/market/new");
   }
 
   return (
@@ -31,7 +31,7 @@ export default function AddPost({ isOpen, onToggle }) {
           </li>
           <li>
             <button
-              onClick={linkToPostPage}
+              onClick={linkToPostPageHandler}
               className="flex gap-3 items-center cursor-pointer text-white font-medium"
             >
               <Image

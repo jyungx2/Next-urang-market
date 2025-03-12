@@ -9,7 +9,7 @@ export default function PostItem({
   likeNum,
 }) {
   return (
-    <li className="flex gap-8 bg-[var(--color-primary-50)] rounded-2xl px-4 py-8 cursor-pointer">
+    <>
       <Image src="/images/example.jpg" alt="image" width={120} height={120} />
       <div className="flex flex-col gap-2 grow basis-0 min-w-0">
         <div className="flex justify-between">
@@ -39,6 +39,6 @@ export default function PostItem({
           </button>
         </div>
       </div>
-    </li>
+    </>
   );
 }

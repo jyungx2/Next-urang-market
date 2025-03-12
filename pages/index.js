@@ -35,9 +35,7 @@ export default function Home() {
           isSidebarOpen ? "hidden" : ""
         }`}
       >
-        <MainHeader
-          onMenuClick={() => setIsSidebarOpen((prevState) => !prevState)}
-        />
+        <MainHeader />
 
         <div className="flex flex-col gap-10">
           <SearchForm />
