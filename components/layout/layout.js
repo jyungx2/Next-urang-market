@@ -2,15 +2,24 @@ import MainNav from "@/components/layout/main-nav";
 import classes from "./layout.module.css";
 import { useContext } from "react";
 import UIContext from "@/store/ui-context";
+import PostItemNav from "@/components/layout/postItem-nav";
+import { useRouter } from "next/router";
 
 export default function Layout(props) {
-  const {
-    isSidebarOpen,
-    isSearchOpen,
-    isSettingsOpen,
-    isNotificationOpen,
-    isProductOpen,
-  } = useContext(UIContext);
+  const { isSidebarOpen, isSearchOpen, isSettingsOpen, isNotificationOpen } =
+    useContext(UIContext);
+
+  const router = useRouter();
+
+  // 특정 페이지에서 MainNav를 숨기고 FooterNav를 보여줄 경로 설정
+  // const hideMainNavPages = ["/market/[postId]"]; // 여기에 특정 페이지 추가
+  // const isPostItemNavPage = hideMainNavPages.some((path) =>
+  //   router.pathname.startsWith(path.replace(/\[.*?\]/, ""))
+  // );
+  // ➡️ /market/으로 시작하는 모든 Url에서 PostItemNav가 보이는 오류 발생... post 추가하는 페이지(/market/new)에서도 보이게 됨
+
+  // 해결코드: 즉, /market/무조건한개값 일 때만 true가 나오도록 정규표현식 수정
+  const isPostItemNavPage = /^\/market\/[^/]+$/.test(router.pathname);
 
   return (
     <div className={classes["layout-container"]}>
@@ -19,9 +28,14 @@ export default function Layout(props) {
         isSidebarOpen ||
         isSearchOpen ||
         isSettingsOpen ||
-        isNotificationOpen ||
-        isProductOpen
-      ) && <MainNav />}
+        isNotificationOpen
+      ) ? (
+        isPostItemNavPage ? (
+          <PostItemNav />
+        ) : (
+          <MainNav />
+        )
+      ) : null}
     </div>
   );
 }

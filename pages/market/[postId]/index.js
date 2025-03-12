@@ -1,20 +1,14 @@
-import UIContext from "@/store/ui-context";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
 
 export default function PostItemPage() {
   const router = useRouter();
   console.log(router.pathname); // /market/post/[postId]
   console.log(router.query); // {postId: '23'}
 
-  const { isProductOpen, toggleProductPage } = useContext(UIContext);
-  // ✅ 상품 상세 페이지에 도착하면 isProductOpen을 true로 유지
-  useEffect(() => {
-    if (!isProductOpen) {
-      toggleProductPage();
-    }
-  }, [isProductOpen]);
+  const linkBackhandler = () => {
+    router.push("/market");
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -31,7 +25,7 @@ export default function PostItemPage() {
         {/* 상단 네비게이션 버튼들 */}
         <div className="flex justify-between items-start w-full">
           <div className="flex gap-6">
-            <button className="cursor-pointer">
+            <button className="cursor-pointer" onClick={linkBackhandler}>
               <Image
                 src="/icons/chevron-left-w.svg"
                 alt="icon"
@@ -100,7 +94,7 @@ export default function PostItemPage() {
           <p className="mt-2 text-gray-400 text-xl">
             1 chat · 7 favorites · 379 views
           </p>
-        </div>{" "}
+        </div>
         <div className="flex flex-col mt-6">
           <h1 className="text-4xl font-bold">루이비통 가방</h1>
           <p className="text-gray-500 text-xl">
@@ -112,19 +106,6 @@ export default function PostItemPage() {
           </p>
         </div>
       </main>
-
-      {/* 가격 및 채팅 버튼 */}
-      <div className="flex items-center justify-between sticky bottom-0 z-200 bg-amber-200">
-        <div className="flex justify-center items-center border-r p-6">
-          <Image src="/icons/heart.svg" alt="icon" width={28} height={28} />
-        </div>
-        <div className="flex justify-between items-center w-full p-6">
-          <p className="text-3xl font-bold">60,000원</p>
-          <button className="px-6 py-3 bg-orange-500 text-white rounded-full font-semibold">
-            Chat
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
