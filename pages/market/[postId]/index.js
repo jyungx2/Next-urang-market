@@ -66,44 +66,116 @@ export default function PostItemPage() {
       {/* 메인 콘텐츠 (배경 이미지 아래) */}
       <main className="relative z-10 bg-white rounded-t-3xl p-6">
         {/* 판매자 프로필 */}
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+        <div className="flex items-center gap-4 border-b p-4">
+          <div className="rounded-full">
+            <Image
+              src="/images/example.jpg"
+              alt="image"
+              width={36}
+              height={36}
+              className="rounded-full aspect-square w-full"
+            />
+          </div>
           <div>
-            <p className="text-xl font-semibold">theye</p>
+            <p className="text-2xl font-semibold">theye</p>
             <p className="text-gray-500 text-xl">부평구 삼산1동</p>
           </div>
-          <div className="ml-auto text-blue-500 font-bold">36.5℃</div>
+          <div className="ml-auto text-blue-500 font-bold bg-blue-200 p-3 rounded-4xl">
+            36.5℃
+          </div>
         </div>
+
         {/* 상품 정보 */}
-        <div className="flex flex-col mt-6">
-          <h1 className="text-4xl font-bold">루이비통 가방</h1>
-          <p className="text-gray-500 text-xl">
-            Womens Accessories · 5 hours ago
-          </p>
-          <p className="mt-4 text-lg">빈티지샵에서 구매했던 제품입니다</p>
-          <p className="mt-2 text-gray-400 text-xl">
-            1 chat · 7 favorites · 379 views
-          </p>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col mt-8">
+            <h1 className="text-4xl font-bold">루이비통 가방</h1>
+            <p className="text-gray-500 text-xl">
+              Womens Accessories · 5 hours ago
+            </p>
+            <p className="mt-4 text-lg">빈티지샵에서 구매했던 제품입니다</p>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between mt-6 items-center">
+              <h2 className="font-bold text-[2rem]">Where to meet</h2>
+              <div className="flex items-center">
+                <span>올리브영</span>
+                <Image
+                  src="/icons/chevron-right.svg"
+                  alt="image"
+                  width={24}
+                  height={24}
+                />
+              </div>
+            </div>
+            <div>GPS</div>
+          </div>
+
+          <div className="flex mt-8">
+            <p className="mt-2 text-gray-400 text-xl">
+              1 chat · 7 favorites · 379 views
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col mt-6">
-          <h1 className="text-4xl font-bold">루이비통 가방</h1>
-          <p className="text-gray-500 text-xl">
-            Womens Accessories · 5 hours ago
-          </p>
-          <p className="mt-4 text-lg">빈티지샵에서 구매했던 제품입니다</p>
-          <p className="mt-2 text-gray-400 text-xl">
-            1 chat · 7 favorites · 379 views
-          </p>
-        </div>
-        <div className="flex flex-col mt-6">
-          <h1 className="text-4xl font-bold">루이비통 가방</h1>
-          <p className="text-gray-500 text-xl">
-            Womens Accessories · 5 hours ago
-          </p>
-          <p className="mt-4 text-lg">빈티지샵에서 구매했던 제품입니다</p>
-          <p className="mt-2 text-gray-400 text-xl">
-            1 chat · 7 favorites · 379 views
-          </p>
+
+        <div className="flex flex-col gap-4 mt-10 border-t p-6 px-0 font-bold">
+          <header className="flex justify-between items-center">
+            <h2 className="font-bold text-[2rem]">
+              Other listings by '짱가네'
+            </h2>
+            <Image
+              src="/icons/chevron-right.svg"
+              alt="image"
+              width={28}
+              height={28}
+            />
+          </header>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-2">
+              <Image
+                src="/images/product-2.jpg"
+                alt="product"
+                width={280}
+                height={200}
+                className="aspect-[5/3]"
+              />
+              <p>거울</p>
+              <p>50,000원</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Image
+                src="/images/product-2.jpg"
+                alt="product"
+                width={280}
+                height={200}
+                className="aspect-[5/3]"
+              />
+              <p>거울</p>
+              <p>50,000원</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Image
+                src="/images/product-2.jpg"
+                alt="product"
+                width={280}
+                height={200}
+                className="aspect-[5/3]"
+              />
+              <p>거울</p>
+              <p>50,000원</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Image
+                src="/images/product-2.jpg"
+                alt="product"
+                width={280}
+                height={200}
+                className="aspect-[5/3]"
+              />
+              <p>거울</p>
+              <p>50,000원</p>
+            </div>
+          </div>
         </div>
       </main>
     </div>
