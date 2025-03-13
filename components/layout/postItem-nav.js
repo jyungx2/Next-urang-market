@@ -3,8 +3,11 @@ import { useRouter } from "next/router";
 
 export default function PostItemNav() {
   const router = useRouter();
-  const linkToChatPageHandler = () => {
-    router.push();
+  const postId = router.query.postId;
+
+  const linkToChatPageHandler = (postId) => {
+    console.log(postId);
+    router.push(`/market/${postId}/chat`);
   };
 
   return (
@@ -20,7 +23,7 @@ export default function PostItemNav() {
         </p>
         <button
           className="px-6 py-3 bg-[var(--color-primary-400)] text-white rounded-full font-semibold cursor-pointer hover:bg-[var(--color-primary-300)] focus:bg-[var(--color-primary-300)]"
-          onClick={linkToChatPageHandler}
+          onClick={() => linkToChatPageHandler(postId)}
         >
           Chat
         </button>

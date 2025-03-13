@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 export default function PostsList({ posts }) {
   const router = useRouter();
 
-  const handler = (postId) => {
+  const linkToPostDetailPageHandler = (postId) => {
     router.push(`/market/${postId}`);
   };
 
@@ -16,7 +16,7 @@ export default function PostsList({ posts }) {
           <li
             key={post.id}
             className="flex gap-8 bg-[var(--color-primary-50)] rounded-2xl px-4 py-8 cursor-pointer"
-            onClick={() => handler(post.id)}
+            onClick={() => linkToPostDetailPageHandler(post.id)}
           >
             <PostItem
               key={post.id}

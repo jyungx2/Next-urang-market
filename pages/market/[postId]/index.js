@@ -2,7 +2,7 @@ import RelatedListings from "@/components/market/related-listings";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-export default function PostItemPage() {
+export default function PostDetailPage() {
   const router = useRouter();
   console.log(router.pathname); // /market/post/[postId]
   console.log(router.query); // {postId: '23'}
