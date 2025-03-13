@@ -1,14 +1,27 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function PostItemNav() {
+  const router = useRouter();
+  const linkToChatPageHandler = () => {
+    router.push();
+  };
+
   return (
-    <div className="flex items-center justify-between sticky bottom-0 z-200 bg-amber-200">
-      <div className="flex justify-center items-center border-r p-6">
-        <Image src="/icons/heart.svg" alt="icon" width={28} height={28} />
+    <div className="flex items-center justify-between sticky bottom-0 z-200 bg-[var(--color-com-bg)] p-2">
+      <div className="flex justify-center items-center border-r border-[var(--color-bg)] p-4">
+        <button className="cursor-pointer">
+          <Image src="/icons/heart-w.svg" alt="icon" width={36} height={36} />
+        </button>
       </div>
-      <div className="flex justify-between items-center w-full p-6">
-        <p className="text-3xl font-bold">60,000원</p>
-        <button className="px-6 py-3 bg-orange-500 text-white rounded-full font-semibold">
+      <div className="flex justify-between items-center w-full p-4">
+        <p className="text-[1.8rem] font-bold text-[var(--color-bg)]">
+          60,000원
+        </p>
+        <button
+          className="px-6 py-3 bg-[var(--color-primary-400)] text-white rounded-full font-semibold cursor-pointer hover:bg-[var(--color-primary-300)] focus:bg-[var(--color-primary-300)]"
+          onClick={linkToChatPageHandler}
+        >
           Chat
         </button>
       </div>
