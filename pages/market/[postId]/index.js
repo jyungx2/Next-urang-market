@@ -7,8 +7,12 @@ export default function PostDetailPage() {
   console.log(router.pathname); // /market/post/[postId]
   console.log(router.query); // {postId: '23'}
 
-  const linkBackhandler = () => {
+  const linkBackHandler = () => {
     router.push("/market");
+  };
+
+  const linkHomeHandler = () => {
+    router.push("/");
   };
 
   return (
@@ -26,7 +30,7 @@ export default function PostDetailPage() {
         {/* 상단 네비게이션 버튼들 */}
         <div className="flex justify-between items-start w-full">
           <div className="flex gap-6">
-            <button className="cursor-pointer" onClick={linkBackhandler}>
+            <button className="cursor-pointer" onClick={linkBackHandler}>
               <Image
                 src="/icons/chevron-left-w.svg"
                 alt="icon"
@@ -34,7 +38,7 @@ export default function PostDetailPage() {
                 height={28}
               />
             </button>
-            <button className="cursor-pointer">
+            <button className="cursor-pointer" onClick={linkHomeHandler}>
               <Image
                 src="/icons/home-w.svg"
                 alt="icon"

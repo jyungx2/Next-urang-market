@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 export default function ChatPage() {
@@ -41,11 +42,17 @@ export default function ChatPage() {
     // socket.send(JSON.stringify(newMessage));
   };
 
+  const router = useRouter();
+  const postId = router.query.postId;
+
   return (
     <div className="min-h-screen flex flex-col">
-      <header>
+      <header className="flex flex-col">
         <div className="flex justify-center items-center relative p-4">
-          <button className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2">
+          <button
+            className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 p-4"
+            onClick={() => router.push(`/market/${postId}`)}
+          >
             <Image
               src="/icons/chevron-left.svg"
               alt="icon"
@@ -61,7 +68,7 @@ export default function ChatPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 border-b p-4 bg-amber-100">
+        <div className="flex flex-col gap-4 border-b border-gray-300 p-4 bg-gray-200">
           <div className="flex gap-4 cursor-pointer">
             <div className="relative w-[48px] aspect-square">
               <Image
@@ -79,8 +86,24 @@ export default function ChatPage() {
           </div>
 
           <div className="flex gap-4">
-            <button className="border p-2 rounded-lg">Set meetup</button>
-            <button className="border p-2 rounded-lg">KarrotPay</button>
+            <button className="flex gap-2 items-center h-fit p-2 border rounded-lg">
+              <Image
+                src="/icons/calendar.svg"
+                alt="set-meetup"
+                height={24}
+                width={24}
+              />
+              <span>Set meetup</span>
+            </button>
+            <button className="flex gap-2 items-center h-fit p-2 border rounded-lg">
+              <Image
+                src="/icons/currency-dollar.svg"
+                alt="purchase"
+                height={24}
+                width={24}
+              />
+              <span>Pay in advance</span>
+            </button>
           </div>
         </div>
       </header>
