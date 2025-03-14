@@ -8,7 +8,7 @@ export default function PostsSection({ title, list }) {
       <header className={classes.header}>
         <h1 className={classes.title}>{title}</h1>
 
-        <Link href="/" className={classes.Link}>
+        <Link href="/community" className={classes.Link}>
           <span>더보기</span>
           <Image
             src="/icons/arrow-up-right.svg"
