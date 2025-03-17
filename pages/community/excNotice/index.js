@@ -1,32 +1,23 @@
-import NoticePostItem from "@/components/community/notice-post-item";
+import ExcPostItem from "@/components/community/exc-post-item";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 export default function CommunityPage() {
-  const router = useRouter();
-
   const DUMMY_DATA = [
     {
       id: 1,
-      writer: "김유랑",
+      writer: "김초밥",
       createdAt: "2025.03.13",
-      views: 324,
-      title: "유랑마켓 중고거래 이용 가이드 (등업 및 이용)",
+      location: "캐나다 캘거리",
+      content: "벤쿠버 부모님 모시고 가기 좋은 한인식당 추천해주세요.",
     },
     {
       id: 2,
-      writer: "김유랑",
-      createdAt: "2025.02.28",
-      views: 56,
-      title: "유랑마켓 포인트 적립 꿀팁!",
-    },
-    {
-      id: 3,
-      writer: "김유랑",
-      createdAt: "2025.02.11",
-      views: 1463,
-      title: "영국 워홀 총 정리 (자격조건/신청방법/준비서류/eVisa/Vignette 등)",
+      writer: "김어묵",
+      location: "캐나다 벤쿠버",
+      createdAt: "2025.03.20",
+      content:
+        "프랑스어 공부하시는 분 계실까요? 프랑스어 유학연수로 프랑스 대신 몬트리올 유학 괜찮나요",
     },
   ];
 
@@ -60,7 +51,7 @@ export default function CommunityPage() {
           </Link>
         </div>
 
-        <div id="category-1" className="flex gap-2">
+        <div className="flex gap-2">
           <button className="rounded-4xl border-none bg-[var(--color-primary-50)] text-[var(--color-primary-600)] py-4 px-6 font-bold text-[1.4rem] cursor-pointer">
             공지사항
           </button>
@@ -76,49 +67,50 @@ export default function CommunityPage() {
         </div>
       </div>
 
-      <div id="neighborhood_routed_area" className="flex flex-col p-3">
-        <div id="category-2" className="flex gap-6 mb-12">
+      <div id="neighborhood_routed_area" className="flex flex-col px-4">
+        <div className="flex gap-4 mb-6">
           {/* 상단 버튼에 의해 필터링되는 2차 카테고리
           워홀: 필독공지/비자승인/경험공유
           해외취업: 성공후기/조언구해요 */}
-
-          <button
-            role="tab"
-            className="font-medium p-2 border-b-2 border-[var(--color-primary-600)] text-[1.4rem] text-[var(--color-primary-600)] cursor-pointer"
-          >
-            <span>현지생활</span>
-          </button>
-          <button
-            role="tab"
-            className="font-medium p-2 text-[1.4rem] cursor-pointer"
-          >
-            <span>현지맛집</span>
-          </button>
-          <button
-            role="tab"
-            className="font-medium p-2 text-[1.4rem] cursor-pointer"
-          >
-            <span>꿀팁공유</span>
-          </button>
-          <button
-            role="tab"
-            className="font-medium p-2 text-[1.4rem] cursor-pointer"
-          >
-            <span>친구해요</span>
-          </button>
+          <div className="flex gap-6">
+            <button
+              role="tab"
+              className="font-medium p-2 border-b-2 border-[var(--color-primary-600)] text-[1.4rem] text-[var(--color-primary-600)] cursor-pointer"
+            >
+              <span>현지생활</span>
+            </button>
+            <button
+              role="tab"
+              className="font-medium p-2 text-[1.4rem] cursor-pointer"
+            >
+              <span>현지맛집</span>
+            </button>
+            <button
+              role="tab"
+              className="font-medium p-2 text-[1.4rem] cursor-pointer"
+            >
+              <span>꿀팁공유</span>
+            </button>
+            <button
+              role="tab"
+              className="font-medium p-2 text-[1.4rem] cursor-pointer"
+            >
+              <span>친구해요</span>
+            </button>
+          </div>
         </div>
 
-        <ul className="flex flex-col gap-6">
+        <div className="flex flex-col gap-2">
           {DUMMY_DATA.map((item) => (
-            <NoticePostItem
+            <ExcPostItem
               key={item.id}
               writer={item.writer}
               createdAt={item.createdAt}
-              views={item.views}
-              title={item.title}
+              location={item.location}
+              content={item.content}
             />
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
