@@ -86,8 +86,8 @@ export default function MarketPage() {
         {/* 헤더 (상단 고정) */}
         <header className="sticky top-0 left-0 w-full">
           <SubHeader />
-          <AddPost isOpen={isDropUpOpen} onToggle={toggleDropUp} />
         </header>
+        <AddPost isOpen={isDropUpOpen} onToggle={toggleDropUp} />
 
         {/* 메인 컨텐츠 (제품 리스트) */}
         <main className="flex-1 overflow-y-auto pb-6">
