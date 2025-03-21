@@ -2,6 +2,7 @@ import MainCategory from "@/components/community/mainCat";
 import SubCategory from "@/components/community/subCat";
 import UserLocation from "@/components/community/user-location";
 import CommunityAddPost from "@/components/ui/community-addPost";
+import { useState } from "react";
 
 export default function CommunityLayout({ children }) {
   return (
