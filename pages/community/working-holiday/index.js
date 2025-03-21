@@ -1,7 +1,7 @@
 import NoticePostItem from "@/components/community/notice-post-item";
 import CommunityLayout from "@/pages/community/layout";
 
-export default function CommunityPage() {
+export default function WorkingHolidayPage() {
   const DUMMY_DATA = [
     {
       id: 1,
