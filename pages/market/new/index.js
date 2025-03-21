@@ -2,6 +2,7 @@ import Image from "next/image";
 import classes from "./index.module.css";
 import ImagePicker from "@/components/market/image-picker";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function PostPage() {
   const router = useRouter();

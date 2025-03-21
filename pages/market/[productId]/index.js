@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 
 export default function PostDetailPage() {
   const router = useRouter();
-  console.log(router.pathname); // /market/post/[postId]
-  console.log(router.query); // {postId: '23'}
+  console.log(router.pathname); // /market/post/[productId]
+  console.log(router.query); // {productId: '23'}
 
   const linkBackHandler = () => {
     router.push("/market");

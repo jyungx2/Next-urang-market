@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-export default function AddPost({ isOpen, onToggle }) {
+export default function MarketAddPost({ isOpen, onToggle }) {
   const router = useRouter();
 
   function linkToPostPageHandler() {
-    router.push("/market/post/new");
+    router.push("/market/new");
   }
 
   return (

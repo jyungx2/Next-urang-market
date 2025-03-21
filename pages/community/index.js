@@ -2,7 +2,7 @@ import MainCategory from "@/components/community/mainCat";
 import NoticePostItem from "@/components/community/notice-post-item";
 import SubCategory from "@/components/community/subCat";
 import UserLocation from "@/components/community/user-location";
-import AddPost from "@/components/ui/add-post";
+import CommunityAddPost from "@/components/ui/community-addPost";
 
 export default function CommunityPage() {
   const DUMMY_DATA = [
@@ -34,7 +34,9 @@ export default function CommunityPage() {
       <div id="neighborhood_menu" className="flex flex-col gap-8 p-4">
         <UserLocation />
         <MainCategory />
-        <AddPost />
+        <div className="fixed bottom-300 left-1/2 -translate-x-1/2 w-full max-w-[640px] px-6 z-50">
+          <CommunityAddPost />
+        </div>
       </div>
 
       <div id="neighborhood_routed_area" className="flex flex-col p-3">

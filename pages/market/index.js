@@ -5,7 +5,7 @@ import PostsList from "@/components/market/posts-list";
 import UIContext from "@/store/ui-context";
 import { useContext, useEffect, useState } from "react";
 import Notification from "@/components/common/notification";
-import AddPost from "@/components/ui/add-post";
+import MarketAddPost from "@/components/ui/market-addPost";
 
 export default function MarketPage() {
   const { isSidebarOpen, isSearchOpen, isNotificationOpen } =
@@ -79,7 +79,7 @@ export default function MarketPage() {
     <>
       {/* 전체 페이지 Wrapper */}
       <div
-        className={`flex flex-col min-min-h-screen min-w-[640px] px-6 mx-auto relative bg-[var(--color-bg)] ${
+        className={`flex flex-col min-min-h-screen min-w-[640px] px-6 mx-auto bg-[var(--color-bg)] relative ${
           isSidebarOpen || isSearchOpen || isNotificationOpen ? "hidden" : ""
         }`}
       >
@@ -87,7 +87,10 @@ export default function MarketPage() {
         <header className="sticky top-0 left-0 w-full">
           <SubHeader />
         </header>
-        <AddPost isOpen={isDropUpOpen} onToggle={toggleDropUp} />
+
+        <div className="fixed bottom-300 left-1/2 -translate-x-1/2 w-full max-w-[640px] px-6 z-50">
+          <MarketAddPost isOpen={isDropUpOpen} onToggle={toggleDropUp} />
+        </div>
 
         {/* 메인 컨텐츠 (제품 리스트) */}
         <main className="flex-1 overflow-y-auto pb-6">
