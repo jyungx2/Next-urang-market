@@ -2,9 +2,8 @@ import Image from "next/image";
 import classes from "./index.module.css";
 import ImagePicker from "@/components/market/image-picker";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
-export default function PostPage() {
+export default function ProductAddPage() {
   const router = useRouter();
   return (
     <div className="flex flex-col gap-[2rem] min-min-h-screen p-6 bg-[var(--color-bg)]">

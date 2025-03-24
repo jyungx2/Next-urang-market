@@ -5,7 +5,7 @@ export default function MarketAddPost({ isOpen, onToggle }) {
   const router = useRouter();
 
   function linkToPostPageHandler() {
-    router.push("/market/new");
+    router.push("/market/product/new");
   }
 
   return (
