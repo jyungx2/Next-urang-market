@@ -160,3 +160,13 @@ body {
 .scrollbar-hide {
   scrollbar-width: none;
 }
+
+/* Tiptap 편집기 사용시, placeholder는 가상요소로 스타일링 필수! */
+.ProseMirror p.is-empty::before {
+  content: "이웃에게 동네 정보를 공유하거나 물어보세요.\A동네와 주변 지역의 이웃들까지 볼 수 있어요.\A\A잠깐! 거래글은 꼭 [이웃 중고거래]에 올려주세요.\A이웃소식에 거래글을 등록하면 삭제될 수 있습니다.";
+  white-space: pre-wrap;
+  float: left;
+  color: #9ca3af; /* 회색: Tailwind의 gray-400 */
+  pointer-events: none;
+  height: 0;
+}

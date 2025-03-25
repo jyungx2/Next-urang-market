@@ -16,13 +16,19 @@ export default function PostAddPage() {
       StarterKit, // 기본 에디터 기능 (Bold, Italic, List 등)
       Image, // 이미지 업로드 기능
       Link.extend({ inclusive: false }).configure({
-        openOnClick: false,
+        autolink: true,
+        defaultProtocol: "https",
+        protocols: ["http", "https"],
       }),
       HorizontalRule,
       Markdown,
+      // 🔥 Placeholder.configure({ placeholder: "..." })는 HTML 속성만 채워줄 뿐!
+      // 👉 진짜 텍스트를 보여주는 건 CSS에서 ::before로 처리해야 함.
       Placeholder.configure({
-        placeholder: "여기에 게시글을 작성하세요...", // 기본 안내 텍스트
+        placeholder: "",
       }),
+      //  여기서 "custom-placeholder"는 data-placeholder 속성으로 들어감
+      // ❌ 하지만 이 상태만으론 아무것도 보이지 않음
     ],
     content: "", // 초기 에디터 내용
   });
@@ -38,7 +44,7 @@ export default function PostAddPage() {
       {/* 실제 에디터 콘텐츠가 렌더링되는 영역 */}
       <EditorContent
         editor={editor}
-        className="text-2xl p-8 bg-amber-50 flex-grow"
+        className="text-2xl p-8 bg-amber-50 flex-grow "
       />
       <ButtonGroup />
     </div>
