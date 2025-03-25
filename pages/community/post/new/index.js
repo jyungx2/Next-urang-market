@@ -5,7 +5,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Toolbar } from "@/components/tiptap/toolbar"; // 사용자 정의 툴바 컴포넌트 (Bold, Image 등 버튼)
 import WriteArea from "@/components/tiptap/writearea";
-import Buttons from "@/components/tiptap/buttons";
+import ButtonGroup from "@/components/tiptap/button-group";
 
 export default function PostAddPage() {
   // useEditor 훅을 사용하여 Tiptap 에디터 인스턴스 생성
@@ -32,9 +32,9 @@ export default function PostAddPage() {
       {/* 실제 에디터 콘텐츠가 렌더링되는 영역 */}
       <EditorContent
         editor={editor}
-        className="bg-green-500 text-base p-8 h-fit"
+        className="bg-green-500 text-base p-8 min-h-[400px]"
       />
-      <Buttons />
+      <ButtonGroup />
     </div>
   );
 }
