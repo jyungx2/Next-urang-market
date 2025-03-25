@@ -41,6 +41,12 @@ export default function SubCategory() {
           key={cat.id}
           role="tab"
           className="font-medium p-2 border-b-2 border-[var(--color-primary-600)] text-[1.4rem] text-[var(--color-primary-600)] cursor-pointer"
+          onClick={() =>
+            router.push({
+              pathname: router.pathname,
+              query: { ...router.query, category: cat.key },
+            })
+          }
         >
           <span>{cat.label}</span>
         </button>

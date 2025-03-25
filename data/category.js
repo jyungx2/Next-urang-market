@@ -7,8 +7,8 @@ const categoryData = [
     slug: "notice",
     path: "/community",
     subCategories: [
-      { id: 101, label: "필독공지" },
-      { id: 102, label: "업데이트" },
+      { id: 101, label: "필독공지", key: "must-notice" },
+      { id: 102, label: "업데이트", key: "update" },
     ],
   },
   {
@@ -17,9 +17,9 @@ const categoryData = [
     slug: "living-abroad",
     path: "/community/living-abroad",
     subCategories: [
-      { id: 201, label: "현지생활" },
-      { id: 202, label: "현지맛집" },
-      { id: 203, label: "친구해요" },
+      { id: 201, label: "현지생활", key: "local-life" },
+      { id: 202, label: "현지맛집", key: "local-restaurant" },
+      { id: 203, label: "친구해요", key: "friends" },
     ],
   },
   {
@@ -28,8 +28,8 @@ const categoryData = [
     slug: "working-holiday",
     path: "/community/working-holiday",
     subCategories: [
-      { id: 301, label: "비자승인" },
-      { id: 302, label: "경험공유" },
+      { id: 301, label: "비자승인", key: "visa-accept" },
+      { id: 302, label: "경험공유", key: "exp-share" },
     ],
   },
   {
@@ -38,8 +38,8 @@ const categoryData = [
     slug: "working-abroad",
     path: "/community/working-abroad",
     subCategories: [
-      { id: 401, label: "성공후기" },
-      { id: 402, label: "조언구해요" },
+      { id: 401, label: "성공후기", key: "success-review" },
+      { id: 402, label: "조언구해요", key: "advise-share" },
     ],
   },
 ];

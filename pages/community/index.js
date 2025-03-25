@@ -1,7 +1,12 @@
 import NoticePostItem from "@/components/community/notice-post-item";
 import CommunityLayout from "@/pages/community/layout";
+import { useRouter } from "next/router";
 
 export default function CommunityPage() {
+  const router = useRouter();
+  const { category } = router.query;
+  console.log("query category", category);
+
   const DUMMY_DATA = [
     {
       id: 1,
