@@ -1,6 +1,7 @@
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
+import NextLink from "next/link"; // next/link에서 React 컴포넌트용 Link를 가져오기
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Toolbar } from "@/components/tiptap/toolbar"; // 사용자 정의 툴바 컴포넌트 (Bold, Image 등 버튼)
@@ -37,15 +38,32 @@ export default function PostAddPage() {
   if (!editor) return null;
 
   return (
-    <div className="flex flex-col bg-[var(--color-bg)] min-h-screen">
+    <div className="flex flex-col bg-[var(--color-bg)] min-h-screen relative w-full">
       <WriteArea />
       {/* 툴바 컴포넌트 (굵게, 이미지 추가, 이모지 등) */}
       <Toolbar editor={editor} />
       {/* 실제 에디터 콘텐츠가 렌더링되는 영역 */}
-      <EditorContent
-        editor={editor}
-        className="text-2xl p-8 bg-amber-50 flex-grow "
-      />
+      <EditorContent editor={editor} className="text-2xl p-8 flex-grow " />
+
+      {/* 커스텀 placeholder */}
+      {editor.isEmpty && (
+        <div className="absolute top-80 left-8 text-gray-400 pointer-events-none space-y-1">
+          <p>이웃에게 동네 정보를 공유하거나 물어보세요.</p>
+          <p>동네와 주변 지역의 이웃들까지 볼 수 있어요.</p>
+          <br />
+          <p>
+            잠깐! 거래글은 꼭{" "}
+            <NextLink
+              href="/market/product/new"
+              className="underline text-[var(--color-primary-500)] pointer-events-auto"
+            >
+              [이웃 중고거래]
+            </NextLink>{" "}
+            에 올려주세요.
+          </p>
+          <p>이웃소식에 거래글을 등록하면 삭제될 수 있습니다.</p>
+        </div>
+      )}
       <ButtonGroup />
     </div>
   );
