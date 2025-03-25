@@ -1,5 +1,13 @@
 import React, { useRef } from "react";
-import { Bold, ImageIcon, LinkIcon, Video, Italic } from "lucide-react";
+import {
+  Bold,
+  ImageIcon,
+  LinkIcon,
+  Video,
+  Italic,
+  Strikethrough,
+} from "lucide-react";
+import classes from "./toolbar.module.css";
 
 export const Toolbar = ({ editor }) => {
   // input file 요소에 접근하기 위한 ref
@@ -71,7 +79,9 @@ export const Toolbar = ({ editor }) => {
       {/* 굵게 */}
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
-        className="p-2 hover:bg-gray-100 rounded"
+        className={`p-2 hover:bg-[var(--color-grey-200)] rounded ${
+          editor.isActive("bold") ? classes["is-active"] : ""
+        }`}
         title="굵게"
       >
         <Bold size={22} />
@@ -80,25 +90,38 @@ export const Toolbar = ({ editor }) => {
       {/* 이탤릭 */}
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        className="p-2 hover:bg-gray-100 rounded"
+        className={`p-2 hover:bg-[var(--color-grey-200)] rounded ${
+          editor.isActive("italic") ? classes["is-active"] : ""
+        }`}
         title="기울임"
       >
         <Italic size={22} />
       </button>
 
-      {/* 이미지 추가 */}
+      {/* Strike */}
+      <button
+        onClick={() => editor.chain().focus().toggleStrike().run()}
+        className={`p-2 hover:bg-[var(--color-grey-200)] rounded ${
+          editor.isActive("strike") ? classes["is-active"] : ""
+        }`}
+        title="취소선"
+      >
+        <Strikethrough size={22} />
+      </button>
+
+      {/* 이미지 추가 (isActive 적용 대상 아님) */}
       <button
         onClick={triggerImageUpload}
-        className="p-2 hover:bg-gray-100 rounded"
+        className="p-2 hover:bg-[var(--color-grey-200)] rounded"
         title="사진 추가"
       >
         <ImageIcon size={22} />
       </button>
 
-      {/* 동영상 추가 */}
+      {/* 동영상 추가 (isActive 적용 대상 아님) */}
       <button
         onClick={triggerVideoUpload}
-        className="p-2 hover:bg-gray-100 rounded"
+        className="p-2 hover:bg-[var(--color-grey-200)] rounded"
         title="동영상 추가"
       >
         <Video size={22} />
@@ -107,7 +130,9 @@ export const Toolbar = ({ editor }) => {
       {/* 링크 추가 */}
       <button
         onClick={addLink}
-        className="p-2 hover:bg-gray-100 rounded"
+        className={`p-2 hover:bg-[var(--color-grey-200)] rounded ${
+          editor.isActive("link") ? classes["is-active"] : ""
+        }`}
         title="링크 추가"
       >
         <LinkIcon size={22} />

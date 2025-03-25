@@ -17,12 +17,12 @@ export default function Button({
 }) {
   const classes = className(
     rest.className,
-    "flex items-center h-[44px] leading-[44px] rounded-lg h-12",
+    "flex items-center h-[44px] leading-[44px] rounded-lg h-12 font-bold",
     {
       "opacity-80": loading,
-      "text-[var(--color-primary-500)] bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]":
+      "text-[var(--color-primary-600)] bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]":
         primary && !outline,
-      "text-[var(--color-grey-500)] bg-[var(--color-grey-200)] hover:bg-[var(--color-grey-300)]":
+      "text-[var(--color-grey-600)] bg-[var(--color-grey-200)] hover:bg-[var(--color-grey-300)]":
         secondary && !outline,
       "border-[var(--color-secondary-500)] bg-[var(--color-secondary-500)]":
         success && !outline,
