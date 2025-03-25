@@ -1,10 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function UserLocation() {
+  const router = useRouter();
+
   return (
     <div className="flex justify-between">
-      <button className="flex items-center cursor-pointer">
+      <button
+        className="flex items-center cursor-pointer bg-[var(--color-secondary-100)] rounded-full p-3"
+        onClick={() => router.push("/community/location-search")}
+      >
         <Image src="/icons/location.svg" alt="icon" width={20} height={20} />
         <h3 className="font-bold text-[1.6rem] ml-2">효성동 이웃</h3>
         <Image

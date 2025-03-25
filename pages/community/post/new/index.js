@@ -7,7 +7,6 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import { Toolbar } from "@/components/tiptap/toolbar"; // 사용자 정의 툴바 컴포넌트 (Bold, Image 등 버튼)
 import WriteArea from "@/components/tiptap/writearea";
 import ButtonGroup from "@/components/tiptap/button-group";
-import { Markdown } from "tiptap-markdown";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 
 export default function PostAddPage() {
@@ -22,7 +21,6 @@ export default function PostAddPage() {
         protocols: ["http", "https"],
       }),
       HorizontalRule,
-      Markdown,
       // 🔥 Placeholder.configure({ placeholder: "..." })는 HTML 속성만 채워줄 뿐!
       // 👉 진짜 텍스트를 보여주는 건 CSS에서 ::before로 처리해야 함.
       Placeholder.configure({

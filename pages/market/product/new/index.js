@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 export default function ProductAddPage() {
   const router = useRouter();
   return (
-    <div className="flex flex-col gap-[2rem] min-min-h-screen p-6 bg-[var(--color-bg)]">
+    <div className="flex flex-col gap-[2rem] min-h-screen p-6 bg-[var(--color-bg)]">
       <header className={classes.header}>
         <button
           className="absolute top-0 left-0 cursor-pointer"
