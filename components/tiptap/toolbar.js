@@ -6,6 +6,7 @@ import {
   Video,
   Italic,
   Strikethrough,
+  Minus,
 } from "lucide-react";
 import classes from "./toolbar.module.css";
 
@@ -79,7 +80,7 @@ export const Toolbar = ({ editor }) => {
       {/* 굵게 */}
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
-        className={`p-2 hover:bg-[var(--color-grey-200)] rounded ${
+        className={`p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer ${
           editor.isActive("bold") ? classes["is-active"] : ""
         }`}
         title="굵게"
@@ -90,7 +91,7 @@ export const Toolbar = ({ editor }) => {
       {/* 이탤릭 */}
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={`p-2 hover:bg-[var(--color-grey-200)] rounded ${
+        className={`p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer ${
           editor.isActive("italic") ? classes["is-active"] : ""
         }`}
         title="기울임"
@@ -101,7 +102,7 @@ export const Toolbar = ({ editor }) => {
       {/* Strike */}
       <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
-        className={`p-2 hover:bg-[var(--color-grey-200)] rounded ${
+        className={`p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer ${
           editor.isActive("strike") ? classes["is-active"] : ""
         }`}
         title="취소선"
@@ -109,10 +110,18 @@ export const Toolbar = ({ editor }) => {
         <Strikethrough size={22} />
       </button>
 
+      {/* 구분선 추가 (isActive 적용 대상 아님) */}
+      <button
+        className="p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer"
+        onClick={() => editor.chain().focus().setHorizontalRule().run()}
+      >
+        <Minus />
+      </button>
+
       {/* 이미지 추가 (isActive 적용 대상 아님) */}
       <button
         onClick={triggerImageUpload}
-        className="p-2 hover:bg-[var(--color-grey-200)] rounded"
+        className="p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer"
         title="사진 추가"
       >
         <ImageIcon size={22} />
@@ -121,7 +130,7 @@ export const Toolbar = ({ editor }) => {
       {/* 동영상 추가 (isActive 적용 대상 아님) */}
       <button
         onClick={triggerVideoUpload}
-        className="p-2 hover:bg-[var(--color-grey-200)] rounded"
+        className="p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer"
         title="동영상 추가"
       >
         <Video size={22} />
@@ -130,7 +139,7 @@ export const Toolbar = ({ editor }) => {
       {/* 링크 추가 */}
       <button
         onClick={addLink}
-        className={`p-2 hover:bg-[var(--color-grey-200)] rounded ${
+        className={`p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer ${
           editor.isActive("link") ? classes["is-active"] : ""
         }`}
         title="링크 추가"

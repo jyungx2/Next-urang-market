@@ -7,6 +7,7 @@ import { Toolbar } from "@/components/tiptap/toolbar"; // 사용자 정의 툴�
 import WriteArea from "@/components/tiptap/writearea";
 import ButtonGroup from "@/components/tiptap/button-group";
 import { Markdown } from "tiptap-markdown";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
 
 export default function PostAddPage() {
   // useEditor 훅을 사용하여 Tiptap 에디터 인스턴스 생성
@@ -17,6 +18,7 @@ export default function PostAddPage() {
       Link.extend({ inclusive: false }).configure({
         openOnClick: false,
       }),
+      HorizontalRule,
       Markdown,
       Placeholder.configure({
         placeholder: "여기에 게시글을 작성하세요...", // 기본 안내 텍스트
