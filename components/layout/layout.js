@@ -25,7 +25,7 @@ export default function Layout(props) {
   const postItemNavPages = ["/market/[postId]"];
 
   // ✅ `MainNav`와 `PostItemNav` 모두 숨겨야 할 페이지 배열
-  const hiddenNavPages = ["/market/[postId]/chat"];
+  const hiddenNavPages = ["/market/[postId]/chat", "/community/post/new"];
 
   // ✅ 현재 경로가 `PostItemNav`를 표시해야 하는지 확인
   const isPostItemNavPage = postItemNavPages.some((path) => {

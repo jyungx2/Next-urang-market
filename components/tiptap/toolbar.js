@@ -51,7 +51,7 @@ export const Toolbar = ({ editor }) => {
   };
 
   return (
-    <div className="flex gap-2 p-2 border-b border-[var(--color-grey-200)] bg-amber-300">
+    <div className="flex gap-4 p-2 border-b border-[var(--color-grey-200)]">
       {/* 숨겨진 input 요소들 (이미지/비디오) */}
       <input
         type="file"

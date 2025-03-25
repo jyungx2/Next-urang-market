@@ -25,14 +25,14 @@ export default function PostAddPage() {
   if (!editor) return null;
 
   return (
-    <div className="bg-amber-100 min-h-screen">
+    <div className="flex flex-col bg-[var(--color-bg)] min-h-screen">
       <WriteArea />
       {/* 툴바 컴포넌트 (굵게, 이미지 추가, 이모지 등) */}
       <Toolbar editor={editor} />
       {/* 실제 에디터 콘텐츠가 렌더링되는 영역 */}
       <EditorContent
         editor={editor}
-        className="bg-green-500 text-base p-8 min-h-[400px]"
+        className="text-2xl p-8 bg-amber-50 flex-grow"
       />
       <ButtonGroup />
     </div>
