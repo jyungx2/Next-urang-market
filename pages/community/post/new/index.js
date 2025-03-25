@@ -43,11 +43,11 @@ export default function PostAddPage() {
       {/* 툴바 컴포넌트 (굵게, 이미지 추가, 이모지 등) */}
       <Toolbar editor={editor} />
       {/* 실제 에디터 콘텐츠가 렌더링되는 영역 */}
-      <EditorContent editor={editor} className="text-2xl p-8 flex-grow " />
+      <EditorContent editor={editor} className="text-2xl p-8 flex-grow" />
 
       {/* 커스텀 placeholder */}
       {editor.isEmpty && (
-        <div className="absolute top-80 left-8 text-gray-400 pointer-events-none space-y-1">
+        <div className="absolute top-79 left-8 text-gray-400 pointer-events-none space-y-1">
           <p>이웃에게 동네 정보를 공유하거나 물어보세요.</p>
           <p>동네와 주변 지역의 이웃들까지 볼 수 있어요.</p>
           <br />

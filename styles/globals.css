@@ -170,3 +170,10 @@ body {
   pointer-events: none;
   height: 0;
 }
+
+/* placeholder 텍스트를 클릭했을 때 파란색 테두리(=브라우저가 기본적으로 contenteditable 요소나 input 계열에 focus 상태일 때 적용하는 스타일)을 제거하기 위한 추가 스타일링 ... EditorContent는 내부적으로 <div contenteditable="true">이기 때문에, outline 적용됨..*/
+.ProseMirror:focus {
+  outline: none;
+}
+/* 💥문제: <EditorContent />에 TailwindCSS로 'focus:outline-none'을 적용했음에도 불구하고, 여전히 outline 없어지지 않음
+🎯 예측원인: <EditorContent />는 내부적으로 <div class="ProseMirror">를 렌더링하기 때문에, className="focus:outline-none"을 <EditorContent />에 줘도 실제로는 .ProseMirror에 적용되지 않습니다. */
