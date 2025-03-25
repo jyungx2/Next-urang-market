@@ -6,7 +6,7 @@ export default function UserLocation() {
   const router = useRouter();
 
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between items-center">
       <button
         className="flex items-center cursor-pointer bg-[var(--color-secondary-100)] rounded-full p-3"
         onClick={() => router.push("/community/location-search")}
