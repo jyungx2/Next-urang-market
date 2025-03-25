@@ -32,6 +32,11 @@ export default function PostAddPage() {
       // ❌ 하지만 이 상태만으론 아무것도 보이지 않음
     ],
     content: "", // 초기 에디터 내용
+    editorProps: {
+      attributes: {
+        class: "focus:outline-none",
+      },
+    },
   });
 
   // editor가 존재할 때만 렌더링
