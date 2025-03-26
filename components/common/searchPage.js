@@ -7,6 +7,8 @@ export default function SearchPage() {
   const { toggleSearchPage } = useContext(UIContext);
   const searchBlankRef = useRef(null);
 
+  //  DOM에 직접 접근해야 하는 상황이기 때문에 useRef가 적절.
+  // cf) autoFocus속성은 React가 실제 DOM에 붙이기 전에 놓치는 경우가 있어서 브라우저마다 포커스 안 될 수도 있음 → ❌ 불안정
   useEffect(() => {
     searchBlankRef.current.focus();
   }, []);
