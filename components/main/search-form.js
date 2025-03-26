@@ -1,8 +1,13 @@
 import Image from "next/image";
 import classes from "./search-form.module.css";
 import Location from "@/components/layout/location";
+import { useContext } from "react";
+import UIContext from "@/store/ui-context";
+import SearchPage from "@/components/common/searchPage";
 
 export default function SearchForm() {
+  const { toggleSearchPage } = useContext(UIContext);
+
   return (
     <div className={classes.container}>
       <Location />
@@ -24,6 +29,7 @@ export default function SearchForm() {
               type="text"
               className={`${classes.inputUnset} ${classes.searchInput}`}
               placeholder="검색어를 입력하세요."
+              onFocus={toggleSearchPage}
             />
           </div>
 

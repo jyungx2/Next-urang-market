@@ -1,10 +1,15 @@
 import Image from "next/image";
 import classes from "./searchPage.module.css";
 import UIContext from "@/store/ui-context";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 
 export default function SearchPage() {
   const { toggleSearchPage } = useContext(UIContext);
+  const searchBlankRef = useRef(null);
+
+  useEffect(() => {
+    searchBlankRef.current.focus();
+  }, []);
 
   return (
     <div className="flex flex-col gap-10 p-6 min-h-screen bg-[var(--color-bg)]">
@@ -23,6 +28,7 @@ export default function SearchPage() {
             type="text"
             placeholder="검색어를 입력해주세요."
             className="inputUnset inputCustom"
+            ref={searchBlankRef}
           />
         </div>
 
