@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function ExcPostItem({ writer, createdAt, location, content }) {
+export default function TalkPostItem({ writer, createdAt, location, content }) {
   return (
     <div className="flex flex-col gap-6 border-t-[10px] border-[var(--color-grey-100)] p-4">
       <div id="post-header" className="flex gap-4 items-center text-[1.2rem]">
