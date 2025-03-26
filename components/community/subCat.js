@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import categoryData from "@/data/category";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 export default function SubCategory() {
   const router = useRouter();
