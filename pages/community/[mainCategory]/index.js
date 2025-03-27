@@ -1,11 +1,11 @@
-import NoticePostItem from "@/components/community/notice-post-item";
-import TalkPostItem from "@/components/community/talk-post-item";
+import EvenPostList from "@/components/community/even-post-list";
 import CommunityLayout from "@/pages/community/layout";
 import { useRouter } from "next/router";
+import OddPostList from "@/components/community/odd-post-list";
 
 export default function CommunityPage() {
   const router = useRouter();
-  const { mainCategory, tab } = router.query;
+  const { mainCategory } = router.query;
 
   if (!mainCategory) return null;
 
@@ -54,24 +54,7 @@ export default function CommunityPage() {
   if (mainCategory === "notice" || mainCategory === "working-holiday") {
     return (
       <CommunityLayout>
-        <ul className="flex flex-col gap-6">
-          {DUMMY_DATA_ONE.map((item) => (
-            <NoticePostItem
-              key={item.id}
-              writer={item.writer}
-              createdAt={String(item.createdAt)}
-              views={item.views}
-              title={item.title}
-              onDetail={() =>
-                router.push({
-                  // 동적 페이지 관련 URL 변수 ([id], [slug] 등)는 pathname에 직접 문자열로 넣기보단, query 객체로 분리해서 넘기는 것이 가독성과 유지보수 측면👍
-                  pathname: "/community/[mainCategory]/[postId]",
-                  query: { mainCategory, postId: item.id, tab },
-                })
-              }
-            />
-          ))}
-        </ul>
+        <OddPostList items={DUMMY_DATA_ONE} />
       </CommunityLayout>
     );
   }
@@ -79,23 +62,7 @@ export default function CommunityPage() {
   if (mainCategory === "working-abroad" || mainCategory === "living-abroad") {
     return (
       <CommunityLayout>
-        <ul className="flex flex-col gap-6">
-          {DUMMY_DATA_TWO.map((item) => (
-            <TalkPostItem
-              key={item.id}
-              writer={item.writer}
-              createdAt={String(item.createdAt)}
-              location={item.location}
-              content={item.content}
-              onDetail={() =>
-                router.push({
-                  pathname: "/community/[mainCategory]/[postId]",
-                  query: { mainCategory, postId: item.id, tab },
-                })
-              }
-            />
-          ))}
-        </ul>
+        <EvenPostList items={DUMMY_DATA_TWO} />
       </CommunityLayout>
     );
   }
