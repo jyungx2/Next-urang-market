@@ -6,7 +6,7 @@ export default function SubCategory() {
   const router = useRouter();
   const pathname = router.pathname;
 
-  const { category } = router.query;
+  const { tab } = router.query;
 
   const currentMainCat = categoryData.find((cat) => cat.path === pathname);
 
@@ -19,13 +19,13 @@ export default function SubCategory() {
   }, [currentMainCat]);
 
   useEffect(() => {
-    if (!category && subCategories.length > 0) {
-      // category 쿼리가 없을 때 첫 번째 서브카테고리로 설정
+    if (!tab && subCategories.length > 0) {
+      // tab 쿼리가 없을 때 첫 번째 서브카테고리로 설정
       // replace(): 현재 URL만 교체 → 깔끔함 & push로 하면 "브라우저 히스토리에 추가됨 → 뒤로가기 불편해지는 현상" 방지.
       router.replace(
         {
           pathname: router.pathname,
-          query: { ...router.query, category: subCategories[0].key },
+          query: { ...router.query, tab: subCategories[0].tab },
         },
         undefined,
         { shallow: false }
@@ -34,7 +34,7 @@ export default function SubCategory() {
         // 💥단! useSWR(), useEffect()처럼 클라이언트에서 "query를 기반으로 fetch"하는 로직은 정상 작동함)
       );
     }
-  }, [category, subCategories, router]);
+  }, [tab, subCategories, router]);
 
   return (
     <div id="category-2" className="flex gap-6 mb-8">
@@ -43,7 +43,7 @@ export default function SubCategory() {
           해외취업: 성공후기/조언구해요 */}
 
       {subCategories.map((cat) => {
-        const isActive = category === cat.key;
+        const isActive = tab === cat.tab;
         return (
           <button
             key={cat.id}
@@ -56,7 +56,7 @@ export default function SubCategory() {
             onClick={() =>
               router.push({
                 pathname: router.pathname,
-                query: { ...router.query, category: cat.key },
+                query: { ...router.query, tab: cat.tab },
               })
             }
           >
