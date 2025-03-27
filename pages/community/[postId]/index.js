@@ -1,12 +1,19 @@
 import CommentItem from "@/components/community/comment-item";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function PostDetailPage() {
+  const router = useRouter();
+  console.log(router.query);
+
   return (
-    <div className="flex flex-col gap-4 p-4 bg-amber-50 min-h-screen">
+    <div className="flex flex-col gap-4 p-4 pt-0 min-h-screen">
       {/* 헤더 */}
-      <div className="grid grid-cols-3 items-center justify-between mb-4 bg-amber-200">
-        <button className="relative w-[30px] aspect-square cursor-pointer">
+      <div className="grid grid-cols-3 items-center justify-between mb-4 border-b border-[var(--color-grey-100)] p-4">
+        <button
+          className="relative w-[30px] aspect-square cursor-pointer"
+          onClick={() => router.push("/community")}
+        >
           <Image
             src="/icons/chevron-left.svg"
             alt="icon"
@@ -14,7 +21,7 @@ export default function PostDetailPage() {
             className="object-cover rounded-full"
           />
         </button>
-        <h1 className="text-[2rem] font-bold text-center">이웃소식</h1>
+        <h1 className="text-[2rem] font-bold text-center">공지사항</h1>
       </div>
 
       {/* 프로필 */}

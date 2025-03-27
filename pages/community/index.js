@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 
 export default function CommunityPage() {
   const router = useRouter();
-  const { category } = router.query;
-  console.log("query category", category);
+  const { tab } = router.query;
+  console.log("query string of tab", tab);
 
   const DUMMY_DATA = [
     {
@@ -41,6 +41,12 @@ export default function CommunityPage() {
             createdAt={String(item.createdAt)}
             views={item.views}
             title={item.title}
+            onDetail={() =>
+              router.push({
+                pathname: `/community/${item.id}`,
+                query: { tab },
+              })
+            }
           />
         ))}
       </ul>

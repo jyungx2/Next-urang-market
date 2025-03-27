@@ -1,9 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function NoticePostItem({ writer, createdAt, views, title }) {
+export default function NoticePostItem({
+  writer,
+  createdAt,
+  views,
+  title,
+  onDetail,
+}) {
   return (
-    <li className="border-b border-[var(--color-grey-300)] pb-4">
+    <li
+      className="border-b border-[var(--color-grey-300)] pb-4 cursor-pointer"
+      onClick={onDetail}
+    >
       <div className="flex gap-2 justify-between">
         <div className="flex flex-col gap-4">
           <span>{title}</span>
