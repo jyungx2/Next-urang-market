@@ -5,7 +5,7 @@ const categoryData = [
     id: 1,
     name: "공지사항",
     slug: "notice",
-    path: "/community",
+    path: "/community/notice",
     subCategories: [
       { id: 101, label: "필독공지", tab: "must-notice" },
       { id: 102, label: "업데이트", tab: "update" },

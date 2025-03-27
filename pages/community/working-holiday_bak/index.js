@@ -1,7 +1,11 @@
 import NoticePostItem from "@/components/community/notice-post-item";
 import CommunityLayout from "@/pages/community/layout";
+import { useRouter } from "next/router";
 
 export default function WorkingHolidayPage() {
+  const router = useRouter();
+  const { tab } = router.query;
+
   const DUMMY_DATA = [
     {
       id: 1,
@@ -36,6 +40,12 @@ export default function WorkingHolidayPage() {
             createdAt={String(item.createdAt)}
             views={item.views}
             title={item.title}
+            onDetail={() =>
+              router.push({
+                pathname: "/community/[postId]",
+                query: { postId: item.id, tab },
+              })
+            }
           />
         ))}
       </ul>

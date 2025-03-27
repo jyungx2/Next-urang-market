@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 export default function PostDetailPage() {
   const router = useRouter();
-  console.log(router.query);
+  const { mainCategory, tab } = router.query;
 
   return (
     <div className="flex flex-col gap-4 p-4 pt-0 min-h-screen">
@@ -12,7 +12,12 @@ export default function PostDetailPage() {
       <div className="grid grid-cols-3 items-center justify-between mb-4 border-b border-[var(--color-grey-100)] p-4">
         <button
           className="relative w-[30px] aspect-square cursor-pointer"
-          onClick={() => router.push("/community")}
+          onClick={() =>
+            router.push({
+              pathname: "/community/[mainCategory]",
+              query: { mainCategory, tab },
+            })
+          }
         >
           <Image
             src="/icons/chevron-left.svg"

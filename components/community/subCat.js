@@ -4,11 +4,11 @@ import { useEffect, useMemo } from "react";
 
 export default function SubCategory() {
   const router = useRouter();
-  const pathname = router.pathname;
+  const { mainCategory } = router.query;
 
   const { tab } = router.query;
 
-  const currentMainCat = categoryData.find((cat) => cat.path === pathname);
+  const currentMainCat = categoryData.find((cat) => cat.slug === mainCategory);
 
   // 💥 문제: subCategories = []가 렌더링마다 새 배열을 만들어 useEffect가 계속 실행될 수 있음...
   // **현재는 !category 조건이 있어서 괜찮지만(어느 서브카테고리를 누르든, useRouter().push()로 query string을 지정해줬으므로..), if (subCategories.length > 0)만 쓰면 다른 서브카테고리 눌러도 다시 첫번째 서브카테고리로 리셋될 수 있음 (실제로 클릭한 서브카테고리가 active 됐다가 다시 결국엔 첫번째 서브카테고리가 active되는 걸 볼 수 있음.)** ➡️ 현재는 괜찮지만 미래에 위험해질 수도 있으니 미리 방어하자는 의미로 useMemo()를 통해 특정 밸류를 기억하여 참조값이 변경되는 것을 방지하자!

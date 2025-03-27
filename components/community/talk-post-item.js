@@ -1,9 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function TalkPostItem({ writer, createdAt, location, content }) {
+export default function TalkPostItem({
+  writer,
+  createdAt,
+  location,
+  content,
+  onDetail,
+}) {
   return (
-    <div className="flex flex-col gap-6 border-t-[10px] border-[var(--color-grey-100)] p-4">
+    <div
+      className="flex flex-col gap-6 border-t-[10px] border-[var(--color-grey-100)] p-4 cursor-pointer"
+      onClick={onDetail}
+    >
       <div id="post-header" className="flex gap-4 items-center text-[1.2rem]">
         <Link href="/" className="flex gap-2 items-center">
           <Image
@@ -28,9 +37,7 @@ export default function TalkPostItem({ writer, createdAt, location, content }) {
         </span>
       </div>
 
-      <Link href="/" id="post-content">
-        {content}
-      </Link>
+      <div id="post-content">{content}</div>
 
       <div id="post-footer" className="flex gap-6">
         <button className="flex items-center gap-2">

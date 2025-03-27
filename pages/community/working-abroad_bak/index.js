@@ -1,7 +1,11 @@
 import TalkPostItem from "@/components/community/talk-post-item";
 import CommunityLayout from "@/pages/community/layout";
+import { useRouter } from "next/router";
 
 export default function WorkingAbroadPage() {
+  const router = useRouter();
+  const { tab } = router.query;
+
   const DUMMY_DATA = [
     {
       id: 1,
@@ -30,6 +34,12 @@ export default function WorkingAbroadPage() {
             createdAt={String(item.createdAt)}
             location={item.location}
             content={item.content}
+            onDetail={() =>
+              router.push({
+                pathname: "/community/working-abroad/[postId]",
+                query: { postId: item.id, tab },
+              })
+            }
           />
         ))}
       </ul>
