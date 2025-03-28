@@ -54,7 +54,7 @@ export default function CommunityPage({ postsEven }) {
 export async function getStaticProps() {
   // etStaticProps는 서버에서 실행되므로 절대경로가 필요..
   // fetch("/api/posts")는 브라우저에서는 잘 작동하지만, getStaticProps는 Next.js 서버에서 실행되기 때문에 상대 경로(/api/...)로는 요청을 못 보낸다.
-  const res = await fetch("http://localhost:3001/api/posts");
+  const res = await fetch("http://localhost:3000/api/posts");
   const data = await res.json();
   console.log(data);
 
