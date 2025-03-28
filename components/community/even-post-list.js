@@ -17,7 +17,7 @@ export default function EvenPostList({ items }) {
           onDetail={() =>
             router.push({
               pathname: "/community/[mainCategory]/[postId]",
-              query: { mainCategory, postId: item.id, tab },
+              query: { mainCategory, postId: item._id, tab },
             })
           }
         />

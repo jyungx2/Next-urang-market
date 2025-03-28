@@ -2,8 +2,9 @@ import EvenPostList from "@/components/community/even-post-list";
 import CommunityLayout from "@/pages/community/layout";
 import { useRouter } from "next/router";
 import OddPostList from "@/components/community/odd-post-list";
+import categoryData from "@/data/category";
 
-export default function CommunityPage() {
+export default function CommunityPage({ postsEven }) {
   const router = useRouter();
   const { mainCategory } = router.query;
 
@@ -33,24 +34,6 @@ export default function CommunityPage() {
     },
   ];
 
-  const DUMMY_DATA_TWO = [
-    {
-      id: 1,
-      writer: "김초밥",
-      createdAt: "2025.03.13",
-      location: "캐나다 캘거리",
-      content: "벤쿠버 부모님 모시고 가기 좋은 한인식당 추천해주세요.",
-    },
-    {
-      id: 2,
-      writer: "김어묵",
-      location: "캐나다 벤쿠버",
-      createdAt: "2025.03.20",
-      content:
-        "프랑스어 공부하시는 분 계실까요? 프랑스어 유학연수로 프랑스 대신 몬트리올 유학 괜찮나요",
-    },
-  ];
-
   if (mainCategory === "notice" || mainCategory === "working-holiday") {
     return (
       <CommunityLayout>
@@ -62,8 +45,32 @@ export default function CommunityPage() {
   if (mainCategory === "working-abroad" || mainCategory === "living-abroad") {
     return (
       <CommunityLayout>
-        <EvenPostList items={DUMMY_DATA_TWO} />
+        <EvenPostList items={postsEven} />
       </CommunityLayout>
     );
   }
+}
+
+export async function getStaticProps() {
+  // etStaticProps는 서버에서 실행되므로 절대경로가 필요..
+  // fetch("/api/posts")는 브라우저에서는 잘 작동하지만, getStaticProps는 Next.js 서버에서 실행되기 때문에 상대 경로(/api/...)로는 요청을 못 보낸다.
+  const res = await fetch("http://localhost:3001/api/posts");
+  const data = await res.json();
+  console.log(data);
+
+  return {
+    props: { postsEven: data.posts },
+    revalidate: 60,
+  };
+}
+
+export async function getStaticPaths() {
+  const paths = categoryData.map((cat) => ({
+    params: { mainCategory: cat.slug },
+  }));
+
+  return {
+    paths,
+    fallback: "blocking",
+  };
 }
