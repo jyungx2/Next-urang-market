@@ -7,6 +7,7 @@ import {
 export default async function handler(req, res) {
   let client;
 
+  // CONNECT TO DB
   try {
     client = await connectDatabase();
   } catch (err) {
@@ -14,11 +15,12 @@ export default async function handler(req, res) {
     return;
   }
 
+  // POST HTTP
   if (req.method === "POST") {
     const { content } = req.body;
 
     // Validation for server-side
-    if (!title || !content) {
+    if (!content) {
       res.status(422).json({ message: "Invalid input - post" });
       client.close();
       return;
@@ -26,6 +28,7 @@ export default async function handler(req, res) {
 
     const newPost = {
       content,
+      createdAt: new Date(),
     };
 
     let result;
@@ -36,10 +39,19 @@ export default async function handler(req, res) {
         .status(201)
         .json({ message: "Added post in community page", post: newPost });
     } catch (err) {
-      res.status(500).json({ message: "Inserting comment failed!" });
+      res.status(500).json({ message: "Inserting post failed!" });
     }
   }
 
+  // GET HTTP
   if (req.method === "GET") {
+    try {
+      const documents = await getAllDocuments(client, "posts", { _id: -1 });
+      res.status(200).json({ posts: documents });
+    } catch (err) {
+      res.status(500).json({ message: "Getting posts failed!" });
+    }
   }
+
+  client.close();
 }

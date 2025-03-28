@@ -6,8 +6,8 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Toolbar } from "@/components/tiptap/toolbar"; // 사용자 정의 툴바 컴포넌트 (Bold, Image 등 버튼)
 import WriteArea from "@/components/tiptap/writearea";
-import ButtonGroup from "@/components/tiptap/button-group";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
+import Button from "@/components/ui/button";
 
 export default function PostAddPage() {
   // useEditor 훅을 사용하여 Tiptap 에디터 인스턴스 생성
@@ -40,8 +40,29 @@ export default function PostAddPage() {
   // editor가 존재할 때만 렌더링
   if (!editor) return null;
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const postHTML = editor.getHTML(); // 최신 에디터 내용을 이 시점에서 가져와야 함!
+    console.log("postHTML: ", postHTML);
+
+    const res = await fetch("/api/posts", {
+      method: "POST",
+      body: JSON.stringify({ content: postHTML }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+    console.log("게시글 등록 완료", data);
+  }
+
   return (
-    <div className="flex flex-col bg-[var(--color-bg)] min-h-screen relative w-full">
+    <form
+      className="flex flex-col bg-[var(--color-bg)] min-h-screen relative w-full"
+      onSubmit={handleSubmit}
+    >
       <WriteArea />
       {/* 툴바 컴포넌트 (굵게, 이미지 추가, 이모지 등) */}
       <Toolbar editor={editor} />
@@ -67,7 +88,19 @@ export default function PostAddPage() {
           <p>이웃소식에 거래글을 등록하면 삭제될 수 있습니다.</p>
         </div>
       )}
-      <ButtonGroup />
-    </div>
+
+      <div className="flex p-8 gap-2">
+        <Button
+          link="/community"
+          secondary
+          className="flex-grow justify-center"
+        >
+          취소
+        </Button>
+        <Button type="submit" primary className="flex-grow justify-center">
+          등록
+        </Button>
+      </div>
+    </form>
   );
 }
