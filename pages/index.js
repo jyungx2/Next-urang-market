@@ -41,11 +41,11 @@ export default function Home() {
         <div className="flex flex-col gap-10">
           <SearchForm />
           <Slider />
-          <PostsSection title="워홀준비" />
+          <PostsSection title="워홀준비" category="working-holiday" />
           <AdsSection />
-          <PostsSection title="현지경험담" />
+          <PostsSection title="현지경험담" category="living-abroad" />
           <AdsSection />
-          <PostsSection title="해외취업후기" />
+          <PostsSection title="해외취업후기" category="working-abroad" />
         </div>
       </div>
       {isSearchOpen && <SearchPage />}

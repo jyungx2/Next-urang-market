@@ -2,13 +2,13 @@ import Link from "next/link";
 import classes from "./posts-section.module.css";
 import Image from "next/image";
 
-export default function PostsSection({ title, list }) {
+export default function PostsSection({ title, category }) {
   return (
     <section className="mb-10">
       <header className={classes.header}>
         <h1 className={classes.title}>{title}</h1>
 
-        <Link href="/community" className={classes.Link}>
+        <Link href={`/community/${category}`} className={classes.Link}>
           <span>더보기</span>
           <Image
             src="/icons/arrow-up-right.svg"
