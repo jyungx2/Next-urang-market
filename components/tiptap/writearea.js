@@ -4,11 +4,12 @@ import { useRouter } from "next/router";
 
 export default function WriteArea() {
   const router = useRouter();
+  console.log(router.query);
 
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-4 border-b border-[var(--color-grey-200)]">
-        <button onClick={() => router.push("/community")}>
+        <button onClick={() => router.back()}>
           <Image
             src="/icons/xbtn.svg"
             alt="icon"

@@ -41,13 +41,8 @@ export default function TalkPostItem({
 
       <div id="post-footer" className="flex gap-6">
         <button className="flex items-center gap-2">
-          <Image
-            src="/icons/like-filled.svg"
-            alt="icon"
-            width={24}
-            height={24}
-          />
-          <span id="like-num">1</span>
+          <Image src="/icons/like.svg" alt="icon" width={24} height={24} />
+          <span id="like-num"></span>
         </button>
 
         <button className="flex items-center gap-2">

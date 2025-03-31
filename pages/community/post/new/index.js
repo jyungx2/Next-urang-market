@@ -43,12 +43,11 @@ export default function PostAddPage() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const postHTML = editor.getHTML(); // 최신 에디터 내용을 이 시점에서 가져와야 함!
-    console.log("postHTML: ", postHTML);
+    const content = editor.getText(); // 최신 에디터 내용을 이 시점에서 가져와야 함!
 
     const res = await fetch("/api/posts", {
       method: "POST",
-      body: JSON.stringify({ content: postHTML }),
+      body: JSON.stringify({ content }),
       headers: {
         "Content-Type": "application/json",
       },
