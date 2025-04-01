@@ -149,6 +149,7 @@ export default function PostDetailPage() {
           <div
             ref={editableRef}
             role="textbox"
+            aria-label="댓글 입력창"
             contentEditable
             className={`textarea ${isEmpty ? "empty" : ""}`}
             placeholder="댓글을 남겨주세요"
@@ -193,4 +194,28 @@ export default function PostDetailPage() {
       </ul>
     </div>
   );
+}
+
+export async function getStaticProps(context) {
+  const postId = context.params.postId;
+
+  const res = await fetch(`http://localhost:3000/api/posts/${postId}`);
+
+  const data = res.json();
+  console.log(postId, res, data);
+
+  return {
+    props: { selectedPost: data.post },
+  };
+}
+
+export async function getStaticPaths() {
+  const paths = categoryData.map((cat) => ({
+    params: { mainCategory: cat.slug },
+  }));
+
+  return {
+    paths,
+    fallback: "blocking",
+  };
 }

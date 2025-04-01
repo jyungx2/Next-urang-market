@@ -45,8 +45,20 @@ export default async function handler(req, res) {
 
   // GET HTTP
   if (req.method === "GET") {
+    const { mainCategory } = req.query;
+
+    let filter = {};
+    if (mainCategory) {
+      filter = { mainCategory };
+    }
+
     try {
-      const documents = await getAllDocuments(client, "posts", { _id: -1 });
+      const documents = await getAllDocuments(
+        client,
+        "posts",
+        { _id: -1 },
+        filter
+      );
       res.status(200).json({ posts: documents });
     } catch (err) {
       res.status(500).json({ message: "Getting posts failed!" });

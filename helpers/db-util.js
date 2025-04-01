@@ -23,3 +23,11 @@ export async function getAllDocuments(client, collection, sort, filter = {}) {
 
   return documents;
 }
+
+export async function getDocumentById(client, collection, id) {
+  const db = client.db();
+  const document = await db
+    .collection(collection)
+    .findOne({ _id: new ObjectId(id) });
+  return document;
+}

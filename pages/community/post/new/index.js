@@ -8,8 +8,14 @@ import { Toolbar } from "@/components/tiptap/toolbar"; // 사용자 정의 툴�
 import WriteArea from "@/components/tiptap/writearea";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Button from "@/components/ui/button";
+import { useState } from "react";
 
 export default function PostAddPage() {
+  const [category, setCategory] = useState({
+    mainCategory: "",
+    subCategory: "",
+  });
+
   // useEditor 훅을 사용하여 Tiptap 에디터 인스턴스 생성
   const editor = useEditor({
     extensions: [
@@ -45,9 +51,18 @@ export default function PostAddPage() {
 
     const content = editor.getText(); // 최신 에디터 내용을 이 시점에서 가져와야 함!
 
+    if (!category.mainCategory || !category.subCategory) {
+      alert("내용과 카테고리를 모두 입력해주세요!");
+      return;
+    }
+
     const res = await fetch("/api/posts", {
       method: "POST",
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({
+        content,
+        mainCategory: category.mainCategory,
+        subCategory: category.subCategory,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -62,7 +77,7 @@ export default function PostAddPage() {
       className="flex flex-col bg-[var(--color-bg)] min-h-screen relative w-full"
       onSubmit={handleSubmit}
     >
-      <WriteArea />
+      <WriteArea onCategorySelect={setCategory} />
       {/* 툴바 컴포넌트 (굵게, 이미지 추가, 이모지 등) */}
       <Toolbar editor={editor} />
       {/* 실제 에디터 콘텐츠가 렌더링되는 영역 */}
@@ -96,7 +111,7 @@ export default function PostAddPage() {
         >
           취소
         </Button>
-        <Button type="submit" primary className="flex-grow justify-center">
+        <Button type="button" primary className="flex-grow justify-center">
           등록
         </Button>
       </div>
