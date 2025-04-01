@@ -33,14 +33,24 @@ export default function MainNav() {
         </li>
         <li className={classes.navItem}>
           <Link href="/job" className={classes.navLink}>
-            <Image src="/icons/work.svg" alt="image" width={28} height={28} />
-            <span>구인구직</span>
+            <Image
+              src="/icons/newspaper.svg"
+              alt="image"
+              width={28}
+              height={28}
+            />
+            <span>커뮤니티</span>
           </Link>
         </li>
         <li className={classes.navItem}>
           <Link href="/stay" className={classes.navLink}>
-            <Image src="/icons/stay.svg" alt="image" width={28} height={28} />
-            <span>숙박</span>
+            <Image
+              src="/icons/chat-filled.svg"
+              alt="image"
+              width={28}
+              height={28}
+            />
+            <span>채팅</span>
           </Link>
         </li>
         <li className={classes.navItem}>
