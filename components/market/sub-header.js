@@ -17,7 +17,7 @@ export default function SubHeader() {
           height={24}
         />
       </div>
-      <div className="flex ml-auto gap-8">
+      <div className="flex ml-auto gap-6">
         <button className="cursor-pointer" onClick={toggleSidebar}>
           <Image src="/icons/menu.svg" alt="menu-icon" width={28} height={28} />
         </button>

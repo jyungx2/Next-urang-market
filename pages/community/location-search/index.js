@@ -6,11 +6,11 @@ export default function LocationSearchPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen flex flex-col gap-2">
+    <div className="min-h-screen flex flex-col gap-2 bg-[var(--color-bg)]">
       <div className="grid grid-cols-3 items-center p-4 font-bold border-b border-[var(--color-grey-200)]">
         <button
           className="justify-self-start cursor-pointer"
-          onClick={() => router.push("/community")}
+          onClick={() => router.back()}
         >
           <Image
             src="/icons/chevron-left.svg"
@@ -24,7 +24,7 @@ export default function LocationSearchPage() {
       </div>
       <div className="flex gap-6 p-4">
         <input
-          className="flex-grow bg-[var(--color-grey-50)] rounded-full p-4 text-[1.4rem]"
+          className="flex-grow bg-[var(--color-grey-100)] rounded-full p-4 text-[1.4rem]"
           placeholder="시/군/구, 읍/면/동 단위로 입력하세요."
         />
         <button className="cursor-pointer">

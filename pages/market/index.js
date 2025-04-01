@@ -34,7 +34,7 @@ export default function MarketPage() {
       likeNum: 8,
     },
     {
-      id: 2,
+      id: 3,
       title: "rice cooker",
       location: "캐나다 벤쿠버",
       time: "10m",
@@ -43,7 +43,7 @@ export default function MarketPage() {
       likeNum: 8,
     },
     {
-      id: 2,
+      id: 4,
       title: "rice cooker",
       location: "캐나다 벤쿠버",
       time: "10m",
@@ -52,7 +52,7 @@ export default function MarketPage() {
       likeNum: 8,
     },
     {
-      id: 2,
+      id: 5,
       title: "rice cooker",
       location: "캐나다 벤쿠버",
       time: "10m",

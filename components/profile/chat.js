@@ -9,23 +9,23 @@ export default function Chat({ chats }) {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
-        <h1 className="font-bold text-[2rem]">Chats</h1>
-        <div className="flex gap-4 items-center">
+        <h1 className="font-bold text-[2.4rem]">Chats</h1>
+        <div className="flex gap-6 items-center">
           <button className="cursor-pointer">
-            <Image src="/icons/filter.svg" alt="icon" width={24} height={24} />
+            <Image src="/icons/filter.svg" alt="icon" width={28} height={28} />
           </button>
 
           <button className="cursor-pointer">
             <Image
               src="/icons/bookmark.svg"
               alt="icon"
-              width={24}
-              height={24}
+              width={28}
+              height={28}
             />
           </button>
 
           <button className="cursor-pointer" onClick={toggleNotificationPage}>
-            <Image src="/icons/alarm.svg" alt="icon" width={24} height={24} />
+            <Image src="/icons/alarm.svg" alt="icon" width={28} height={28} />
           </button>
         </div>
       </div>

@@ -8,16 +8,23 @@ export default function UserLocation() {
   return (
     <div className="flex justify-between items-center">
       <button
-        className="flex items-center cursor-pointer bg-[var(--color-secondary-100)] rounded-full p-3"
+        className="flex items-center cursor-pointer bg-[var(--color-secondary-900)] rounded-full p-4 gap-1"
         onClick={() => router.push("/community/location-search")}
       >
-        <Image src="/icons/location.svg" alt="icon" width={20} height={20} />
-        <h3 className="font-bold text-[1.6rem] ml-2">효성동 이웃</h3>
         <Image
-          src="/icons/chevron-down-micro.svg"
+          src="/icons/location-w-filled.svg"
           alt="icon"
-          width={14}
-          height={14}
+          width={18}
+          height={18}
+        />
+        <h3 className="font-bold text-[1.6rem] text-[var(--color-grey-bg)] ml-2">
+          효성동 이웃
+        </h3>
+        <Image
+          src="/icons/chevron-down-w-micro.svg"
+          alt="icon"
+          width={10}
+          height={10}
         />
       </button>
 

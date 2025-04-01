@@ -10,7 +10,7 @@ export default function Profile() {
     <>
       <div className="flex flex-col gap-8">
         <header className="flex justify-between items-center">
-          <h1 className="font-bold text-[2.8rem]">My Profile</h1>
+          <h1 className="font-bold text-[2.4rem]">My Profile</h1>
           <button className="cursor-pointer" onClick={toggleSettingsPage}>
             <Image src="/icons/cog-6.svg" alt="icon" width={30} height={30} />
           </button>

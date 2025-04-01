@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 export default function MainNav() {
   const router = useRouter();
   const currentPath = router.pathname;
+  console.log("currentPath", currentPath);
 
   return (
     <nav className={`${classes.navbar}`}>
@@ -16,39 +17,56 @@ export default function MainNav() {
               src={
                 currentPath === "/"
                   ? "/icons/home.svg"
-                  : "/icons/home-active.svg"
+                  : "/icons/home-inactive.svg"
               }
               alt="image"
-              width={24}
-              height={24}
+              width={26}
+              height={26}
             />
             <span>홈</span>
           </Link>
         </li>
         <li className={classes.navItem}>
           <Link href="/market" className={classes.navLink}>
-            <Image src="/icons/market.svg" alt="image" width={28} height={28} />
+            <Image
+              src={
+                currentPath === "/market"
+                  ? "/icons/dollar.svg"
+                  : "/icons/dollar-inactive.svg"
+              }
+              alt="image"
+              width={26}
+              height={26}
+            />
             <span>사고팔고</span>
           </Link>
         </li>
         <li className={classes.navItem}>
-          <Link href="/job" className={classes.navLink}>
+          <Link href="/community/notice" className={classes.navLink}>
             <Image
-              src="/icons/newspaper.svg"
+              src={
+                currentPath.includes("/community")
+                  ? "/icons/newspaper.svg"
+                  : "/icons/newspaper-inactive.svg"
+              }
               alt="image"
-              width={28}
-              height={28}
+              width={26}
+              height={26}
             />
             <span>커뮤니티</span>
           </Link>
         </li>
         <li className={classes.navItem}>
-          <Link href="/stay" className={classes.navLink}>
+          <Link href="/chat" className={classes.navLink}>
             <Image
-              src="/icons/chat-filled.svg"
+              src={
+                currentPath === "/chat"
+                  ? "/icons/chat-filled.svg"
+                  : "/icons/chat-inactive.svg"
+              }
               alt="image"
-              width={28}
-              height={28}
+              width={26}
+              height={26}
             />
             <span>채팅</span>
           </Link>
@@ -56,10 +74,14 @@ export default function MainNav() {
         <li className={classes.navItem}>
           <Link href="/profile" className={classes.navLink}>
             <Image
-              src="/icons/profile.svg"
+              src={
+                currentPath === "/profile"
+                  ? "/icons/profile.svg"
+                  : "/icons/profile-inactive.svg"
+              }
               alt="image"
-              width={28}
-              height={28}
+              width={26}
+              height={26}
             />
             <span>프로필</span>
           </Link>
