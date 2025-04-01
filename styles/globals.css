@@ -186,3 +186,32 @@ body {
 
 /* 2. editorProps.attributes.class로 직접 class 부여하기 */
 /* Tailwind를 사용하는 프로젝트에서 더 선호되는 방식(클래스 기반으로 스타일을 관리하니까 Tailwind와 일관성 있게 맞출 수 있고, 전역 CSS 없이도 유지보수하기 좋음)  */
+
+/* ⛔️ [contenteditable]:empty는 텍스트를 입력했다가 지우면 <br> 같은 게 남아서 진짜 empty가 아닌 상태로 처리돼서 placeholder가 다시 안 보이는 현상이 생김. => 불안정한 방식 => JS로 상태 추적 후 클래스 추가하는 방식으로 가자 */
+/* .textarea[contenteditable]:empty::before {
+  content: attr(placeholder);
+  color: var(--color-grey-400);
+  pointer-events: none;
+} */
+
+/* React에서 isEmpty === true일 때만 'empty' 클래스를 수동으로 붙여서 표시 */
+.textarea {
+  position: relative;
+  min-height: 80px;
+  font-size: 1.4rem;
+  outline: none;
+  white-space: pre-wrap;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+}
+
+.textarea.empty::before {
+  content: attr(placeholder);
+  color: #aaa;
+  pointer-events: none;
+  display: block; /* 타이핑 후, 모든 입력값 지웠을 때, 줄바꿈 일으키는 요소 */
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  white-space: pre-wrap;
+}

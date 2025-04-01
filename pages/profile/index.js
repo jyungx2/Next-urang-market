@@ -1,8 +1,4 @@
-import Notification from "@/components/common/notification";
-import SettingsPage from "@/components/common/settings";
-import Chat from "@/components/profile/chat";
 import Profile from "@/components/profile/profile";
-import ProfileLayout from "@/pages/profile/layout";
 import UIContext from "@/store/ui-context";
 import { useContext } from "react";
 
