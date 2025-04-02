@@ -1,9 +1,9 @@
 import CategoryModal from "@/components/community/category-modal";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function WriteArea({ onCategorySelect }) {
+export default function WriteArea({ titleRef, onCategorySelect }) {
   const router = useRouter();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -11,6 +11,14 @@ export default function WriteArea({ onCategorySelect }) {
     mainCategory: "",
     subCategory: "",
   });
+
+  const isNoticeCategory = selected.mainCategory === "공지사항";
+
+  useEffect(() => {
+    console.log("✅ selected:", selected);
+    console.log("✅ mainCategory:", selected.mainCategory);
+    console.log("✅ isNoticeCategory:", isNoticeCategory);
+  }, [selected]);
 
   const handleCategorySelect = (category) => {
     setSelected(category);
@@ -34,6 +42,18 @@ export default function WriteArea({ onCategorySelect }) {
           등록
         </button>
       </div>
+
+      {/* 적용안됨xx */}
+      <div className="w-full p-4 border-b border-[var(--color-grey-200)]">
+        <label>TITLE</label>
+        <input
+          ref={titleRef}
+          type="text"
+          placeholder="제목을 입력하세요"
+          required
+        />
+      </div>
+
       <div className="w-full p-4 border-b border-[var(--color-grey-200)]">
         효성동
       </div>

@@ -9,8 +9,8 @@ export default function WriteArea({ onCategorySelect }) {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState({
-    mainCategory: "",
-    subCategory: "",
+    mainCategory: {},
+    subCategory: {},
   });
 
   const handleCategorySelect = (category) => {
@@ -48,8 +48,8 @@ export default function WriteArea({ onCategorySelect }) {
           className="w-full flex items-center py-3 text-left"
           type="button"
         >
-          {selected.mainCategory && selected.subCategory
-            ? `${selected.mainCategory} / ${selected.subCategory}`
+          {selected.mainCategory.name && selected.subCategory.label
+            ? `${selected.mainCategory.name} / ${selected.subCategory.label}`
             : "게시글의 주제를 선택해주세요."}
           <Image
             src="/icons/chevron-down.svg"

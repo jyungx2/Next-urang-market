@@ -37,11 +37,15 @@ export default function CommunityPage() {
     return data;
   };
 
+  // 🖍️useSWR은 캐싱기능 보유. mutate()로 기존 데이터 revalidate 해주지 않으면 기존 데이터 가져다 써서 업데이트 불가.
+  // ⚠️ refreshInterval은 가능은 하지만 비추천함 - 불필요한 네트워크 요청과 성능 낭비 때문. => 유저의 데이터 요청이 없어도 실행 & 여러 유저가 동시에 사용하면 서버 부하 & 모바일/저사양 디바이스에 부담 & 특정 이벤트 이후만 갱신한다는 CSR 사용목적에 맞지 않음
+  // BUT, 실시간 채팅/실시간 알림/주식시세/환율/라이브 스코어 등의 기능에는 유용
   const { data, error, isLoading } = useSWR(
     shouldFetch
       ? `/api/posts?mainCategory=${mainCategory}&subCategory=${subCategory}`
       : null,
     fetcher
+    // { refreshInterval: 5000 } // 5초마다 자동 갱신
   );
 
   if (error) {
@@ -55,7 +59,9 @@ export default function CommunityPage() {
   if (isLoading) {
     return (
       <CommunityLayout>
-        <p>⏳ 데이터를 불러오는 중입니다...</p>
+        <p className="text-center font-medium text-[2rem]">
+          ⏳ 데이터를 불러오는 중입니다...
+        </p>
       </CommunityLayout>
     );
   }
@@ -74,13 +80,6 @@ export default function CommunityPage() {
       createdAt: "2025.02.28",
       views: 56,
       title: "유랑마켓 포인트 적립 꿀팁!",
-    },
-    {
-      id: 3,
-      writer: "김유랑",
-      createdAt: "2025.02.11",
-      views: 1463,
-      title: "영국 워홀 총 정리 (자격조건/신청방법/준비서류/eVisa/Vignette 등)",
     },
   ];
 

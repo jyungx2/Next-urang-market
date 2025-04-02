@@ -8,14 +8,22 @@ import { Toolbar } from "@/components/tiptap/toolbar"; // 사용자 정의 툴�
 import WriteArea from "@/components/tiptap/writearea";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Button from "@/components/ui/button";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CustomPlaceholder } from "@/extensions/custom-placeholder";
+import { Router } from "lucide-react";
+import { useRouter } from "next/router";
+import { mutate } from "swr";
 
 export default function PostAddPage() {
+  const router = useRouter();
+  // CATEGORY
   const [category, setCategory] = useState({
-    mainCategory: "",
-    subCategory: "",
+    mainCategory: {},
+    subCategory: {},
   });
+
+  // TITLE
+  const titleRef = useRef();
 
   // useEditor 훅을 사용하여 Tiptap 에디터 인스턴스 생성
   const editor = useEditor({
@@ -47,25 +55,37 @@ export default function PostAddPage() {
     },
   });
 
-  // editor가 존재할 때만 렌더링
-  if (!editor) return null;
-
   async function handleSubmit(e) {
     e.preventDefault();
 
+    // CONTENT
     const content = editor.getText(); // 최신 에디터 내용을 이 시점에서 가져와야 함!
 
-    if (!category.mainCategory || !category.subCategory) {
-      alert("내용과 카테고리를 모두 입력해주세요!");
+    // TITLE
+    const title = titleRef.current?.value.trim() || "";
+
+    if (category.mainCategory.name === "공지사항" && !title) {
+      alert("제목을 입력해주세요!");
+      return;
+    }
+
+    if (!content) {
+      alert("내용을 입력해주세요!");
+      return;
+    }
+
+    if (!category.mainCategory.name || !category.subCategory.label) {
+      alert("카테고리를 선택해주세요!");
       return;
     }
 
     const res = await fetch("/api/posts", {
       method: "POST",
       body: JSON.stringify({
+        title: category.mainCategory.name === "공지사항" ? title : null,
         content,
-        mainCategory: category.mainCategory,
-        subCategory: category.subCategory,
+        mainCategory: category.mainCategory.name,
+        subCategory: category.subCategory.label,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -74,6 +94,16 @@ export default function PostAddPage() {
 
     const data = await res.json();
     console.log("게시글 등록 완료", data);
+
+    // 캐시 무효화
+    mutate(
+      `/api/posts?mainCategory=${category.mainCategory.slug}&subCategory=${category.subCategory.tab}`
+    );
+
+    // 해당 서브카테고리 페이지로 이동
+    router.push(
+      `/community/${category.mainCategory.slug}?tab=${category.subCategory.tab}`
+    );
   }
 
   return (
@@ -81,7 +111,7 @@ export default function PostAddPage() {
       className="flex flex-col bg-[var(--color-bg)] min-h-screen relative w-full"
       onSubmit={handleSubmit}
     >
-      <WriteArea onCategorySelect={setCategory} />
+      <WriteArea titleRef={titleRef} onCategorySelect={setCategory} />
       {/* 툴바 컴포넌트 (굵게, 이미지 추가, 이모지 등) */}
       <Toolbar editor={editor} />
       {/* 실제 에디터 콘텐츠가 렌더링되는 영역 */}

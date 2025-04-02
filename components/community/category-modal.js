@@ -50,9 +50,16 @@ export default function CategoryModal({ isOpen, onClose, onSelect }) {
                       type="button"
                       key={sub.id}
                       onClick={() => {
+                        console.log(cat.name, sub.label);
                         onSelect({
-                          mainCategory: cat.name,
-                          subCategory: sub.label,
+                          mainCategory: {
+                            name: cat.name, // "공지사항" — 한글 라벨
+                            slug: cat.slug, // "notice" — 영어 slug
+                          },
+                          subCategory: {
+                            label: sub.label, // "필독공지"
+                            tab: sub.tab, // "must-notice"
+                          },
                         });
                         onClose();
                       }}
@@ -70,3 +77,14 @@ export default function CategoryModal({ isOpen, onClose, onSelect }) {
     </AnimatePresence>
   );
 }
+
+// onSelect({
+//   mainCategory: {
+//     name: cat.name, // "공지사항" — 한글 라벨
+//     slug: cat.slug, // "notice" — 영어 slug
+//   },
+//   subCategory: {
+//     label: sub.label, // "필독공지"
+//     tab: sub.tab, // "must-notice"
+//   },
+// });
