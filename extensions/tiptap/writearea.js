@@ -5,7 +5,6 @@ import { useState } from "react";
 
 export default function WriteArea({ onCategorySelect }) {
   const router = useRouter();
-  console.log(router.query);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState({

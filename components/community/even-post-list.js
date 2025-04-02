@@ -9,7 +9,7 @@ export default function EvenPostList({ items }) {
     <ul className="flex flex-col gap-6">
       {items.map((item) => (
         <EvenPostItem
-          key={item.id}
+          key={item._id}
           writer={item.writer}
           createdAt={String(item.createdAt)}
           location={item.location}

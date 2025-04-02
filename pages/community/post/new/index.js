@@ -116,7 +116,7 @@ export default function PostAddPage() {
         >
           취소
         </Button>
-        <Button type="button" primary className="flex-grow justify-center">
+        <Button type="submit" primary className="flex-grow justify-center">
           등록
         </Button>
       </div>

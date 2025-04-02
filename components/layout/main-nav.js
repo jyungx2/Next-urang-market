@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 export default function MainNav() {
   const router = useRouter();
   const currentPath = router.pathname;
-  console.log("currentPath", currentPath);
 
   return (
     <nav className={`${classes.navbar}`}>

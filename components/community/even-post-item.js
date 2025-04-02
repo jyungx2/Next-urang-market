@@ -1,13 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function TalkPostItem({
-  writer,
-  createdAt,
-  location,
-  content,
-  onDetail,
-}) {
+export default function TalkPostItem({ createdAt, content, onDetail }) {
   return (
     <div
       className="flex flex-col gap-6 border-t-[10px] border-[var(--color-grey-100)] p-4 cursor-pointer"
@@ -22,7 +16,7 @@ export default function TalkPostItem({
             height={24}
             className="rounded-full aspect-square object-cover"
           />
-          <span className="font-bold">{writer}</span>
+          <span className="font-bold">지영</span>
         </Link>
 
         <span className="text-gray-500">{createdAt}</span>
@@ -33,7 +27,7 @@ export default function TalkPostItem({
             width={14}
             height={14}
           />
-          {location}
+          하드코딩
         </span>
       </div>
 

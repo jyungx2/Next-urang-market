@@ -17,10 +17,11 @@ export default async function handler(req, res) {
 
   // POST HTTP
   if (req.method === "POST") {
-    const { content } = req.body;
+    const { content, mainCategory, subCategory } = req.body;
+    console.log(req.query);
 
     // Validation for server-side
-    if (!content) {
+    if (!content || !mainCategory || !subCategory) {
       res.status(422).json({ message: "Invalid input - post" });
       client.close();
       return;
@@ -28,6 +29,8 @@ export default async function handler(req, res) {
 
     const newPost = {
       content,
+      mainCategory,
+      subCategory,
       createdAt: new Date(),
     };
 
@@ -45,12 +48,11 @@ export default async function handler(req, res) {
 
   // GET HTTP
   if (req.method === "GET") {
-    const { mainCategory } = req.query;
+    const { mainCategory, subCategory } = req.query;
 
-    let filter = {};
-    if (mainCategory) {
-      filter = { mainCategory };
-    }
+    const filter = {};
+    if (mainCategory) filter.mainCategory = mainCategory;
+    if (subCategory) filter.subCategory = subCategory;
 
     try {
       const documents = await getAllDocuments(
