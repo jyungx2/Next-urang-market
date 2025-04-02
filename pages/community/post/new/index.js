@@ -9,6 +9,7 @@ import WriteArea from "@/components/tiptap/writearea";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Button from "@/components/ui/button";
 import { useState } from "react";
+import { CustomPlaceholder } from "@/extensions/custom-placeholder";
 
 export default function PostAddPage() {
   const [category, setCategory] = useState({
@@ -29,16 +30,19 @@ export default function PostAddPage() {
       HorizontalRule,
       // 🔥 Placeholder.configure({ placeholder: "..." })는 HTML 속성만 채워줄 뿐!
       // 👉 진짜 텍스트를 보여주는 건 CSS에서 ::before로 처리해야 함.
-      Placeholder.configure({
-        placeholder: "",
-      }),
+      // Placeholder.configure({
+      //   placeholder:
+      //     "이웃에게 동네 정보를 공유하거나 물어보세요.\n동네와 주변 지역의 이웃들까지 볼 수 있어요.\n\n잠깐! 거래글은 꼭 [이웃 중고거래]에 올려주세요.\n이웃소식에 거래글을 등록하면 삭제될 수 있습니다.",
+      // }),
+      CustomPlaceholder,
       //  여기서 "custom-placeholder"는 data-placeholder 속성으로 들어감
       // ❌ 하지만 이 상태만으론 아무것도 보이지 않음
     ],
     content: "", // 초기 에디터 내용
     editorProps: {
       attributes: {
-        class: "focus:outline-none",
+        class:
+          "ProseMirror focus:outline-none text-2xl flex-grow leading-relaxed",
       },
     },
   });
@@ -86,7 +90,7 @@ export default function PostAddPage() {
       {/* 커스텀 placeholder */}
       {editor.isEmpty && (
         <div className="absolute top-79 left-8 text-gray-400 pointer-events-none space-y-1">
-          <p>이웃에게 동네 정보를 공유하거나 물어보세요.</p>
+          {/* <p>이웃에게 동네 정보를 공유하거나 물어보세요.</p>
           <p>동네와 주변 지역의 이웃들까지 볼 수 있어요.</p>
           <br />
           <p>
@@ -99,7 +103,7 @@ export default function PostAddPage() {
             </NextLink>{" "}
             에 올려주세요.
           </p>
-          <p>이웃소식에 거래글을 등록하면 삭제될 수 있습니다.</p>
+          <p>이웃소식에 거래글을 등록하면 삭제될 수 있습니다.</p> */}
         </div>
       )}
 
