@@ -79,7 +79,6 @@ export const Toolbar = ({ editor }) => {
 
       {/* 굵게 */}
       <button
-        type="button"
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={`p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer ${
           editor.isActive("bold") ? classes["is-active"] : ""
@@ -91,7 +90,6 @@ export const Toolbar = ({ editor }) => {
 
       {/* 이탤릭 */}
       <button
-        type="button"
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer ${
           editor.isActive("italic") ? classes["is-active"] : ""
@@ -103,7 +101,6 @@ export const Toolbar = ({ editor }) => {
 
       {/* Strike */}
       <button
-        type="button"
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer ${
           editor.isActive("strike") ? classes["is-active"] : ""
@@ -115,7 +112,6 @@ export const Toolbar = ({ editor }) => {
 
       {/* 구분선 추가 (isActive 적용 대상 아님) */}
       <button
-        type="button"
         className="p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer"
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
       >
@@ -124,7 +120,6 @@ export const Toolbar = ({ editor }) => {
 
       {/* 이미지 추가 (isActive 적용 대상 아님) */}
       <button
-        type="button"
         onClick={triggerImageUpload}
         className="p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer"
         title="사진 추가"
@@ -134,7 +129,6 @@ export const Toolbar = ({ editor }) => {
 
       {/* 동영상 추가 (isActive 적용 대상 아님) */}
       <button
-        type="button"
         onClick={triggerVideoUpload}
         className="p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer"
         title="동영상 추가"
@@ -144,7 +138,6 @@ export const Toolbar = ({ editor }) => {
 
       {/* 링크 추가 */}
       <button
-        type="button"
         onClick={addLink}
         className={`p-2 hover:bg-[var(--color-grey-200)] rounded cursor-pointer ${
           editor.isActive("link") ? classes["is-active"] : ""

@@ -88,9 +88,9 @@ export default function PostAddPage() {
       <EditorContent editor={editor} className="text-2xl p-8 flex-grow" />
 
       {/* 커스텀 placeholder */}
-      {editor.isEmpty && (
+      {/* {editor.isEmpty && (
         <div className="absolute top-79 left-8 text-gray-400 pointer-events-none space-y-1">
-          {/* <p>이웃에게 동네 정보를 공유하거나 물어보세요.</p>
+          <p>이웃에게 동네 정보를 공유하거나 물어보세요.</p>
           <p>동네와 주변 지역의 이웃들까지 볼 수 있어요.</p>
           <br />
           <p>
@@ -103,12 +103,13 @@ export default function PostAddPage() {
             </NextLink>{" "}
             에 올려주세요.
           </p>
-          <p>이웃소식에 거래글을 등록하면 삭제될 수 있습니다.</p> */}
+          <p>이웃소식에 거래글을 등록하면 삭제될 수 있습니다.</p>
         </div>
-      )}
+      )} */}
 
       <div className="flex p-8 gap-2">
         <Button
+          type="button"
           link="/community"
           secondary
           className="flex-grow justify-center"

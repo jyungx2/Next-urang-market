@@ -31,10 +31,7 @@ export default function WriteArea({ onCategorySelect }) {
           />
         </button>
 
-        <button
-          type="button"
-          className="text-[var(--color-secondary-800)] font-bold rounded-[6px] px-4 py-2 bg-[var(--color-secondary-50)] cursor-pointer"
-        >
+        <button className="text-[var(--color-secondary-800)] font-bold rounded-[6px] px-4 py-2 bg-[var(--color-secondary-50)] cursor-pointer">
           등록
         </button>
       </div>

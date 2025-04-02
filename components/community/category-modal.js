@@ -22,7 +22,7 @@ export default function CategoryModal({ isOpen, onClose, onSelect }) {
 
           {/* 아래에서 위로 슬라이드되는 모달 */}
           <motion.div
-            className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6 z-50 max-h-[70vh] max-w-[640px] w-full mx-auto overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 bg-[var(--color-grey-100)] rounded-t-2xl p-6 z-50 max-h-[70vh] max-w-[640px] w-full mx-auto overflow-y-auto"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -34,7 +34,7 @@ export default function CategoryModal({ isOpen, onClose, onSelect }) {
               </h2>
               <button
                 onClick={onClose}
-                className="text-[1.6rem] text-gray-400 cursor-pointer"
+                className="text-[1.6rem] text-grey-500 cursor-pointer"
                 type="button"
               >
                 닫기
@@ -47,6 +47,7 @@ export default function CategoryModal({ isOpen, onClose, onSelect }) {
                 <div className="flex flex-wrap gap-4">
                   {cat.subCategories.map((sub) => (
                     <button
+                      type="button"
                       key={sub.id}
                       onClick={() => {
                         onSelect({
