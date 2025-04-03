@@ -1,9 +1,10 @@
 import CommentItem from "@/components/community/comment-item";
+import categoryData from "@/data/category";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
-export default function PostDetailPage() {
+export default function PostDetailPage({ selectedPost }) {
   const router = useRouter();
   const { mainCategory, tab } = router.query;
 
@@ -74,10 +75,7 @@ export default function PostDetailPage() {
 
       {/* 내용물 */}
       <div>
-        <p className="text-[1.4rem]">
-          시방이나 영종도 말고도 연안부두나 만석부두 등 근처에 짬낚으로 우럭이나
-          잡을만한 곳 없을까영?ㅎ 낚금으로 들었는데 전체 다 낚금인가요?
-        </p>
+        <p className="text-[1.4rem]">{selectedPost.content}</p>
       </div>
 
       {/* 댓글 리셋 & 좋아요 섹션 */}
@@ -196,22 +194,37 @@ export default function PostDetailPage() {
   );
 }
 
+// ✅ 해당 URL에 어떤 데이터를 넘길지 결정
+// api/posts/[postId] - getDocumentById(): 각 경로에서 필요한 개별 게시글 데이터를 가져오는 용도 (특정 post의 id로 상세 데이터 요청)
 export async function getStaticProps(context) {
   const postId = context.params.postId;
 
   const res = await fetch(`http://localhost:3000/api/posts/${postId}`);
 
-  const data = res.json();
+  const data = await res.json();
   console.log(postId, res, data);
+
+  if (!data.post) {
+    return {
+      notFound: true, // 404 페이지로 이동
+    };
+  }
 
   return {
     props: { selectedPost: data.post },
   };
 }
 
+// ✅ 어떤 URL을 빌드할지 결정 -> 모든 post의 mainCategory, postId 명시
 export async function getStaticPaths() {
-  const paths = categoryData.map((cat) => ({
-    params: { mainCategory: cat.slug },
+  const res = await fetch("http://localhost:3000/api/posts");
+  const data = await res.json();
+
+  const paths = data.posts.map((post) => ({
+    params: {
+      mainCategory: post.mainCategory,
+      postId: post._id.toString(),
+    },
   }));
 
   return {
