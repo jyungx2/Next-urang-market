@@ -1,7 +1,25 @@
 import CarrierModal from "@/components/user/carrier-modal";
 import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
+
+async function createUser(username, birthdate) {
+  const response = await fetch("/api/auth/signup", {
+    method: "POST",
+    body: JSON.stringify({ username, birthdate }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "something went wrong!");
+  }
+
+  return data;
+}
 
 export default function SignupPage() {
   const [selectedCarrier, setSelectedCarrier] = useState("통신사"); // 선택된 통신사 (기본값: 라벨 '통신사')
@@ -14,6 +32,23 @@ export default function SignupPage() {
   const handleSelectCarrier = (carrier) => {
     setSelectedCarrier(carrier); // 선택한 통신사 상태 업데이트
     closeModal();
+  };
+
+  const usernameRef = useRef();
+  const birthdateRef = useRef();
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const enteredUsername = usernameRef.current.value;
+    const enteredBirthdate = birthdateRef.current.value;
+
+    try {
+      const result = await createUser(enteredUsername, enteredBirthdate);
+      console.log(result);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -36,7 +71,7 @@ export default function SignupPage() {
         </h1>
       </header>
 
-      <div className="flex flex-col gap-8">
+      <form onSubmit={submitHandler} className="flex flex-col gap-8 flex-grow">
         <div className="flex flex-col gap-4">
           <label className="text-[2rem] font-bold">Enter your full name</label>
           <div
@@ -46,6 +81,7 @@ export default function SignupPage() {
               type="text"
               placeholder="Enter name"
               className="inputUnset inputCustom"
+              ref={usernameRef}
             />
           </div>
         </div>
@@ -60,6 +96,7 @@ export default function SignupPage() {
               type="type"
               placeholder="yy/mm/dd"
               className="inputUnset inputCustom"
+              ref={birthdateRef}
             />
           </div>
         </div>
@@ -115,13 +152,16 @@ export default function SignupPage() {
             <span className="p-4">4:58</span>
           </div>
         </div>
-      </div>
 
-      <div className="mt-auto">
-        <button className="font-bold h-[4rem] bg-[var(--color-primary-500)] p-4 w-full rounded-lg text-white cursor-pointer hover:bg-[var(--color-primary-700)]">
-          Confirm
-        </button>
-      </div>
+        <div className="mt-auto">
+          <button
+            type="submit"
+            className="font-bold h-[4rem] bg-[var(--color-primary-500)] p-4 w-full rounded-lg text-white cursor-pointer hover:bg-[var(--color-primary-700)]"
+          >
+            Confirm
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

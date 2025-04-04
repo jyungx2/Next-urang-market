@@ -17,6 +17,7 @@ export default NextAuth({
 
         const user = await usersCollection.findOne({
           username: credentials.username,
+          birthdate: credentials.birthdate,
         });
 
         if (!user) {
@@ -27,6 +28,7 @@ export default NextAuth({
         return {
           id: user._id.toString(),
           username: user.username,
+          birthdate: user.birthdate.toString(),
           role: user.role,
         };
       },
@@ -37,6 +39,7 @@ export default NextAuth({
       if (user) {
         token.id = user.id;
         token.username = user.username;
+        token.birthdate = user.birthdate;
         token.role = user.role;
       }
       return token;
@@ -44,6 +47,7 @@ export default NextAuth({
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.username = token.username;
+      session.user.birthdate = token.birthdate;
       session.user.role = token.role;
       return session;
     },

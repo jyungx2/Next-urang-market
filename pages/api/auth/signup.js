@@ -1,4 +1,4 @@
-import { connectDatabase } from "@/helpers/db-util";
+import { connectDatabase, insertDocument } from "@/helpers/db-util";
 
 async function handler(req, res) {
   // if (req.method !== "POST ") {
@@ -11,8 +11,7 @@ async function handler(req, res) {
 
     if (!username || !birthdate) {
       res.status(422).json({
-        message:
-          "Invalid input - password should also be at least 7 characters long.",
+        message: "Invalid input - please type in your name and date of birth.",
       });
       return;
     }
@@ -24,6 +23,7 @@ async function handler(req, res) {
     const existingUser = await db
       .collection("users")
       .findOne({ username: username });
+    // 💡 phoneNumber: phoneNumber도 추가! (동명이인 가능성 o)
 
     if (existingUser) {
       res.status(422).json({ message: "User exists already!" });
@@ -32,12 +32,17 @@ async function handler(req, res) {
     }
 
     // ✅ 특정 이메일은 관리자 계정으로 자동 등록
-    const isAdmin = email === "admin@urang.com"; // ← 원하는 이메일 주소 넣기
+    const isAdmin = username === "김유랑"; // ← 원하는 이메일 주소 넣기
 
-    await db.collection("users").insertOne({
-      username,
-      role: isAdmin ? "admin" : "user",
-    });
+    const newUser = { username, birthdate, role: isAdmin ? "admin" : "user" };
+
+    try {
+      const result = await insertDocument(client, "users", newUser);
+      newUser._id = result.insertedId;
+      res.status(201).json({ message: "Created User!" });
+    } catch (err) {
+      res.status(500).json({ message: "Registering user failed!" });
+    }
 
     // const hashedPassword = await hashPassword(password);
 
@@ -46,7 +51,6 @@ async function handler(req, res) {
     //   password: hashedPassword,
     // });
 
-    res.status(201).json({ message: "Created User!" });
     client.close();
   }
 }
