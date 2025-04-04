@@ -134,8 +134,8 @@ body {
 .textareaCustom {
   display: block;
   width: 100%;
-  padding: 10px;
-  font-size: 14px;
+  padding: 1rem;
+  font-size: 1.4rem;
   box-sizing: border-box;
 }
 
@@ -147,6 +147,7 @@ body {
 .inputCustom {
   display: block;
   width: 100%;
+  height: 4rem;
   padding: 0 4px;
   box-sizing: border-box;
 }
