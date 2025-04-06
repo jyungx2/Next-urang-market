@@ -1,6 +1,7 @@
 import CarrierModal from "@/components/user/carrier-modal";
 import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
 async function createUser(username, birthdate) {
@@ -22,6 +23,7 @@ async function createUser(username, birthdate) {
 }
 
 export default function SignupPage() {
+  const router = useRouter();
   const [selectedCarrier, setSelectedCarrier] = useState("통신사"); // 선택된 통신사 (기본값: 라벨 '통신사')
   const [modalOpen, setModalOpen] = useState(false); // 모달 열림 여부 상태
 
