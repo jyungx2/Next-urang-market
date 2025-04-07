@@ -25,7 +25,7 @@ export default function SearchPage() {
           />
         </button>
 
-        <div className="border rounded grow p-3">
+        <div className="border rounded grow">
           <input
             type="text"
             placeholder="검색어를 입력해주세요."
