@@ -8,6 +8,7 @@ import { useContext, useEffect } from "react";
 import Head from "next/head";
 import UIContext from "@/store/ui-context";
 import SearchPage from "@/components/common/searchPage";
+import Layout from "@/components/layout/layout";
 
 export default function Home() {
   const { isSearchOpen, isSidebarOpen } = useContext(UIContext);
@@ -53,5 +54,10 @@ export default function Home() {
     </>
   );
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+Home.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>; // Layout 안 씌움
+};
 
 // 1) 워홀준비섹션: getStaticProps()로 데이터 페칭 함수 작성 -> props로 넘기기

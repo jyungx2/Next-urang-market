@@ -1,15 +1,18 @@
+import Layout from "@/components/layout/layout";
 import Profile from "@/components/profile/profile";
-import UIContext from "@/store/ui-context";
-import { useContext } from "react";
+import ProfileLayout from "@/pages/profile/layout";
 
 export default function ProfilePage() {
-  const { isSettingsOpen } = useContext(UIContext);
-
   return (
-    <div className="flex flex-col p-6 bg-[var(--color-bg)] min-h-screen">
+    <ProfileLayout>
       <main className="flex flex-col gap-14">
-        {!isSettingsOpen && <Profile />}
+        <Profile />
       </main>
-    </div>
+    </ProfileLayout>
   );
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+ProfilePage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>; // Layout 안 씌움
+};

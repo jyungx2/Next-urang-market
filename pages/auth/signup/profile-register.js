@@ -3,8 +3,10 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { useRouter } from "next/router";
 
 export default function ProfileRegisterPage() {
+  const router = useRouter();
   const [profileImage, setProfileImage] = useState();
   const [isOpen, setIsOpen] = useState(false);
 

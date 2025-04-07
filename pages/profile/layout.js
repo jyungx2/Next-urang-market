@@ -7,10 +7,13 @@ export default function ProfileLayout({ children }) {
 
   return (
     <>
-      {isSettingsOpen && <SettingsPage />}
-      <div className="flex flex-col p-6 bg-[var(--color-bg)] min-h-screen">
-        <main className="flex flex-col gap-14">{children}</main>
-      </div>
+      {isSettingsOpen ? (
+        <SettingsPage />
+      ) : (
+        <div className="flex flex-col p-6 bg-[var(--color-bg)] min-h-screen">
+          <main className="flex flex-col gap-14">{children}</main>
+        </div>
+      )}
     </>
   );
 }

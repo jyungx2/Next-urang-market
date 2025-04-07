@@ -6,6 +6,7 @@ import UIContext from "@/store/ui-context";
 import { useContext, useEffect, useState } from "react";
 import Notification from "@/components/common/notification";
 import MarketAddPost from "@/components/ui/market-addPost";
+import Layout from "@/components/layout/layout";
 
 export default function MarketPage() {
   const { isSidebarOpen, isSearchOpen, isNotificationOpen } =
@@ -117,3 +118,8 @@ export default function MarketPage() {
     </>
   );
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+MarketPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>; // Layout 안 씌움
+};

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import OddPostList from "@/components/community/odd-post-list";
 import categoryData from "@/data/category";
 import useSWR from "swr";
+import Layout from "@/components/layout/layout";
 
 function getKoreanCategory(mainSlug, subSlug) {
   const main = categoryData.find((cat) => cat.slug === mainSlug);
@@ -132,3 +133,8 @@ export default function CommunityPage() {
 //     fallback: "blocking",
 //   };
 // }
+
+// ✅ Layout 적용되도록 getLayout 설정
+CommunityPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>; // Layout 안 씌움
+};

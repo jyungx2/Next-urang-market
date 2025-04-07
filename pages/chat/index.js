@@ -1,4 +1,5 @@
 import Notification from "@/components/common/notification";
+import Layout from "@/components/layout/layout";
 import Chat from "@/components/profile/chat";
 import UIContext from "@/store/ui-context";
 import { useContext } from "react";
@@ -79,3 +80,8 @@ export default function StayPage() {
     </div>
   );
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+StayPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>; // Layout 안 씌움
+};
