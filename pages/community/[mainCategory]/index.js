@@ -104,7 +104,8 @@ export default function CommunityPage() {
 }
 
 // export async function getStaticProps(context) {
-//   const mainCategory = context.params.mainCategory; // ❌❌server side 함수는 query 속성 사용 불가능!!❌❌❌ -> path parameter인 mainCategory만 받을 수 있고, 실질적인 데이터 구분점인 subCategory는 못받기 때문에, SSR, ISR(SSG) 불가능. -> query string이 관여하는 데이터 페칭 로직은 CSR으로만 가능!!
+//   const mainCategory = context.params.mainCategory; // ❌❌server side 함수는 query 속성 사용 불가능!!❌❌❌ -> path parameter인 mainCategory만 받을 수 있고, 실질적인 데이터 구분점인 subCategory는 못받기 때문에, SSR, ISR(SSG) 불가능.
+// -> 🌟🌟🌟query string이 관여하는 데이터 페칭 로직은 CSR으로만 가능!!🌟🌟🌟
 //   console.log("context-params", context.params);
 //   // etStaticProps는 서버에서 실행되므로 절대경로가 필요..
 //   // fetch("/api/posts")는 브라우저에서는 잘 작동하지만, getStaticProps는 Next.js 서버에서 실행되기 때문에 상대 경로(/api/...)로는 요청을 못 보낸다.

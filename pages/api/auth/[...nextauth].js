@@ -8,7 +8,11 @@ export default NextAuth({
   },
   providers: [
     CredentialProvider({
-      id: "credentials",
+      id: "phoneLogin",
+      credentials: {
+        phoneNumber: { label: "Phone Number", type: "text" },
+        code: { label: "Code", type: "text" },
+      },
       async authorize(credentials) {
         const client = await connectDatabase();
         const usersCollection = client

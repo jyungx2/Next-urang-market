@@ -4,7 +4,8 @@ import coolsms from "coolsms-node-sdk";
 const codeStore = new Map();
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
+  if (req.method !== "POST")
+    return res.status(405).json({ error: "Method not allowed" });
 
   const { phoneNumber } = req.body;
   if (!phoneNumber)
@@ -15,7 +16,8 @@ export default async function handler(req, res) {
   ).toString();
 
   // 1. 인증번호 문자 전송
-  const messageService = new coolsms.default(
+  // 🚨✅ coolsms.default is not a constructor
+  const messageService = new coolsms(
     process.env.COOLSMS_API_KEY,
     process.env.COOLSMS_API_SECRET
   );
@@ -23,7 +25,7 @@ export default async function handler(req, res) {
   try {
     await messageService.sendOne({
       to: phoneNumber,
-      from: "발신번호", // 사전에 등록된 발신번호 (010-xxxx-xxxx)
+      from: process.env.COOLSMS_SENDER, // 사전에 등록된 발신번호 (010-xxxx-xxxx)
       text: `[유랑마켓] 인증번호는 ${verificationCode} 입니다.`,
     });
 
