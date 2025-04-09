@@ -1,4 +1,5 @@
 import CarrierModal from "@/components/user/carrier-modal";
+import Timer from "@/components/user/timer";
 import useUserStore from "@/zustand/userStore";
 import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence } from "framer-motion";
@@ -12,6 +13,7 @@ const phoneExp = /^01[0-9]-?\d{3,4}-?\d{4}$/;
 
 export default function SignupForm() {
   const router = useRouter();
+  const [timeLeft, setTimeLeft] = useState(180); // 3분 = 180초
 
   // 1️⃣ CSS Styling
   const [selectedCarrier, setSelectedCarrier] = useState("통신사"); // 선택된 통신사 (기본값: 라벨 '통신사')
@@ -63,6 +65,7 @@ export default function SignupForm() {
     onSuccess: () => {
       alert("인증번호가 전송되었습니다.");
       setIsCodeSent(true);
+      setTimeLeft(180);
     },
     onError: (err) => {
       alert(err.message);
@@ -207,7 +210,13 @@ export default function SignupForm() {
             className="px-3 py-4 flex-1 focus:outline-none"
             {...register("code", { required: "인증번호를 입력해주세요." })}
           />
-          <span className="p-4">4:58</span>
+          {isCodeSent ? (
+            <span className="p-4">
+              <Timer timeLeft={timeLeft} setTimeLeft={setTimeLeft} />
+            </span>
+          ) : (
+            <span className="p-4">3:00</span>
+          )}
         </div>
       </div>
 
