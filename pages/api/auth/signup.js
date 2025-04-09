@@ -7,9 +7,9 @@ async function handler(req, res) {
 
   if (req.method === "POST") {
     const data = req.body;
-    const { username, birthdate } = data;
+    const { username, birthdate, phoneNumber, profileImage, nickname } = data;
 
-    if (!username || !birthdate) {
+    if (!username || !birthdate || !phoneNumber || !profileImage || !nickname) {
       res.status(422).json({
         message: "Invalid input - please type in your name and date of birth.",
       });
@@ -22,8 +22,8 @@ async function handler(req, res) {
     // 중복 아이디 계정 방지 로직
     const existingUser = await db
       .collection("users")
-      .findOne({ username: username });
-    // 💡 phoneNumber: phoneNumber도 추가! (동명이인 가능성 o)
+      .findOne({ username: username, phoneNumber: phoneNumber });
+    // 💡 phoneNumber: phoneNumber 추가! (동명이인 가능성 o)
 
     if (existingUser) {
       res.status(422).json({ message: "User exists already!" });
@@ -34,12 +34,19 @@ async function handler(req, res) {
     // ✅ 특정 이메일은 관리자 계정으로 자동 등록
     const isAdmin = username === "김유랑"; // ← 원하는 이메일 주소 넣기
 
-    const newUser = { username, birthdate, role: isAdmin ? "admin" : "user" };
+    const newUser = {
+      username,
+      birthdate,
+      phoneNumber,
+      profileImage,
+      nickname,
+      role: isAdmin ? "admin" : "user",
+    };
 
     try {
       const result = await insertDocument(client, "users", newUser);
       newUser._id = result.insertedId;
-      res.status(201).json({ message: "Created User!" });
+      res.status(201).json({ user: newUser, message: "Created User!" });
     } catch (err) {
       res.status(500).json({ message: "Registering user failed!" });
     }
