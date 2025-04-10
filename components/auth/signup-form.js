@@ -53,17 +53,24 @@ export default function SignupForm() {
   // 🌟 React Query CODE
   const sendCodeMutation = useMutation({
     mutationFn: async (phoneNumber) => {
-      return fetch("/api/auth/send-code", {
+      const res = await fetch("/api/auth/send-code", {
         method: "POST",
         body: JSON.stringify({ phoneNumber }),
         headers: { "Content-Type": "application/json" },
-      }).then((res) => {
-        if (!res.ok) throw new Error("인증번호 전송 실패");
-        return res.json();
       });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "인증번호 전송 실패");
+
+      if (data.mockCode) {
+        console.log("🔐 개발용 인증번호:", data.mockCode); // 테스트 편의용
+        alert(`개발용 인증번호: ${data.mockCode}`);
+      }
+      return data;
     },
     onSuccess: () => {
       alert("인증번호가 전송되었습니다.");
+
       setIsCodeSent(true);
       setTimeLeft(180);
     },

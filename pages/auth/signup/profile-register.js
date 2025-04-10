@@ -1,12 +1,14 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/router";
 import { useMutation } from "@tanstack/react-query";
-import { uploadImage } from "@/lib/cloudinary";
+// import { uploadImage } from "@/pages/api/auth/cloudinary"; // ❌pages/api/auth/cloudinary.js는 API Route (서버 전용) 파일이고, 그걸 import해서 클라이언트 컴포넌트에서 직접 사용하면 절대 안 돼.❌
 import useUserStore from "@/zustand/userStore";
+import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
 
 export default function ProfileRegisterPage() {
   const {
@@ -17,9 +19,17 @@ export default function ProfileRegisterPage() {
     setNickname,
     setUser,
   } = useUserStore(); // ✅ 여기서 미리 호출
+  const [profileFile, setProfileFile] = useState(null); // ⬅️ Cloudinary 업로드용 File 객체
+  const [previewUrl, setPreviewUrl] = useState(null); // 미리보기용
 
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (previewUrl) {
+      console.log("🔍 미리보기 URL 생성됨:", previewUrl);
+    }
+  }, [previewUrl]);
 
   // 1️⃣ 프로필 이미지 UI
   const handleToggle = () => {
@@ -31,19 +41,21 @@ export default function ProfileRegisterPage() {
 
     if (file) {
       // 이전 URL 정리
-      if (profileImage) {
-        URL.revokeObjectURL(profileImage);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
       }
 
       // 새로운 URL 생성
-      const newImageUrl = URL.createObjectURL(file); // 이미지 파일 미리보기 위해 파일 객체를 URL로 변환
-      setProfileImage(newImageUrl);
+      const newPreview = URL.createObjectURL(file); // 이미지 파일 미리보기 위해 파일 객체를 URL로 변환
+      setPreviewUrl(newPreview); // 브라우저에 표시할 URL
+      setProfileFile(file); // 실제 Cloudinary 업로드용 (파일 저장)
     }
     setIsOpen(false);
   };
 
   const handleClearFile = () => {
-    setProfileImage(undefined);
+    setPreviewUrl(null); // ← ✅ 이건 있어야 미리보기가 사라짐
+    setProfileFile(null); // ← ✅ 이거도 필요! 업로드를 안 하게 됨
     handleToggle();
   };
 
@@ -55,23 +67,43 @@ export default function ProfileRegisterPage() {
   // 3️⃣ Final API request
   const finallyRegister = useMutation({
     mutationFn: async (userInfo) => {
-      const { nickname, profileImage } = userInfo;
+      const { nickname } = userInfo;
 
       // 1. 이미지 업로드
+      // let imageUrl = null;
+      // if (profileImage) {
+      //   try {
+      //     imageUrl = await uploadImage(profileImage);
+      //   } catch (error) {
+      //     throw new Error(
+      //       "Image upload failed, signup was not completed. Please try again later."
+      //     );
+      //   }
+      // }
+      // 🌟🌟 클라이언트 컴포넌트에서는 직접 cloudinary를 쓰지 않고,
+      // API Route에 POST 요청을 보낸다. 🌟🌟
+
+      // 1. 이미지 업로드 로직에선 profileFile을 사용해서 Cloudinary에 업로드:
       let imageUrl = null;
-      if (profileImage) {
-        try {
-          imageUrl = await uploadImage(profileImage);
-        } catch (error) {
-          throw new Error(
-            "Image upload failed, signup was not completed. Please try again later."
-          );
-        }
+      if (profileFile) {
+        const imageData = await profileFile.arrayBuffer();
+        const base64Image = Buffer.from(imageData).toString("base64");
+        const fileUri = `data:${profileFile.type};base64,${base64Image}`;
+
+        const res = await fetch("/api/auth/cloudinary", {
+          method: "POST",
+          body: JSON.stringify({ image: fileUri }),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await res.json();
+        imageUrl = data.url;
+
+        setProfileImage(imageUrl); // 전역 상태에 최종 URL 저장
       }
 
       // 2. 전역상태 저장
       setNickname(nickname);
-      setProfileImage(imageUrl);
 
       // 3. 최종 user 객체 완성 - 저장
       setUser((prev) => ({
@@ -93,7 +125,7 @@ export default function ProfileRegisterPage() {
         headers: { "Content-Type": "application/json" },
       });
 
-      if (!response.ok) {
+      if (!resSignup.ok) {
         throw new Error("회원가입 실패");
       }
 
@@ -111,6 +143,13 @@ export default function ProfileRegisterPage() {
         nickname: createdUser.nickname,
         // callbackUrl: "/profile", => redirect: true일 때, 로그인 성공하면 해당 Url로 자동 이동 (만약 redirect: false이면 callbackUrl 작성해도 이동 x)
       });
+
+      if (!resLogin || !resLogin.ok) {
+        console.error("자동 로그인 실패", resLogin);
+        alert("자동 로그인에 실패했습니다.");
+        return;
+      }
+
       const dataLogin = await resLogin.json();
       console.log("회원가입 후, 자동로그인 성공!", dataLogin);
 
@@ -154,9 +193,9 @@ export default function ProfileRegisterPage() {
             id="fildupload_profile_img"
             className="relative mx-auto w-[100px] h-[100px]"
           >
-            {profileImage ? (
+            {previewUrl ? (
               <Image
-                src={profileImage}
+                src={previewUrl}
                 alt="프로필사진 미리보기"
                 fill
                 className="w-full h-full border border-grey-20 rounded-full object-cover p-1"
@@ -187,10 +226,9 @@ export default function ProfileRegisterPage() {
                         id="attach"
                         accept="image/*"
                         className="hidden"
-                        onChange={(e) => {
-                          handleFileShow(e);
-                        }}
-                        {...register("profileImage")}
+                        {...register("profileImage", {
+                          onChange: handleFileShow,
+                        })}
                       />
                     </label>
                     <div
