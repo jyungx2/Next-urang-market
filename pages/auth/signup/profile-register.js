@@ -134,13 +134,11 @@ export default function ProfileRegisterPage() {
     },
     onSuccess: async (createdUser) => {
       // 5. 회원가입 시, 자동 로그인되도록 로그인 API 요청
+      // signIn(): fetch()처럼 Response 객체(json 호출해서 JSON 데이터(body)를 파싱해야 실제 데이터 얻음)를 반환하지 않고, 일반 JS객체를 반환 -> json() 함수 사용 쓰면 안됨.
+      // ex) {ok: true, status: 200, url:"/api/auth/callback/credentials?callbackUrl=..."}
       const resLogin = await signIn("phoneLogin", {
         redirect: false,
-        username: createdUser.username,
-        birthdate: createdUser.birthdate,
         phoneNumber: createdUser.phoneNumber,
-        profileImage: createdUser.profileImage,
-        nickname: createdUser.nickname,
         // callbackUrl: "/profile", => redirect: true일 때, 로그인 성공하면 해당 Url로 자동 이동 (만약 redirect: false이면 callbackUrl 작성해도 이동 x)
       });
 
@@ -149,9 +147,7 @@ export default function ProfileRegisterPage() {
         alert("자동 로그인에 실패했습니다.");
         return;
       }
-
-      const dataLogin = await resLogin.json();
-      console.log("회원가입 후, 자동로그인 성공!", dataLogin);
+      console.log("자동로그인 성공 😊", resLogin);
 
       // 6. 홈페이지로 이동
       router.push("/");

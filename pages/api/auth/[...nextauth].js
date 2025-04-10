@@ -14,6 +14,8 @@ export default NextAuth({
         code: { label: "Code", type: "text" },
       },
       async authorize(credentials) {
+        console.log("🔥 credentials:", credentials);
+
         const client = await connectDatabase();
         const usersCollection = client
           .db(process.env.MONGODB_NAME)
@@ -26,7 +28,9 @@ export default NextAuth({
           const user = await usersCollection.findOne({
             phoneNumber: credentials.phoneNumber,
           });
+
           if (!user) throw new Error("No user found for auto-login");
+
           return {
             id: user._id.toString(), // DB에서 가져온 값
             username: user.username, // DB에서 가져온 값
