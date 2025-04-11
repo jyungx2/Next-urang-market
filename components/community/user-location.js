@@ -1,9 +1,11 @@
+import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 export default function UserLocation() {
   const router = useRouter();
+  const { currentUser } = useCurrentUserStore();
 
   return (
     <div className="flex justify-between items-center">
@@ -30,7 +32,7 @@ export default function UserLocation() {
 
       <Link href="/" className="relative w-[30px] aspect-square">
         <Image
-          src="/images/example.jpg"
+          src={currentUser.profileImage}
           alt="icon"
           fill
           className="rounded-full object-cover"
