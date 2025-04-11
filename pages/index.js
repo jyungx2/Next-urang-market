@@ -9,8 +9,20 @@ import Head from "next/head";
 import UIContext from "@/store/ui-context";
 import SearchPage from "@/components/common/searchPage";
 import Layout from "@/components/layout/layout";
+import useCurrentUserStore from "@/zustand/currentUserStore";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
+  const { currentUser } = useCurrentUserStore();
+
+  // 앱 최초 렌더링 시 or 로그인 상태가 아닐 때, /auth로 리다이렉트
+  useEffect(() => {
+    if (!currentUser) {
+      router.replace("/auth");
+    }
+  }, []);
+
   const { isSearchOpen, isSidebarOpen } = useContext(UIContext);
 
   // 사이드바 오픈시, 스크롤 막는 코드
@@ -21,6 +33,8 @@ export default function Home() {
       document.body.style.overflow = "auto"; // ✅ 스크롤 다시 활성화
     }
   }, [isSidebarOpen]);
+
+  if (!currentUser) return null;
 
   return (
     <>

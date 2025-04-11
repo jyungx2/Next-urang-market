@@ -6,7 +6,7 @@ export default function CommunityRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    // 첫번째 메인 카테고리로 바로 이동
+    // 첫번째 메인 카테고리로 리다이렉트
     router.replace("/community/notice");
   }, []);
 
