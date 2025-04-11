@@ -62,3 +62,17 @@ Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 �
 - Deployment: Vercel
 
 📌 Urang Market과 함께 스마트한 중고거래를 경험해보세요! 🚀
+
+✨feat: 유저 데이터 전역 상태 관리용 useUserStore, useCurrentUserStore 분리 적용
+
+- 회원가입 과정 중 단계별 사용자 정보 입력을 위한 임시 저장소(useUserStore) 구현
+
+  - 개별 Setter 포함 (username, phoneNumber, nickname 등)
+  - 회원가입 완료 시 초기화되도록 resetUser 함수 포함
+
+- 로그인한 유저의 인증 정보 및 상태를 관리하는 useCurrentUserStore 구현
+
+  - getSession() 기반 영구 세션 저장
+  - 현재 로그인 여부 확인, 유저 데이터 전역 사용 목적
+
+- 회원가입 완료 후, 자동 로그인 시 getSession().user → useCurrentUserStore에 저장되도록 처리

@@ -8,17 +8,12 @@ import { useMutation } from "@tanstack/react-query";
 // import { uploadImage } from "@/pages/api/auth/cloudinary"; // ❌pages/api/auth/cloudinary.js는 API Route (서버 전용) 파일이고, 그걸 import해서 클라이언트 컴포넌트에서 직접 사용하면 절대 안 돼.❌
 import useUserStore from "@/zustand/userStore";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function ProfileRegisterPage() {
-  const {
-    username,
-    birthdate,
-    phoneNumber,
-    setProfileImage,
-    setNickname,
-    setUser,
-  } = useUserStore(); // ✅ 여기서 미리 호출
+  const { currentUser } = useCurrentUserStore();
+  const { setUser } = useUserStore(); // ✅ 여기서 미리 호출
   const [profileFile, setProfileFile] = useState(null); // ⬅️ Cloudinary 업로드용 File 객체
   const [previewUrl, setPreviewUrl] = useState(null); // 미리보기용
 
@@ -98,30 +93,20 @@ export default function ProfileRegisterPage() {
 
         const data = await res.json();
         imageUrl = data.url;
-
-        setProfileImage(imageUrl); // 전역 상태에 최종 URL 저장
       }
 
-      // 2. 전역상태 저장
-      setNickname(nickname);
-
-      // 3. 최종 user 객체 완성 - 저장
+      // 2. 최종 user 객체 완성 (유지보수성⬆️)
       setUser((prev) => ({
         ...prev,
         nickname,
         profileImage: imageUrl,
       }));
+      const user = useUserStore.getState().getUser();
 
-      // 4. 회원가입 API 요청 => DB에 해당 유저데이터 저장!
+      // 3. 회원가입 API 요청 => DB에 해당 유저데이터 저장!
       const resSignup = await fetch("/api/auth/signup", {
         method: "POST",
-        body: JSON.stringify({
-          username,
-          birthdate,
-          phoneNumber,
-          profileImage: imageUrl ?? null, // MongoDB에 undefined 값은 저장되지 않지만, null은 저장됨 -> '이미지 업로드를 안 한 사용자도 Image필드가 null로 저장되길 원한다'할 때 유용
-          nickname: userInfo.nickname,
-        }),
+        body: JSON.stringify(user),
         headers: { "Content-Type": "application/json" },
       });
 
@@ -133,7 +118,7 @@ export default function ProfileRegisterPage() {
       return dataSignup.user; // → onSuccess로 전달됨
     },
     onSuccess: async (createdUser) => {
-      // 5. 회원가입 시, 자동 로그인되도록 로그인 API 요청
+      // 4. 회원가입 시, 자동 로그인되도록 로그인 API 요청
       // signIn(): fetch()처럼 Response 객체(json 호출해서 JSON 데이터(body)를 파싱해야 실제 데이터 얻음)를 반환하지 않고, 일반 JS객체를 반환 -> json() 함수 사용 쓰면 안됨.
       // ex) {ok: true, status: 200, url:"/api/auth/callback/credentials?callbackUrl=..."}
       const resLogin = await signIn("phoneLogin", {
@@ -149,8 +134,23 @@ export default function ProfileRegisterPage() {
       }
       console.log("자동로그인 성공 😊", resLogin);
 
-      // 6. 홈페이지로 이동
-      router.push("/");
+      // 회원가입 완료 시, 임시저장소(useStore) 초기화
+      useUserStore.getState().resetUser();
+
+      // 자동로그인 성공 시, next-auth의 session에 저장된 유저정보를 영구저장소(currentUserStore)에 세팅
+      // 📍getSession(): 현재 로그인된 사용자의 세션 정보를 클라이언트에서 가져오는 함수
+      // 📍session.user: [...nextauth].js 파일 내 authorize()에서 리턴한 유효한 DB 사용자 객체 (signIn 성공 시 session에 자동으로 저장되기 때문에 언제든 getSession()으로 꺼내쓸 수 있음)
+      let session = await getSession();
+
+      if (!session) {
+        await new Promise((r) => setTimeout(r, 300)); // 300ms 대기
+        session = await getSession(); // 재시도
+      }
+      useCurrentUserStore.getState().setCurrentUser(session.user); // ✅ 로그인 유저 상태 저장
+      console.log(currentUser, "getSession().user: ", session.user);
+
+      // 5. 홈페이지로 이동
+      router.push("/profile");
     },
     onError: (err) => {
       console.error(err);
