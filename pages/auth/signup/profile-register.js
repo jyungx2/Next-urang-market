@@ -140,6 +140,7 @@ export default function ProfileRegisterPage() {
       // ex) {ok: true, status: 200, url:"/api/auth/callback/credentials?callbackUrl=..."}
       const resLogin = await signIn("phoneLogin", {
         redirect: false,
+        username: createdUser.username,
         phoneNumber: createdUser.phoneNumber,
         // callbackUrl: "/profile", => redirect: true일 때, 로그인 성공하면 해당 Url로 자동 이동 (만약 redirect: false이면 callbackUrl 작성해도 이동 x)
       });

@@ -26,6 +26,7 @@ export default NextAuth({
           // ✨ credentials는 로그인 시 사용자가 입력한 값 => 인증되지 않은 정보가 session에 들어갈 수 있는 위험⭕️ & 사용자가 악의적으로 다른 nickname을 넣었을 때도 session에 저장될 수 있는 문제🚫 => credentials를 이용해 DB에서 유저를 찾는 용도로만 씀!
           // ✨ user는 그걸 바탕으로 DB에서 찾은 실제 유저 정보 => 검증된 안전한 정보✅
           const user = await usersCollection.findOne({
+            username: credentials.username,
             phoneNumber: credentials.phoneNumber,
           });
 
