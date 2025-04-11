@@ -9,7 +9,7 @@ export default function MyProfile() {
   return (
     <div className="flex gap-6 items-center p-4 rounded-2xl bg-[var(--color-primary-50)]">
       <Image
-        src={currentUser?.profileImage}
+        src={currentUser?.profileImage || "/icons/profile-signup.svg"}
         alt="profile-image"
         width={60}
         height={60}

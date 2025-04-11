@@ -4,7 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 const CurrentUserStore = (set) => ({
   currentUser: null,
   setCurrentUser: (user) => set({ currentUser: user }),
-  resetCurrentUser: () => set({ user: null }),
+  resetCurrentUser: () => set({ currentUser: null }),
 });
 
 const useCurrentUserStore = create(

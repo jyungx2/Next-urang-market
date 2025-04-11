@@ -32,7 +32,7 @@ export default function UserLocation() {
 
       <Link href="/" className="relative w-[30px] aspect-square">
         <Image
-          src={currentUser.profileImage}
+          src={currentUser?.profileImage || "/icons/profile-signup.svg"}
           alt="icon"
           fill
           className="rounded-full object-cover"
