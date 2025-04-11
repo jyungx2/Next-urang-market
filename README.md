@@ -63,7 +63,7 @@ Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 �
 
 📌 Urang Market과 함께 스마트한 중고거래를 경험해보세요! 🚀
 
-✨feat: 유저 데이터 전역 상태 관리용 useUserStore, useCurrentUserStore 분리 적용
+## ✨feat: 유저 데이터 전역 상태 관리용 useUserStore, useCurrentUserStore 분리 적용
 
 - 회원가입 과정 중 단계별 사용자 정보 입력을 위한 임시 저장소(useUserStore) 구현
 
@@ -76,3 +76,11 @@ Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 �
   - 현재 로그인 여부 확인, 유저 데이터 전역 사용 목적
 
 - 회원가입 완료 후, 자동 로그인 시 getSession().user → useCurrentUserStore에 저장되도록 처리
+
+## 🐛 Fix: setUser 함수형 업데이트로 인해 최신 상태 반영 안 되는 문제 수정
+
+💡 회원가입 단계에서 setUser(prev => ...) 함수형 업데이트 직후 getUser() 호출 시, React batching으로 인해 최신 nickname, profileImage 값이 반영되지 않던 문제를 객체 기반 업데이트(setUser({...}) 방식)로 변경하여 해결.
+
+> `zustand`의 `setUser(prev => ...)` 형태는 batching 이슈로 인해 상태가 즉시 반영되지 않을 수 있습니다.
+> 따라서 직후에 getState().getUser()로 값을 가져오면 이전 상태가 반환될 수 있습니다.
+> 안정적인 동기 업데이트를 위해 `setUser({ ... })` 방식 사용을 권장합니다.

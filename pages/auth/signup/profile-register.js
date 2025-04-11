@@ -13,7 +13,7 @@ import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function ProfileRegisterPage() {
   const { currentUser } = useCurrentUserStore();
-  const { setUser } = useUserStore(); // ✅ 여기서 미리 호출
+  const { username, birthdate, phoneNumber, setUser } = useUserStore(); // ✅ 여기서 미리 호출
   const [profileFile, setProfileFile] = useState(null); // ⬅️ Cloudinary 업로드용 File 객체
   const [previewUrl, setPreviewUrl] = useState(null); // 미리보기용
 
@@ -95,26 +95,43 @@ export default function ProfileRegisterPage() {
         imageUrl = data.url;
       }
 
+      console.log("✅ nickname:", nickname);
+      console.log("✅ imageUrl:", imageUrl);
+
       // 2. 최종 user 객체 완성 (유지보수성⬆️)
-      setUser((prev) => ({
-        ...prev,
+      // 🚫
+      // setUser((prev) => ({
+      //   ...prev,
+      //   nickname,
+      //   profileImage: imageUrl,
+      // }));
+
+      // ✅ 위처럼 함수형 업데이트 말고 직접 객체로 업데이트하기
+      setUser({
+        username,
+        birthdate,
+        phoneNumber,
         nickname,
         profileImage: imageUrl,
-      }));
-      const user = useUserStore.getState().getUser();
+      });
+      const finalUser = useUserStore.getState().getUser();
+      console.log("💿서버로 보낼 user: ", finalUser);
 
       // 3. 회원가입 API 요청 => DB에 해당 유저데이터 저장!
       const resSignup = await fetch("/api/auth/signup", {
         method: "POST",
-        body: JSON.stringify(user),
+        body: JSON.stringify(finalUser),
         headers: { "Content-Type": "application/json" },
       });
 
+      // 💥💥res.json() 호출이 무조건 res.ok보다 먼저 와야 함💥💥
+      // 🖍️이유: 서버가 { message: "User exists already!" }로 응답했어도 그걸 .json()으로 꺼내기 전에 에러를 던져버려서 err.message는 하드코딩된 메시지("회원가입 실패")밖에 안 나와.
+      const dataSignup = await resSignup.json();
+
       if (!resSignup.ok) {
-        throw new Error("회원가입 실패");
+        throw new Error(dataSignup.message || "회원가입 실패");
       }
 
-      const dataSignup = await resSignup.json();
       return dataSignup.user; // → onSuccess로 전달됨
     },
     onSuccess: async (createdUser) => {

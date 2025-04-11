@@ -27,14 +27,27 @@ const UserStore = (set, get) => ({
   // **동작원리: zustand의 set() 함수는 내부적으로 React.useState()랑 비슷하게 동작
 
   // ✅ 상태 값을 하나로 모아 반환해주는 유틸 함수
-  getUser: () =>
-    get((state) => ({
+  // ❌ 잘못된 get 함수 사용방법
+  // getUser: () =>
+  //   get((state) => ({
+  //     username: state.username,
+  //     birthdate: state.birthdate,
+  //     phoneNumber: state.phoneNumber,
+  //     profileImage: state.profileImage,
+  //     nickname: state.nickname,
+  //   })),
+
+  // ✅ 정석적으로 쓰는 방법
+  getUser: () => {
+    const state = get(); // 전체 상태를 받아와서
+    return {
       username: state.username,
       birthdate: state.birthdate,
       phoneNumber: state.phoneNumber,
       profileImage: state.profileImage,
       nickname: state.nickname,
-    })),
+    };
+  },
 
   // ✅ 회원가입 완료 시 호출할 초기화 함수
   resetUser: () =>
