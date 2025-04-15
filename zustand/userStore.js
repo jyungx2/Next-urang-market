@@ -5,6 +5,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 // - 회원가입 끝나고 DB에 저장했으면 → 더 이상 쓸 필요 없음!
 // - 그래서 persist 붙일 필요도 X & 새로고침돼도 사라져야 정상
 const UserStore = (set, get) => ({
+  location: "",
   username: "",
   birthdate: "",
   phoneNumber: "",
@@ -13,6 +14,7 @@ const UserStore = (set, get) => ({
   nickname: "",
 
   // ✅ 개별 setter들 (회원가입 단계별 페이지에서 해당 필드만 독립적으로 업데이트할 때 필요)
+  setLocation: (value) => set({ location: value }),
   setUsername: (value) => set({ username: value }),
   setBirthdate: (value) => set({ birthdate: value }),
   setPhoneNumber: (value) => set({ phoneNumber: value }),
@@ -41,6 +43,7 @@ const UserStore = (set, get) => ({
   getUser: () => {
     const state = get(); // 전체 상태를 받아와서
     return {
+      location: state.location,
       username: state.username,
       birthdate: state.birthdate,
       phoneNumber: state.phoneNumber,
@@ -52,6 +55,7 @@ const UserStore = (set, get) => ({
   // ✅ 회원가입 완료 시 호출할 초기화 함수
   resetUser: () =>
     set({
+      location: "",
       username: "",
       birthdate: "",
       phoneNumber: "",
