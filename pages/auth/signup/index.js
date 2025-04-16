@@ -54,6 +54,7 @@ export default function LocationPage() {
     }, 1500); // 1.5초 로딩 타임
   };
 
+  /*
   const fetchAllLocations = async (keyword) => {
     // 단지 1페이지의 1000건만 가져오는 url 경로..
     // const url = `https://api.odcloud.kr/api/15123287/v1/uddi:c167d44a-d8ad-4624-b442-a67e904635d0?page=1&perPage=1000&serviceKey=${process.env.NEXT_PUBLIC_ODCLOUD_KEY}`;
@@ -89,6 +90,31 @@ export default function LocationPage() {
     const results = await fetchAllLocations(keyword);
     setSearchResults(results);
   };
+  */
+
+  // 주소 검색 API 호출 함수 (검색어로 한 번 전체 데이터 가져오기)
+  const fetchLocations = async (keyword) => {
+    try {
+      const res = await fetch(
+        `/api/search-location?keyword=${encodeURIComponent(keyword)}`
+      );
+      const data = await res.json();
+      return data.locations || [];
+    } catch (error) {
+      console.error("주소 검색 오류:", error);
+      return [];
+    }
+  };
+
+  // 인풋의 엔터 이벤트로 검색 수행 (ref 방식)
+  const handleAddressSearch = async () => {
+    const value = addressRef.current.value.trim();
+    if (value.length < 2) return;
+    setIsLoading(true);
+    const results = await fetchLocations(value);
+    setSearchResults(results);
+    setIsLoading(false);
+  };
 
   return (
     <div className="max-w-[640px] mx-auto min-h-screen bg-[var(--color-bg)] flex flex-col p-4">
@@ -122,8 +148,13 @@ export default function LocationPage() {
                 <li
                   key={idx}
                   className="p-4 hover:bg-gray-100 text-[1.5rem] cursor-pointer"
+                  onClick={() => {
+                    // 예: 주소 선택 시, 인풋에 값을 넣고 드롭다운 숨김
+                    addressRef.current.value = item.full;
+                    setSearchResults([]);
+                  }}
                 >
-                  {item["소재지"]}
+                  {item.full}
                 </li>
               ))}
             </ul>

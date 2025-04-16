@@ -84,3 +84,16 @@ Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 �
 > `zustand`의 `setUser(prev => ...)` 형태는 batching 이슈로 인해 상태가 즉시 반영되지 않을 수 있습니다.
 > 따라서 직후에 getState().getUser()로 값을 가져오면 이전 상태가 반환될 수 있습니다.
 > 안정적인 동기 업데이트를 위해 `setUser({ ... })` 방식 사용을 권장합니다.
+
+## ✨ feat: 법정동 주소 검색 기능 개선 – Open API → 정적 CSV 기반 MongoDB 캐싱으로 전환 (2025/04/16)
+
+- 공공 데이터포털에서 제공하는 전국 법정동 CSV 파일 사용
+- EUC-KR 인코딩 CSV 파일을 UTF-8로 변환 및 파싱 (iconv + csv-parser)
+- "삭제일자" 기반으로 현행 주소만 isActive: true로 필터링
+- full 주소 필드 생성 (시도/시군구/읍면동/리 결합)
+- MongoDB에 최초 1회 insertMany() (중복 삽입 방지)
+- /api/search-location?keyword= 검색 API 구현 (Mongo regex 기반)
+- 프론트엔드에서 ref 방식 검색 input + 검색 결과 드롭다운 구현
+- 선택 시 자동 입력 및 UI 렌더링 완료
+
+✅ 서버 부하 ↓ / 속도 ↑ / 검색 신뢰도 ↑
