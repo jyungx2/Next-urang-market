@@ -15,6 +15,30 @@ export default function LocationPage() {
   const addressRef = useRef();
   const [searchResults, setSearchResults] = useState([]);
 
+  const selectMyLocation = async (fullAddress) => {
+    // 1. 인풋 값 업데이트
+    addressRef.current.value = fullAddress;
+    setSearchResults([]);
+
+    // 2. 카카오 주소 → 좌표 API 요청
+    try {
+      const res = await fetch(
+        `/api/auth/kakao-addToGeo?address=${encodeURIComponent(fullAddress)}`
+      );
+      const data = await res.json();
+
+      if (!res.ok || !data.documents?.length) {
+        throw new Error("주소를 좌표로 변환할 수 없습니다.");
+      }
+
+      const { x, y } = data.documents[0]; // 카카오 api(주소➡️좌표 변환)는 보통 가장 정확하다고 판단된 주소의 좌표를 배열의 첫번째 요소로 리턴 (∵ 내부적으로 정확도(score) 기준 정렬) -> x = 경도(lng), y = 위도(lat)
+      setCoords({ lat: parseFloat(y), lng: parseFloat(x) });
+    } catch (err) {
+      console.error("주소 -> 좌표 변환 실패: ", err);
+      alert("지도를 이동할 수 없습니다.");
+    }
+  };
+
   // getCurrentPosition(): 브라우저에서 위치를 요청하는 "비동기 함수"
   // 📌 fetch()랑 아무 관계 없음
   // 📌 성공(실패)하면 → 성공(실패) 콜백 실행
@@ -53,44 +77,6 @@ export default function LocationPage() {
       );
     }, 1500); // 1.5초 로딩 타임
   };
-
-  /*
-  const fetchAllLocations = async (keyword) => {
-    // 단지 1페이지의 1000건만 가져오는 url 경로..
-    // const url = `https://api.odcloud.kr/api/15123287/v1/uddi:c167d44a-d8ad-4624-b442-a67e904635d0?page=1&perPage=1000&serviceKey=${process.env.NEXT_PUBLIC_ODCLOUD_KEY}`;
-
-    const serviceKey = process.env.NEXT_PUBLIC_ODCLOUD_KEY;
-    const baseUrl = `https://api.odcloud.kr/api/15123287/v1/uddi:c167d44a-d8ad-4624-b442-a67e904635d0`;
-    const perPage = 1000;
-    const totalPages = 50; // 47815건 기준
-    const allResults = [];
-
-    for (let page = 1; page <= totalPages; page++) {
-      const res = await fetch(
-        `${baseUrl}?page=${page}&perPage=${perPage}&serviceKey=${serviceKey}`
-      );
-
-      const data = await res.json();
-      if (Array.isArray(data.data)) {
-        allResults.push(...data.data);
-      }
-    }
-
-    const filtered = allResults.filter(
-      (item) => item["존재여부"] === "존재" && item["소재지"]?.includes(keyword)
-    );
-
-    return filtered;
-  };
-
-  const handleAddressSearch = async () => {
-    const keyword = addressRef.current.value.trim();
-    if (keyword.length < 2) return;
-
-    const results = await fetchAllLocations(keyword);
-    setSearchResults(results);
-  };
-  */
 
   // 주소 검색 API 호출 함수 (검색어로 한 번 전체 데이터 가져오기)
   const fetchLocations = async (keyword) => {
@@ -150,8 +136,8 @@ export default function LocationPage() {
                   className="p-4 hover:bg-gray-100 text-[1.5rem] cursor-pointer"
                   onClick={() => {
                     // 예: 주소 선택 시, 인풋에 값을 넣고 드롭다운 숨김
-                    addressRef.current.value = item.full;
-                    setSearchResults([]);
+                    handleAddressSearch(item.full);
+                    selectMyLocation(item.full);
                   }}
                 >
                   {item.full}
