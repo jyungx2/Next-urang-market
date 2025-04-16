@@ -3,7 +3,6 @@ import classes from "./search-form.module.css";
 import Location from "@/components/layout/location";
 import { useContext } from "react";
 import UIContext from "@/store/ui-context";
-import SearchPage from "@/components/common/searchPage";
 
 export default function SearchForm() {
   const { toggleSearchPage } = useContext(UIContext);

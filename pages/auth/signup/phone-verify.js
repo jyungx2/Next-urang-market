@@ -14,7 +14,7 @@ export default function PhoneVerifyPage() {
           className="relative w-[30px] aspect-square cursor-pointer"
         >
           <Image
-            src="/icons/xbtn.svg"
+            src="/icons/chevron-left.svg"
             alt="icon"
             fill
             className="cursor-pointer"
