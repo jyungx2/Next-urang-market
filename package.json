@@ -26,6 +26,7 @@
     "classnames": "^2.5.1",
     "cloudinary": "^2.6.0",
     "coolsms-node-sdk": "^2.1.0",
+    "csv-parser": "^3.2.0",
     "framer-motion": "^12.6.2",
     "ioredis": "^5.6.0",
     "lucide-react": "^0.483.0",

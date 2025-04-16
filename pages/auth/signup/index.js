@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import classes from "@/components/main/search-form.module.css";
 import ClipLoader from "react-spinners/ClipLoader"; // ✅ 스피너 import
-import { useState } from "react";
+import { useRef, useState } from "react";
 import MapContainer from "@/components/user/map";
 
 export default function LocationPage() {
@@ -11,7 +11,9 @@ export default function LocationPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { location, setLocation } = useUserStore();
   const [coords, setCoords] = useState({ lat: null, lng: null });
-  console.log("카카오 JS KEY:", process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY);
+
+  const addressRef = useRef();
+  const [searchResults, setSearchResults] = useState([]);
 
   // getCurrentPosition(): 브라우저에서 위치를 요청하는 "비동기 함수"
   // 📌 fetch()랑 아무 관계 없음
@@ -52,6 +54,42 @@ export default function LocationPage() {
     }, 1500); // 1.5초 로딩 타임
   };
 
+  const fetchAllLocations = async (keyword) => {
+    // 단지 1페이지의 1000건만 가져오는 url 경로..
+    // const url = `https://api.odcloud.kr/api/15123287/v1/uddi:c167d44a-d8ad-4624-b442-a67e904635d0?page=1&perPage=1000&serviceKey=${process.env.NEXT_PUBLIC_ODCLOUD_KEY}`;
+
+    const serviceKey = process.env.NEXT_PUBLIC_ODCLOUD_KEY;
+    const baseUrl = `https://api.odcloud.kr/api/15123287/v1/uddi:c167d44a-d8ad-4624-b442-a67e904635d0`;
+    const perPage = 1000;
+    const totalPages = 50; // 47815건 기준
+    const allResults = [];
+
+    for (let page = 1; page <= totalPages; page++) {
+      const res = await fetch(
+        `${baseUrl}?page=${page}&perPage=${perPage}&serviceKey=${serviceKey}`
+      );
+
+      const data = await res.json();
+      if (Array.isArray(data.data)) {
+        allResults.push(...data.data);
+      }
+    }
+
+    const filtered = allResults.filter(
+      (item) => item["존재여부"] === "존재" && item["소재지"]?.includes(keyword)
+    );
+
+    return filtered;
+  };
+
+  const handleAddressSearch = async () => {
+    const keyword = addressRef.current.value.trim();
+    if (keyword.length < 2) return;
+
+    const results = await fetchAllLocations(keyword);
+    setSearchResults(results);
+  };
+
   return (
     <div className="max-w-[640px] mx-auto min-h-screen bg-[var(--color-bg)] flex flex-col p-4">
       <header className="flex items-center justify-center mb-2 pb-4 gap-4">
@@ -68,12 +106,28 @@ export default function LocationPage() {
           />
         </button>
 
-        <div className="flex-grow rounded-2xl bg-[var(--color-grey-200)] p-1">
+        <div className="relative flex-grow rounded-2xl bg-[var(--color-grey-200)] p-1">
           <input
+            ref={addressRef}
             type="text"
             className={`${classes.inputUnset} ${classes.searchInput}`}
             placeholder="주소를 입력하세요."
+            onKeyDown={(e) => e.key === "Enter" && handleAddressSearch()}
           />
+
+          {/* 드롭다운 검색 결과 */}
+          {searchResults.length > 0 && (
+            <ul className="absolute z-10 top-full left-0 w-full mt-2 bg-white border rounded-xl shadow-md max-h-[300px] overflow-y-auto">
+              {searchResults.map((item, idx) => (
+                <li
+                  key={idx}
+                  className="p-4 hover:bg-gray-100 text-[1.5rem] cursor-pointer"
+                >
+                  {item["소재지"]}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </header>
 
