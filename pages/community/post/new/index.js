@@ -2,7 +2,6 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import NextLink from "next/link"; // next/link에서 React 컴포넌트용 Link를 가져오기
-import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Toolbar } from "@/components/tiptap/toolbar"; // 사용자 정의 툴바 컴포넌트 (Bold, Image 등 버튼)
 import WriteArea from "@/components/tiptap/writearea";
@@ -10,9 +9,9 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Button from "@/components/ui/button";
 import { useRef, useState } from "react";
 import { CustomPlaceholder } from "@/extensions/custom-placeholder";
-import { Router } from "lucide-react";
 import { useRouter } from "next/router";
 import { mutate } from "swr";
+import Layout from "@/components/layout/layout";
 
 export default function PostAddPage() {
   const router = useRouter();
@@ -153,3 +152,8 @@ export default function PostAddPage() {
     </form>
   );
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+PostAddPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>; // Layout 안 씌움
+};

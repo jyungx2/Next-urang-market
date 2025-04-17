@@ -22,11 +22,11 @@ export default async function handler(req, res) {
     return res.status(500).json({ message: "카카오 역지오코딩 실패" });
   }
 
-  let region = data.documents.find((doc) => doc.region_type === "H"); // 행정동 (주민센터 운영기준, 더 자세한 동 정보 가지고 있음)
+  let region = data.documents.find((doc) => doc.region_type === "B"); // 법정동 (법률적으로 정의된 동, 하나의 법정동이 여러 행정동으로 나뉨)
 
   if (!region) {
-    region = data.documents.find((doc) => doc.region_type === "B");
-  }
+    region = data.documents.find((doc) => doc.region_type === "H");
+  } // 행정동 (행정 편의상 나뉜 동, 더 자세한 동 정보 가지고 있음)
 
   if (!region) {
     return res
@@ -36,5 +36,10 @@ export default async function handler(req, res) {
 
   const fullAddress = `${region.region_1depth_name} ${region.region_2depth_name} ${region.region_3depth_name}`;
 
-  res.status(200).json({ regionName: fullAddress });
+  res.status(200).json({
+    regionName: fullAddress,
+    sido: region.region_1depth_name, // 당장은 안쓰지만 나중 편의를 위해..
+    sigungu: region.region_2depth_name, // 당장은 안쓰지만 나중 편의를 위해..
+    dong: region.region_3depth_name, // 커뮤니티 페이지에서 내위치 설정 시에 사용할 데이터
+  });
 }
