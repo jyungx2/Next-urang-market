@@ -34,6 +34,7 @@ export default NextAuth({
 
           return {
             id: user._id.toString(), // DB에서 가져온 값
+            location: user.location, // DB에서 가져온 값
             username: user.username, // DB에서 가져온 값
             birthdate: user.birthdate, // DB에서 가져온 값
             phoneNumber: user.phoneNumber, // DB에서 가져온 값
@@ -57,6 +58,7 @@ export default NextAuth({
 
         return {
           id: user._id.toString(), // DB에서 가져온 값
+          location: user.location, // DB에서 가져온 값
           username: user.username, // DB에서 가져온 값
           birthdate: user.birthdate, // DB에서 가져온 값
           phoneNumber: user.phoneNumber, // DB에서 가져온 값
@@ -66,10 +68,13 @@ export default NextAuth({
       },
     }),
   ],
+  // ** 콜백: “로그인 과정 중간에 개입해서 정보를 추가하거나 수정할 수 있게 해주는 함수들”
+  // 1️⃣ authorize()에 의해 로그인로직(signIn()) 성공 시, 리턴되는 유저 정보를 jwt() 콜백의 토큰에 넣어서 jwt토큰 생성. => 이 토큰은 서버/클라이언트 모두에서 인증상태를 유지하는데 사용가능. => 이걸 해줘야만 세션에 해당 속성값이 들어갈 수 있음
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.location = user.location;
         token.username = user.username;
         token.birthdate = user.birthdate;
         token.phoneNumber = user.phoneNumber;
@@ -79,8 +84,10 @@ export default NextAuth({
       }
       return token;
     },
+    // 2️⃣ 클라이언트에서 getSession()을 호출하면 이 콜백이 실행되고, 위에서 만든 token 정보를 바탕으로 세션을 구성함
     async session({ session, token }) {
       session.user.id = token.id;
+      session.user.location = token.location;
       session.user.username = token.username;
       session.user.birthdate = token.birthdate;
       session.user.phoneNumber = token.phoneNumber;

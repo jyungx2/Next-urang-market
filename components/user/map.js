@@ -38,7 +38,5 @@ export default function MapContainer({ lat, lng }) {
     });
   }, [lat, lng]);
 
-  return (
-    <div ref={mapRef} className="w-full h-[400px] rounded-xl border" id="map" />
-  );
+  return <div ref={mapRef} className="w-full h-[400px] rounded-xl" id="map" />;
 }

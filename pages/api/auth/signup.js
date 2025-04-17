@@ -7,9 +7,23 @@ async function handler(req, res) {
 
   if (req.method === "POST") {
     const data = req.body;
-    const { username, birthdate, phoneNumber, profileImage, nickname } = data;
+    const {
+      location,
+      username,
+      birthdate,
+      phoneNumber,
+      profileImage,
+      nickname,
+    } = data;
 
-    if (!username || !birthdate || !phoneNumber || !profileImage || !nickname) {
+    if (
+      !location ||
+      !username ||
+      !birthdate ||
+      !phoneNumber ||
+      !profileImage ||
+      !nickname
+    ) {
       res.status(422).json({
         message: "Invalid input - please type in your name and date of birth.",
       });
@@ -35,6 +49,7 @@ async function handler(req, res) {
     const isAdmin = username === "김유랑"; // ← 원하는 이메일 주소 넣기
 
     const newUser = {
+      location,
       username,
       birthdate,
       phoneNumber,

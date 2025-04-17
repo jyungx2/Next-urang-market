@@ -13,7 +13,8 @@ import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function ProfileRegisterPage() {
   const { currentUser } = useCurrentUserStore();
-  const { username, birthdate, phoneNumber, setUser } = useUserStore(); // ✅ 여기서 미리 호출
+  const { location, username, birthdate, phoneNumber, setUser } =
+    useUserStore(); // ✅ 여기서 미리 호출
   const [profileFile, setProfileFile] = useState(null); // ⬅️ Cloudinary 업로드용 File 객체
   const [previewUrl, setPreviewUrl] = useState(null); // 미리보기용
 
@@ -108,6 +109,7 @@ export default function ProfileRegisterPage() {
 
       // ✅ 위처럼 함수형 업데이트 말고 직접 객체로 업데이트하기
       setUser({
+        location,
         username,
         birthdate,
         phoneNumber,
@@ -165,7 +167,7 @@ export default function ProfileRegisterPage() {
         session = await getSession(); // 재시도
       }
       useCurrentUserStore.getState().setCurrentUser(session.user); // ✅ 로그인 유저 상태 저장
-      console.log(currentUser, "getSession().user: ", session.user);
+      console.log(currentUser, "유저 세션: ", session.user); // React 컴포넌트 내 currentUser 값은 다음 렌더링 사이클에서야 업데이트된 값을 반영하기 때문에 여전히 💥currentUser === null💥
 
       // 5. 홈페이지로 이동
       router.push("/profile");

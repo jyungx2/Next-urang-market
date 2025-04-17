@@ -14,6 +14,7 @@ export default function LocationPage() {
 
   const addressRef = useRef();
   const [searchResults, setSearchResults] = useState([]);
+  const [neighborhood, setNeighborhood] = useState("");
 
   const selectMyLocation = async (fullAddress) => {
     // 1. 인풋 값 업데이트
@@ -59,9 +60,8 @@ export default function LocationPage() {
 
             if (!res.ok) throw new Error(data.message || "서버 에러");
 
-            setLocation(data.regionName);
             setIsLoading(false); // 스피너 종료
-
+            setNeighborhood(data.regionName);
             console.log("✅ 위치 설정 완료:", data.regionName);
           } catch (err) {
             console.error("❌ 위치 요청 실패:", err);
@@ -82,7 +82,7 @@ export default function LocationPage() {
   const fetchLocations = async (keyword) => {
     try {
       const res = await fetch(
-        `/api/search-location?keyword=${encodeURIComponent(keyword)}`
+        `/api/auth/search-location?keyword=${encodeURIComponent(keyword)}`
       );
       const data = await res.json();
       return data.locations || [];
@@ -100,6 +100,13 @@ export default function LocationPage() {
     const results = await fetchLocations(value);
     setSearchResults(results);
     setIsLoading(false);
+  };
+
+  const goGetVerification = async (neighborhood) => {
+    console.log("인증절차");
+    router.push("/auth/signup/phone-verify");
+    setLocation(neighborhood);
+    console.log("zustand에 저장된 유저의 동네:", location);
   };
 
   return (
@@ -138,6 +145,7 @@ export default function LocationPage() {
                     // 예: 주소 선택 시, 인풋에 값을 넣고 드롭다운 숨김
                     handleAddressSearch(item.full);
                     selectMyLocation(item.full);
+                    setNeighborhood(item.full);
                   }}
                 >
                   {item.full}
@@ -153,8 +161,16 @@ export default function LocationPage() {
           className="w-full bg-[var(--color-primary-500)] cursor-pointer p-4 rounded-xl font-bold text-white mb-8"
           onClick={getMyLocation}
         >
-          Find nearby neighborhoods
+          현재 내 위치 찾기
         </button>
+
+        <p className="text-[1.4rem] text-gray-500 mb-4">
+          ⚠️ 정확한 위치 검색을 위해 주소는 반드시{" "}
+          <span className="font-semibold text-[var(--color-primary-700)]">
+            &quot;동&quot;
+          </span>{" "}
+          단위까지 입력해주세요. (예: 논현동, 부송동 등)
+        </p>
 
         {isLoading && (
           <div className="flex flex-col items-center justify-center gap-8 mt-20">
@@ -170,18 +186,27 @@ export default function LocationPage() {
             </p>
           </div>
         )}
-
-        {!isLoading && location && (
+        {!isLoading && (
           <>
-            <p className="text-[1.8rem]">
-              현재 위치: <span className="font-bold">{location}</span>
+            <p className="text-[1.8rem] mb-6">
+              설정한 나의 동네:{" "}
+              <span className="font-bold">{neighborhood}</span>
             </p>
-            <div className="mt-8">
+            <div>
               <MapContainer lat={coords.lat} lng={coords.lng} />
             </div>
           </>
         )}
       </div>
+
+      <footer className="mt-auto">
+        <button
+          className="font-bold h-[4rem] bg-[var(--color-primary-600)] p-4 w-full rounded-lg text-white cursor-pointer"
+          onClick={() => goGetVerification(neighborhood)}
+        >
+          본인 인증하러 가기
+        </button>
+      </footer>
     </div>
   );
 }
