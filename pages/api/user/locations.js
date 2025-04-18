@@ -1,9 +1,10 @@
 // ✅ /pages/api/user/location.js
-import { connectToDatabase } from "@/lib/db";
+import { connectDatabase } from "@/helpers/db-util";
+import { ObjectId } from "mongodb";
 
 export default async function handler(req, res) {
-  const client = await connectToDatabase();
-  const db = client.db();
+  const client = await connectDatabase();
+  const db = client.db(process.env.MONGODB_NAME); // 💢💢꼭 매개변수로 데이터베이스 이름(urang-market) 넣어주자! connectDatabase()은 DB 이름 포함 안 시켰다!!!💢💢
 
   if (req.method === "POST") {
     const { userId, recentLocations } = req.body;
@@ -56,12 +57,15 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     const { userId } = req.query;
+    console.log("서버가 받은 userId: ", userId);
 
     if (!userId) {
       return res.status(400).json({ message: "userId는 필수입니다." });
     }
 
-    const user = await db.collection("users").findOne({ userId });
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(userId.trim()) });
 
     if (!user) {
       return res.status(404).json({ message: "유저를 찾을 수 없습니다." });

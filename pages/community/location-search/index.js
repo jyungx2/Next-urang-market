@@ -1,3 +1,4 @@
+import SearchLocationInput from "@/components/common/search-location";
 import Layout from "@/components/layout/layout";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
@@ -9,9 +10,30 @@ import { ClipLoader } from "react-spinners";
 export default function LocationSearchPage() {
   const { currentUser, setNewLocation } = useCurrentUserStore();
   console.log("현재 유저 정보: ", currentUser);
+  console.log(typeof currentUser?.id);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [recentLocations, setRecentLocations] = useState([]);
+
+  // 페이지 최초 렌더링시, 서버로부터 유저의 recentLocations 정보 가져와서(GET 요청) 렌더링
+  useEffect(() => {
+    const fetchRecentLocations = async () => {
+      try {
+        const res = await fetch(`/api/user/locations?userId=${currentUser.id}`);
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message);
+
+        setRecentLocations(data.recentLocations || []);
+      } catch (err) {
+        console.error("❌ 최근 위치 불러오기 실패:", err.message);
+      }
+    };
+
+    if (currentUser?.id) {
+      fetchRecentLocations();
+    }
+  }, [currentUser?.id]);
 
   const getMyLocation = () => {
     setIsLoading(true);
@@ -30,7 +52,7 @@ export default function LocationSearchPage() {
             if (!res.ok) throw new Error(data.message || "서버 에러");
 
             setIsLoading(false); // 스피너 종료
-            setNeighborhood([data.sigungu, data.dong]);
+            // setNeighborhood([data.sigungu, data.dong]);
 
             console.log("✅ 주소 '구':", data.sigungu);
             console.log("✅ 주소 '동':", data.dong);
@@ -39,8 +61,16 @@ export default function LocationSearchPage() {
 
             const fullAddress = [data.sigungu, data.dong].join(" ");
 
-            // 중복 제거하고 최근 리스트에 추가
-            addRecentArea(fullAddress);
+            // 서버에 PUT요청으로 유저의 location 값 fullAddress로 변경 (근데, IsVerified: true여야함! -> 여기서 객체를 만들어야할까? -> 일단 아래처럼 만듦 .. recentLocation이랑 똑같이..근데 배열이 아니라, 단일 객체이므로 그냥 newItem만 넘긴다.)
+            const keyword = fullAddress.split(" "); // 인천시 계양구 계산동 -> [계양구, 계산동]
+            const newItem = {
+              id: Date.now(),
+              keyword,
+              isVerified: true,
+            };
+            updateLocationOnServer(newItem);
+            console.log("❗️업데이트된 location 객체: ", newItem);
+            // router.back();
           } catch (err) {
             console.error("❌ 위치 요청 실패:", err);
             alert(err.message || "위치 정보를 가져오는데 실패했습니다.");
@@ -87,6 +117,8 @@ export default function LocationSearchPage() {
 
     // ✅ 컴포넌트(클라이언트) 상태 먼저 업데이트
     setRecentLocations(newList);
+    // ✅ 이거 중요!
+    setNewLocation(newItem); // 🔥 zustand currentUser.location 업데이트
 
     // ✅ 그 다음 최신 데이터(newList)를 서버에 전송
     try {
@@ -110,7 +142,7 @@ export default function LocationSearchPage() {
     }
   };
 
-  const updateLocationOnServer = async () => {
+  const updateLocationOnServer = async (newLocation) => {
     try {
       const res = await fetch("/api/user/locations", {
         method: "PUT",
@@ -119,10 +151,11 @@ export default function LocationSearchPage() {
         },
         body: JSON.stringify({
           userId: currentUser.id,
-          location,
+          location: newLocation,
         }),
       });
 
+      setNewLocation(newLocation);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       console.log("✅ 현재 위치 수정 완료:", data.message);
@@ -149,9 +182,14 @@ export default function LocationSearchPage() {
         <div /> {/* 오른쪽 공간 채우기용 빈 div */}
       </div>
       <div className="flex gap-6 p-4">
-        <input
+        {/* <input
           className="flex-grow bg-[var(--color-grey-100)] rounded-full p-4 text-[1.4rem]"
           placeholder='정확한 검색결과를 위해 반드시 "동" 단위로 입력하세요.'
+        /> */}
+
+        <SearchLocationInput
+          onSelect={(fullAddress) => saveRecentLocationsToServer(fullAddress)}
+          setIsLoading={setIsLoading}
         />
         <button className="cursor-pointer">
           <Image
@@ -201,7 +239,7 @@ export default function LocationSearchPage() {
             <ul role="listbox">
               <li role="presentation">
                 <Link href="/" className="text-[1.6rem] cursor-pointer">
-                  {location}
+                  {currentUser?.location?.keyword?.join(" ") || ""}
                 </Link>
               </li>
             </ul>
