@@ -1,14 +1,17 @@
 import Layout from "@/components/layout/layout";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 export default function LocationSearchPage() {
+  const { currentUser, setNewLocation } = useCurrentUserStore();
+  console.log("현재 유저 정보: ", currentUser);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [neighborhood, setNeighborhood] = useState("");
+  const [recentLocations, setRecentLocations] = useState([]);
 
   const getMyLocation = () => {
     setIsLoading(true);
@@ -27,8 +30,17 @@ export default function LocationSearchPage() {
             if (!res.ok) throw new Error(data.message || "서버 에러");
 
             setIsLoading(false); // 스피너 종료
-            setNeighborhood(data.dong);
-            console.log("✅ 주소 '동' 데이터 추출:", data.dong);
+            setNeighborhood([data.sigungu, data.dong]);
+
+            console.log("✅ 주소 '구':", data.sigungu);
+            console.log("✅ 주소 '동':", data.dong);
+            // console.log(neighborhood);
+            // 🚨 setNeighborhood([data.sigungu, data.dong]) 호출 직후에는 neighborhood 상태가 아직 이전 값을 유지... (∵ useState의 세터함수는 비동기적으로 작동하므로 바로 아래서 컨솔을 찍으면 업데이트 전 값이 나옴! => ✨useEffect로 변경된 값을 감지해서 출력하면 제대로 업데이트된 값을 알 수 있다.)
+
+            const fullAddress = [data.sigungu, data.dong].join(" ");
+
+            // 중복 제거하고 최근 리스트에 추가
+            addRecentArea(fullAddress);
           } catch (err) {
             console.error("❌ 위치 요청 실패:", err);
             alert(err.message || "위치 정보를 가져오는데 실패했습니다.");
@@ -42,6 +54,81 @@ export default function LocationSearchPage() {
         }
       );
     }, 1500); // 1.5초 로딩 타임
+  };
+
+  const renderAddressList = (areas) =>
+    areas.map((area, index) => (
+      <li key={index} role="presentation">
+        <Link href="/" className="text-[1.6rem] cursor-pointer">
+          {area}
+        </Link>
+      </li>
+    ));
+
+  // 다음 함수는 검색창에서 주소리스트 <li>클릭할 때 onClick 이벤트 함수로 설정!
+  const saveRecentLocationsToServer = async (fullAddress) => {
+    const keyword = fullAddress.split(" ").slice(-2); // 인천시 계양구 계산동 -> [계양구, 계산동]
+    const newItem = {
+      id: Date.now(),
+      keyword,
+      isVerified: false,
+    };
+
+    // ✨newList라는 최신 배열을 직접 만들어서✨
+    // 1. 클라이언트 측 상태값을 이걸로 변경하고 => setRecentLocations(newList)
+    // 2. 서버에 보낼 최신 데이터도 이걸로 보내자 =>  recentLocations: newList,
+    const newList = (() => {
+      const exists = recentLocations.some(
+        (loc) => loc.keyword.join() === keyword.join()
+      );
+      if (exists) return recentLocations;
+      return [...recentLocations, newItem].slice(-3);
+    })();
+
+    // ✅ 컴포넌트(클라이언트) 상태 먼저 업데이트
+    setRecentLocations(newList);
+
+    // ✅ 그 다음 최신 데이터(newList)를 서버에 전송
+    try {
+      const res = await fetch("/api/user/locations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          recentLocations: newList, // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      console.log("✅ 최근 위치 저장 성공");
+    } catch (err) {
+      console.error("❌ 최근 위치 저장 실패:", err.message);
+    }
+  };
+
+  const updateLocationOnServer = async () => {
+    try {
+      const res = await fetch("/api/user/locations", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          location,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      console.log("✅ 현재 위치 수정 완료:", data.message);
+    } catch (err) {
+      console.error("❌ 위치 수정 실패:", err.message);
+    }
   };
 
   return (
@@ -114,7 +201,7 @@ export default function LocationSearchPage() {
             <ul role="listbox">
               <li role="presentation">
                 <Link href="/" className="text-[1.6rem] cursor-pointer">
-                  계양구 계산동
+                  {location}
                 </Link>
               </li>
             </ul>
@@ -123,13 +210,7 @@ export default function LocationSearchPage() {
             <span className="py-4 text-[var(--color-grey-400)]">
               최근 이용 지역
             </span>
-            <ul role="listbox">
-              <li role="presentation">
-                <Link href="/" className="text-[1.6rem] cursor-pointer">
-                  계양구 효성동
-                </Link>
-              </li>
-            </ul>
+            <ul role="listbox">{renderAddressList(recentLocations)}</ul>
           </div>
         </div>
       </div>

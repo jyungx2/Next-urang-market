@@ -5,21 +5,19 @@ import classes from "@/components/main/search-form.module.css";
 import ClipLoader from "react-spinners/ClipLoader"; // ✅ 스피너 import
 import { useRef, useState } from "react";
 import MapContainer from "@/components/user/map";
+import SearchLocationInput from "@/components/common/search-location";
 
 export default function LocationPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { location, setLocation } = useUserStore();
   const [coords, setCoords] = useState({ lat: null, lng: null });
-
-  const addressRef = useRef();
-  const [searchResults, setSearchResults] = useState([]);
   const [neighborhood, setNeighborhood] = useState("");
 
   const selectMyLocation = async (fullAddress) => {
-    // 1. 인풋 값 업데이트
-    addressRef.current.value = fullAddress;
-    setSearchResults([]);
+    // 1. 인풋 값 업데이트 => SearchLocationInput 컴포넌트로 이동
+    // addressRef.current.value = fullAddress;
+    // setSearchResults([]);
 
     // 2. 카카오 주소 → 좌표 API 요청
     try {
@@ -78,30 +76,6 @@ export default function LocationPage() {
     }, 1500); // 1.5초 로딩 타임
   };
 
-  // 주소 검색 API 호출 함수 (검색어로 한 번 전체 데이터 가져오기)
-  const fetchLocations = async (keyword) => {
-    try {
-      const res = await fetch(
-        `/api/auth/search-location?keyword=${encodeURIComponent(keyword)}`
-      );
-      const data = await res.json();
-      return data.locations || [];
-    } catch (error) {
-      console.error("주소 검색 오류:", error);
-      return [];
-    }
-  };
-
-  // 인풋의 엔터 이벤트로 검색 수행 (ref 방식)
-  const handleAddressSearch = async () => {
-    const value = addressRef.current.value.trim();
-    if (value.length < 2) return;
-    setIsLoading(true);
-    const results = await fetchLocations(value);
-    setSearchResults(results);
-    setIsLoading(false);
-  };
-
   const goGetVerification = async (neighborhood) => {
     console.log("인증절차");
     router.push("/auth/signup/phone-verify");
@@ -125,35 +99,13 @@ export default function LocationPage() {
           />
         </button>
 
-        <div className="relative flex-grow rounded-2xl bg-[var(--color-grey-200)] p-1">
-          <input
-            ref={addressRef}
-            type="text"
-            className={`${classes.inputUnset} ${classes.searchInput}`}
-            placeholder="주소를 입력하세요."
-            onKeyDown={(e) => e.key === "Enter" && handleAddressSearch()}
-          />
-
-          {/* 드롭다운 검색 결과 */}
-          {searchResults.length > 0 && (
-            <ul className="absolute z-10 top-full left-0 w-full mt-2 bg-white border rounded-xl shadow-md max-h-[300px] overflow-y-auto">
-              {searchResults.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="p-4 hover:bg-gray-100 text-[1.5rem] cursor-pointer"
-                  onClick={() => {
-                    // 예: 주소 선택 시, 인풋에 값을 넣고 드롭다운 숨김
-                    handleAddressSearch(item.full);
-                    selectMyLocation(item.full);
-                    setNeighborhood(item.full);
-                  }}
-                >
-                  {item.full}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <SearchLocationInput
+          onSelect={(fullAddress) => {
+            selectMyLocation(fullAddress); // 지도 이동
+            setNeighborhood(fullAddress); // 주소값 UI 렌더링
+          }}
+          setIsLoading={setIsLoading}
+        />
       </header>
 
       <div>
