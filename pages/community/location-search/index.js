@@ -8,10 +8,17 @@ import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 export default function LocationSearchPage() {
-  const { currentUser, setCurrentUser, setNewLocation, setRecentLocations } =
-    useCurrentUserStore();
+  const {
+    currentUser,
+    setCurrentUser,
+    setNewLocation,
+    setRecentLocations,
+    setSelectedLocation,
+  } = useCurrentUserStore();
+
   console.log("현재 유저 정보: ", currentUser);
   console.log(typeof currentUser?.id);
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   // const [recentLocations, setRecentLocations] = useState([]);
@@ -98,11 +105,22 @@ export default function LocationSearchPage() {
       <li
         key={index}
         role="presentation"
-        onClick={() => updateLocationOnServer(location)}
+        className="flex justify-between text-[1.6rem] mb-6"
       >
-        <Link href="/community" className="text-[1.6rem] cursor-pointer">
+        <Link
+          href="/community"
+          className="cursor-pointer"
+          onClick={() => changeSelectedLocationOnServer(location)}
+        >
           {location.keyword.join(" ")}
         </Link>
+        <Image
+          className="cursor-pointer"
+          src="/icons/xbtn-bg.svg"
+          alt="icon"
+          width={20}
+          height={20}
+        />
       </li>
     ));
   };
@@ -183,6 +201,27 @@ export default function LocationSearchPage() {
     }
   };
 
+  const changeSelectedLocationOnServer = async (selectedLocation) => {
+    try {
+      const res = await fetch("/api/user/locations", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          selectedLocation,
+        }),
+      });
+      setSelectedLocation(selectedLocation);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      console.log("✅ 현재 선택한 위치 변경 완료:", data.message);
+    } catch {
+      console.error("❌ 현재 선택한 위치 변경 실패:", err.message);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col gap-2 bg-[var(--color-bg)]">
       <div className="grid grid-cols-3 items-center p-4 font-bold border-b border-[var(--color-grey-200)]">
@@ -258,9 +297,7 @@ export default function LocationSearchPage() {
             <ul role="listbox">
               <li role="presentation">
                 <Link href="/" className="text-[1.6rem] cursor-pointer">
-                  {currentUser?.location?.isVerified
-                    ? currentUser?.location.keyword.slice(-2).join(" ")
-                    : ""}
+                  {currentUser?.location.keyword.slice(-2).join(" ")}
                 </Link>
               </li>
             </ul>

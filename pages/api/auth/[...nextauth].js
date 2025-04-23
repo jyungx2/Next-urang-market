@@ -66,6 +66,7 @@ export default NextAuth({
           nickname: user.nickname, // DB에서 가져온 값
           profileImage: user.profileImage, // DB에서 가져온 값
           recentLocations: user.recentLocations ?? [], // ⚠️꼭 추가!
+          selectedLocation: user.selectedLocation ?? {},
         }; // ✅ 로그인 성공
       },
     }),
@@ -85,6 +86,7 @@ export default NextAuth({
         token.profileImage = user.profileImage;
         token.role = user.role;
         token.recentLocations = user.recentLocations ?? [];
+        token.selectedLocation = user.selectedLocation ?? {};
       }
       return token;
     },
@@ -99,6 +101,7 @@ export default NextAuth({
       session.user.profileImage = token.profileImage;
       session.user.role = token.role;
       session.user.recentLocations = token.recentLocations ?? []; // null or undefined일 경우에만 []을 넣겠다..
+      session.user.selectedLocation = token.selectedLocation ?? {};
       return session;
     },
   },

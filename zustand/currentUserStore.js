@@ -17,13 +17,24 @@ const CurrentUserStore = (set, get) => ({
     });
   },
 
-  setRecentLocations: (selectedLocations) => {
+  setRecentLocations: (newLocations) => {
     const user = get().currentUser;
     if (!user) return;
     set({
       currentUser: {
         ...user,
-        recentLocations: selectedLocations,
+        recentLocations: newLocations,
+      },
+    });
+  },
+
+  setSelectedLocation: (selectedLocation) => {
+    const user = get().currentUser;
+    if (!user) return;
+    set({
+      currentUser: {
+        ...user,
+        selectedLocation,
       },
     });
   },

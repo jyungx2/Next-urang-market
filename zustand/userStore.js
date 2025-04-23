@@ -13,6 +13,7 @@ const UserStore = (set, get) => ({
   profileImage: null,
   nickname: "",
   recentLocations: [],
+  selectedLocation: {},
 
   // ✅ 개별 setter들 (회원가입 단계별 페이지에서 해당 필드만 독립적으로 업데이트할 때 필요)
   setLocation: (value) => set({ location: value }),
@@ -51,6 +52,7 @@ const UserStore = (set, get) => ({
       profileImage: state.profileImage,
       nickname: state.nickname,
       recentLocations: state.recentLocations,
+      selectedLocation: state.selectedLocation,
     };
   },
 
@@ -65,6 +67,7 @@ const UserStore = (set, get) => ({
       profileImage: null,
       nickname: "",
       recentLocations: [],
+      selectedLocation: {},
     }),
 });
 
