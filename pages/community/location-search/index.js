@@ -93,22 +93,15 @@ export default function LocationSearchPage() {
     }, 1500); // 1.5초 로딩 타임
   };
 
-  const renderRecentAddress = (areas) => {
-    // areas === [계양구, 계산동]
-    const newItem = {
-      id: Date.now(),
-      keyword: areas,
-      isVerified: false, // 단순 클릭으로 현재위치 변경한 거니까..
-    };
-
-    areas?.map((area, index) => (
+  const renderRecentAddress = (recentLocations) => {
+    return recentLocations?.map((location, index) => (
       <li
         key={index}
         role="presentation"
-        onClick={updateLocationOnServer(newItem)}
+        onClick={() => updateLocationOnServer(location)}
       >
         <Link href="/community" className="text-[1.6rem] cursor-pointer">
-          {area.keyword.join(" ")}
+          {location.keyword.join(" ")}
         </Link>
       </li>
     ));
@@ -265,7 +258,9 @@ export default function LocationSearchPage() {
             <ul role="listbox">
               <li role="presentation">
                 <Link href="/" className="text-[1.6rem] cursor-pointer">
-                  {currentUser?.location?.keyword?.slice(-2).join(" ") || ""}
+                  {currentUser?.location?.isVerified
+                    ? currentUser?.location.keyword.slice(-2).join(" ")
+                    : ""}
                 </Link>
               </li>
             </ul>
