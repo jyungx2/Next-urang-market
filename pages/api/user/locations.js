@@ -14,21 +14,19 @@ export default async function handler(req, res) {
     }
 
     if (location) {
-      let formattedLocation = location;
+      // let formattedLocation = location;
 
-      if (typeof location === "string") {
-        formattedLocation = {
-          keyword: location.split(" ").slice(-2),
-          isVerified: false,
-        };
-      }
+      // 무조건 회원가입 - 자동로그인할 때, 오브젝트 형태로 location값 저장!!
+      // if (typeof location === "string") {
+      //   formattedLocation = {
+      //     keyword: location.split(" "),
+      //     isVerified: false,
+      //   };
+      // }
 
       await db
         .collection("users")
-        .updateOne(
-          { _id: new ObjectId(userId) },
-          { $set: { location: formattedLocation } }
-        );
+        .updateOne({ _id: new ObjectId(userId) }, { $set: { location } });
 
       return res.status(200).json({ message: "현재 위치 수정 완료" });
     }

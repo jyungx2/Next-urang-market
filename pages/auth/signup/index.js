@@ -79,7 +79,12 @@ export default function LocationPage() {
   const goGetVerification = async (neighborhood) => {
     console.log("인증절차");
     router.push("/auth/signup/phone-verify");
-    setLocation(neighborhood);
+
+    const addressObj = {
+      keyword: neighborhood.split(" "),
+      isVerified: false,
+    }; // 회원가입할 땐 위치인증절차 안거치므로 일단 무조건 false
+    setLocation(addressObj);
     console.log("zustand에 저장된 유저의 동네:", location);
   };
 

@@ -5,6 +5,7 @@ import OddPostList from "@/components/community/odd-post-list";
 import categoryData from "@/data/category";
 import useSWR from "swr";
 import Layout from "@/components/layout/layout";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 
 function getKoreanCategory(mainSlug, subSlug) {
   const main = categoryData.find((cat) => cat.slug === mainSlug);
@@ -21,6 +22,7 @@ export default function CommunityPage() {
   console.log("Community Query: ", router.query);
   const { mainCategory: mainSlug, tab: subSlug } = router.query;
   const { mainCategory, subCategory } = getKoreanCategory(mainSlug, subSlug);
+  const { currentUser } = useCurrentUserStore();
 
   console.log("🇺🇸 main/sub:", mainSlug, subSlug);
 

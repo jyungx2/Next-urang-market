@@ -5,7 +5,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 // - 회원가입 끝나고 DB에 저장했으면 → 더 이상 쓸 필요 없음!
 // - 그래서 persist 붙일 필요도 X & 새로고침돼도 사라져야 정상
 const UserStore = (set, get) => ({
-  location: "",
+  location: {},
   username: "",
   birthdate: "",
   phoneNumber: "",

@@ -50,9 +50,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const { mainCategory, subCategory } = req.query;
 
-    const filter = {};
-    if (mainCategory) filter.mainCategory = mainCategory;
-    if (subCategory) filter.subCategory = subCategory;
+    const filter = { mainCategory, subCategory };
 
     try {
       const documents = await getAllDocuments(

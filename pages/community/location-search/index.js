@@ -93,14 +93,26 @@ export default function LocationSearchPage() {
     }, 1500); // 1.5초 로딩 타임
   };
 
-  const renderRecentAddress = (areas) =>
+  const renderRecentAddress = (areas) => {
+    // areas === [계양구, 계산동]
+    const newItem = {
+      id: Date.now(),
+      keyword: areas,
+      isVerified: false, // 단순 클릭으로 현재위치 변경한 거니까..
+    };
+
     areas?.map((area, index) => (
-      <li key={index} role="presentation">
-        <Link href="/" className="text-[1.6rem] cursor-pointer">
+      <li
+        key={index}
+        role="presentation"
+        onClick={updateLocationOnServer(newItem)}
+      >
+        <Link href="/community" className="text-[1.6rem] cursor-pointer">
           {area.keyword.join(" ")}
         </Link>
       </li>
     ));
+  };
 
   // 다음 함수는 검색창에서 주소리스트 <li>클릭할 때 onClick 이벤트 함수로 설정!
   const saveRecentLocationsToServer = async (fullAddress) => {
@@ -253,7 +265,7 @@ export default function LocationSearchPage() {
             <ul role="listbox">
               <li role="presentation">
                 <Link href="/" className="text-[1.6rem] cursor-pointer">
-                  {currentUser?.location?.keyword?.join(" ") || ""}
+                  {currentUser?.location?.keyword?.slice(-2).join(" ") || ""}
                 </Link>
               </li>
             </ul>

@@ -1,8 +1,4 @@
-import {
-  connectDatabase,
-  getDocumentsByKeyword,
-  insertDocument,
-} from "@/helpers/db-util";
+import { connectDatabase, getDocumentsByKeyword } from "@/helpers/db-util";
 
 // ✅ let cachedClient = null을 함수 바깥에 두는 이유는, Next.js API Routes가 모듈을 “메모리에 유지”시키기 때문에, 커넥션을 효율적으로 재사용할 수 있기 때문
 let cachedClient = null; // 모듈 스코프 (한 번만 실행됨, 서버가 꺼질 때까지 유지됨) =>  최초 1번 연결 후 재사용 가능 (성능 👍)

@@ -20,7 +20,7 @@ export default function UserLocation() {
           height={18}
         />
         <h3 className="font-bold text-[1.6rem] text-[var(--color-grey-bg)] ml-2">
-          효성동 이웃
+          {currentUser?.location?.keyword?.slice(-1)[0]} 이웃
         </h3>
         <Image
           src="/icons/chevron-down-w-micro.svg"
