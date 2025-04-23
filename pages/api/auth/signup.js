@@ -14,6 +14,7 @@ async function handler(req, res) {
       phoneNumber,
       profileImage,
       nickname,
+      recentLocations,
     } = data;
 
     if (
@@ -56,6 +57,7 @@ async function handler(req, res) {
       profileImage,
       nickname,
       role: isAdmin ? "admin" : "user",
+      recentLocations: [],
     };
 
     try {

@@ -12,6 +12,7 @@ const UserStore = (set, get) => ({
   isVerified: false,
   profileImage: null,
   nickname: "",
+  recentLocations: [],
 
   // ✅ 개별 setter들 (회원가입 단계별 페이지에서 해당 필드만 독립적으로 업데이트할 때 필요)
   setLocation: (value) => set({ location: value }),
@@ -49,6 +50,7 @@ const UserStore = (set, get) => ({
       phoneNumber: state.phoneNumber,
       profileImage: state.profileImage,
       nickname: state.nickname,
+      recentLocations: state.recentLocations,
     };
   },
 
@@ -62,6 +64,7 @@ const UserStore = (set, get) => ({
       isVerified: false,
       profileImage: null,
       nickname: "",
+      recentLocations: [],
     }),
 });
 

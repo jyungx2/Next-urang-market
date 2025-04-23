@@ -8,12 +8,13 @@ import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 export default function LocationSearchPage() {
-  const { currentUser, setNewLocation } = useCurrentUserStore();
+  const { currentUser, setCurrentUser, setNewLocation, setRecentLocations } =
+    useCurrentUserStore();
   console.log("현재 유저 정보: ", currentUser);
   console.log(typeof currentUser?.id);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [recentLocations, setRecentLocations] = useState([]);
+  // const [recentLocations, setRecentLocations] = useState([]);
 
   // 페이지 최초 렌더링시, 서버로부터 유저의 recentLocations 정보 가져와서(GET 요청) 렌더링
   useEffect(() => {
@@ -24,7 +25,13 @@ export default function LocationSearchPage() {
 
         if (!res.ok) throw new Error(data.message);
 
-        setRecentLocations(data.recentLocations || []);
+        console.log(
+          "🧩 서버로부터 가져온 recentLocations:",
+          data.recentLocations
+        );
+        setRecentLocations(data.recentLocations ?? []);
+
+        console.log("최근 위치 가져오기 성공!", data.recentLocations);
       } catch (err) {
         console.error("❌ 최근 위치 불러오기 실패:", err.message);
       }
@@ -66,7 +73,7 @@ export default function LocationSearchPage() {
             const newItem = {
               id: Date.now(),
               keyword,
-              isVerified: true,
+              isVerified: true, // GPS로 현재 위치를 인증한 거니까..
             };
             updateLocationOnServer(newItem);
             console.log("❗️업데이트된 location 객체: ", newItem);
@@ -86,11 +93,11 @@ export default function LocationSearchPage() {
     }, 1500); // 1.5초 로딩 타임
   };
 
-  const renderAddressList = (areas) =>
-    areas.map((area, index) => (
+  const renderRecentAddress = (areas) =>
+    areas?.map((area, index) => (
       <li key={index} role="presentation">
         <Link href="/" className="text-[1.6rem] cursor-pointer">
-          {area}
+          {area.keyword.join(" ")}
         </Link>
       </li>
     ));
@@ -108,28 +115,35 @@ export default function LocationSearchPage() {
     // 1. 클라이언트 측 상태값을 이걸로 변경하고 => setRecentLocations(newList)
     // 2. 서버에 보낼 최신 데이터도 이걸로 보내자 =>  recentLocations: newList,
     const newList = (() => {
-      const exists = recentLocations.some(
+      const exists = currentUser?.recentLocations?.some(
         (loc) => loc.keyword.join() === keyword.join()
       );
-      if (exists) return recentLocations;
-      return [...recentLocations, newItem].slice(-3);
+      if (exists) return currentUser?.recentLocations;
+      return [...currentUser?.recentLocations, newItem].slice(-3);
     })();
 
     // ✅ 컴포넌트(클라이언트) 상태 먼저 업데이트
     setRecentLocations(newList);
-    // ✅ 이거 중요!
-    setNewLocation(newItem); // 🔥 zustand currentUser.location 업데이트
 
-    // ✅ 그 다음 최신 데이터(newList)를 서버에 전송
+    // 💥⚠️객체 전체를 갱신해줄 필요⚠️💥
+    setCurrentUser({ ...currentUser, recentLocations: newList });
+    // 위의 코드를 써주지 않으면, zustand는 상태가 변경되었는지 판단할 때, === 비교만 하기 때문에, 내부 속성(recentLocations 배열값)이 바뀌어도 currentUser 객체 자체가 동일하다면 React는 렌더링을 다시 하지 않으므로, currentUser 객체가 얕은 비교로 변경되지 않았다고 판단하여 렌더링을 다시 하지 x -> 아무리 setRecentLocations로 배열을 newList를 추가해 업데이트해줘도, 화면 상에 렌더링 되지 않음!
+    // => 따라서, currentUser 자체를 업데이트해줌으로써 깊은 복사를 통해 currentUser 객체의 참조 자체를 바꿔주어 zustand가 변경 사항을 감지하고 리렌더링하도록 한다.
+
+    // ⚠️ GPS로 인증한 위치만 location으로 등록할건지, 아니면 그냥 사용자가 현재 선택한 인증되지 않은 위치도 location으로 등록할건지...=> 우리동네 = location이기 떄문에 내위치(GPS) 버튼 결과값만 location으로 등록되도록 하자! => 따라서 아래 코드는 지워야함..
+    // setNewLocation(newItem); // 🔥 zustand currentUser.location 업데이트
+
+    // ✅ 그 다음 최신 데이터(newList)를 서버에 전송 (진짜 데이터)
     try {
       const res = await fetch("/api/user/locations", {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: currentUser.id,
-          recentLocations: newList, // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
+          recentLocation: newItem, // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
+          // 📌 api routes파일에서 PATCH 요청으로 $push, $each 메소드 이용해 요소 하나씩 받아서 recentLocations: [] 빈 배열에 넣는 방식이므로 newList가 아닌, newItem을 전달.. (250423 - 노션필기참고)
         }),
       });
 
@@ -145,7 +159,7 @@ export default function LocationSearchPage() {
   const updateLocationOnServer = async (newLocation) => {
     try {
       const res = await fetch("/api/user/locations", {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -248,7 +262,9 @@ export default function LocationSearchPage() {
             <span className="py-4 text-[var(--color-grey-400)]">
               최근 이용 지역
             </span>
-            <ul role="listbox">{renderAddressList(recentLocations)}</ul>
+            <ul role="listbox">
+              {renderRecentAddress(currentUser?.recentLocations)}
+            </ul>
           </div>
         </div>
       </div>

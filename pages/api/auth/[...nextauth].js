@@ -40,6 +40,7 @@ export default NextAuth({
             phoneNumber: user.phoneNumber, // DB에서 가져온 값
             nickname: user.nickname, // DB에서 가져온 값
             profileImage: user.profileImage, // DB에서 가져온 값
+            recentLocations: user.recentLocations ?? [], // ⚠️꼭 추가!
           }; // ✅ 로그인 성공 => 유저입력값인 crendentials가 아니라 실제로 유효성이 검증된 DB에 존재하는 값들을 리턴해야 함!
         }
 
@@ -64,12 +65,14 @@ export default NextAuth({
           phoneNumber: user.phoneNumber, // DB에서 가져온 값
           nickname: user.nickname, // DB에서 가져온 값
           profileImage: user.profileImage, // DB에서 가져온 값
+          recentLocations: user.recentLocations ?? [], // ⚠️꼭 추가!
         }; // ✅ 로그인 성공
       },
     }),
   ],
   // ** 콜백: “로그인 과정 중간에 개입해서 정보를 추가하거나 수정할 수 있게 해주는 함수들”
   // 1️⃣ authorize()에 의해 로그인로직(signIn()) 성공 시, 리턴되는 유저 정보를 jwt() 콜백의 토큰에 넣어서 jwt토큰 생성. => 이 토큰은 서버/클라이언트 모두에서 인증상태를 유지하는데 사용가능. => 이걸 해줘야만 세션에 해당 속성값이 들어갈 수 있음
+  // next-auth에서 getSession()은 session 콜백을 통해 클라이언트에 session.user를 구성, 그런데 session 콜백은 결국 jwt 콜백에서 token에 담아둔 값만을 바탕으로 session을 구성.. 즉, jwt → session → client 순서로 이어지기 때문에 여기서 currentUser(전역상태값)에 저장할 속성을 누락하면 undefined 오류가 뜸.
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -81,6 +84,7 @@ export default NextAuth({
         token.nickname = user.nickname;
         token.profileImage = user.profileImage;
         token.role = user.role;
+        token.recentLocations = user.recentLocations ?? [];
       }
       return token;
     },
@@ -94,7 +98,13 @@ export default NextAuth({
       session.user.nickname = token.nickname;
       session.user.profileImage = token.profileImage;
       session.user.role = token.role;
+      session.user.recentLocations = token.recentLocations ?? []; // null or undefined일 경우에만 []을 넣겠다..
       return session;
     },
   },
 });
+
+// 위치	역할	비고
+// 1. jwt(): DB에서 가져온 user 데이터를 token에 저장/이때 빠지면 session()에서도 사라짐
+// 2. session(): token 데이터를 session.user에 복사/여기서 사용하는 건 token 값임
+// 3. getSession():	최종적으로 session.user를 클라이언트에서 사용/즉, user.recentLocations이 여기까지 도달하려면 처음부터 다 넣어야 함
