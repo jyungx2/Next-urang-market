@@ -107,13 +107,12 @@ export default function LocationSearchPage() {
         role="presentation"
         className="flex justify-between text-[1.6rem] mb-6"
       >
-        <Link
-          href="/community"
+        <div
           className="cursor-pointer"
           onClick={() => changeSelectedLocationOnServer(location)}
         >
           {location.keyword.join(" ")}
-        </Link>
+        </div>
         <Image
           className="cursor-pointer"
           src="/icons/xbtn-bg.svg"
@@ -213,9 +212,14 @@ export default function LocationSearchPage() {
           selectedLocation,
         }),
       });
-      setSelectedLocation(selectedLocation);
+
       const data = await res.json();
+
       if (!res.ok) throw new Error(data.message);
+      setSelectedLocation(selectedLocation);
+
+      router.push(`/community/${router.query.from}`);
+
       console.log("✅ 현재 선택한 위치 변경 완료:", data.message);
     } catch {
       console.error("❌ 현재 선택한 위치 변경 실패:", err.message);

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export default function UserLocation() {
+export default function UserLocation({ mainCategory }) {
   const router = useRouter();
   const { currentUser } = useCurrentUserStore();
 
@@ -11,7 +11,12 @@ export default function UserLocation() {
     <div className="flex justify-between items-center">
       <button
         className="flex items-center cursor-pointer bg-[var(--color-secondary-900)] rounded-full p-4 gap-1"
-        onClick={() => router.push("/community/location-search")}
+        onClick={() =>
+          router.push({
+            pathname: "/community/location-search",
+            query: { from: mainCategory },
+          })
+        }
       >
         <Image
           src="/icons/location-w-filled.svg"

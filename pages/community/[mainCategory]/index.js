@@ -6,6 +6,7 @@ import categoryData from "@/data/category";
 import useSWR from "swr";
 import Layout from "@/components/layout/layout";
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import UserLocation from "@/components/community/user-location";
 
 function getKoreanCategory(mainSlug, subSlug) {
   const main = categoryData.find((cat) => cat.slug === mainSlug);
@@ -22,10 +23,8 @@ export default function CommunityPage() {
   console.log("Community Query: ", router.query);
   const { mainCategory: mainSlug, tab: subSlug } = router.query;
   const { mainCategory, subCategory } = getKoreanCategory(mainSlug, subSlug);
-  const { currentUser } = useCurrentUserStore();
 
   console.log("🇺🇸 main/sub:", mainSlug, subSlug);
-
   console.log("🇰🇷 메인/서브:", mainCategory, subCategory);
 
   // 🚨 mainCategoryegory가 아직 없을 땐 null을 key로 넘겨서 SWR을 멈춘다
@@ -53,7 +52,9 @@ export default function CommunityPage() {
 
   if (error) {
     return (
-      <CommunityLayout>
+      <CommunityLayout
+        userLocationSlot={<UserLocation mainCategory={mainSlug} />}
+      >
         <p>💥 데이터를 불러오는 중 오류가 발생했어요 💥</p>
       </CommunityLayout>
     );
@@ -61,7 +62,9 @@ export default function CommunityPage() {
 
   if (isLoading) {
     return (
-      <CommunityLayout>
+      <CommunityLayout
+        userLocationSlot={<UserLocation mainCategory={mainSlug} />}
+      >
         <p className="text-center font-medium text-[2rem]">
           ⏳ 데이터를 불러오는 중입니다...
         </p>
@@ -89,7 +92,9 @@ export default function CommunityPage() {
   // mainCategory(Processed data by a customed function, 한국어 카테고리) 기준으로 렌더링
   if (mainCategory === "공지사항" || mainCategory === "워킹홀리데이") {
     return (
-      <CommunityLayout>
+      <CommunityLayout
+        userLocationSlot={<UserLocation mainCategory={mainSlug} />}
+      >
         <OddPostList items={DUMMY_DATA_ONE} />
       </CommunityLayout>
     );
@@ -98,7 +103,9 @@ export default function CommunityPage() {
   // mainSlug(Raw query data, 영어 카테고리) 기준으로 렌더링
   if (mainSlug === "living-abroad" || mainSlug === "working-abroad") {
     return (
-      <CommunityLayout>
+      <CommunityLayout
+        userLocationSlot={<UserLocation mainCategory={mainSlug} />}
+      >
         <EvenPostList items={data?.posts || []} />
       </CommunityLayout>
     );
