@@ -298,13 +298,16 @@ export default function LocationSearchPage() {
               />
             </div>
 
-            <ul role="listbox">
-              <li role="presentation">
-                <Link href="/" className="text-[1.6rem] cursor-pointer">
-                  {currentUser?.location.keyword.slice(-2).join(" ")}
-                </Link>
-              </li>
-            </ul>
+            <div role="listbox">
+              <div
+                className="text-[1.6rem] cursor-pointer"
+                onClick={() =>
+                  changeSelectedLocationOnServer(currentUser?.location)
+                }
+              >
+                {currentUser?.location.keyword.slice(-2).join(" ")}
+              </div>
+            </div>
           </div>
           <div className="flex flex-col">
             <span className="py-4 text-[var(--color-grey-400)]">
