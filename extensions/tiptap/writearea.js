@@ -47,15 +47,17 @@ export default function WriteArea({ titleRef, onCategorySelect }) {
         </button>
       </div>
 
-      <div className="w-full p-4 border-b border-[var(--color-grey-200)]">
-        <input
-          ref={titleRef}
-          type="text"
-          placeholder="제목을 입력하세요"
-          required
-          className="focus:outline-none focus:ring-0"
-        />
-      </div>
+      {selected.mainCategory.name === "공지사항" && (
+        <div className="w-full p-4 border-b border-[var(--color-grey-200)]">
+          <input
+            ref={titleRef}
+            type="text"
+            placeholder="제목을 입력하세요"
+            required
+            className="focus:outline-none focus:ring-0"
+          />
+        </div>
+      )}
 
       <div className="w-full p-4 border-b border-[var(--color-grey-200)]">
         {currentUser?.selectedLocation?.keyword.slice(-1)[0]}
@@ -68,7 +70,7 @@ export default function WriteArea({ titleRef, onCategorySelect }) {
           type="button"
         >
           {selected.mainCategory && selected.subCategory
-            ? `${selected.mainCategory} / ${selected.subCategory}`
+            ? `${selected.mainCategory.name} / ${selected.subCategory.label}`
             : "게시글의 주제를 선택해주세요."}
           <Image
             src="/icons/chevron-down.svg"
