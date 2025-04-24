@@ -2,9 +2,8 @@ import SearchLocationInput from "@/components/common/search-location";
 import Layout from "@/components/layout/layout";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 export default function LocationSearchPage() {
@@ -22,6 +21,10 @@ export default function LocationSearchPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   // const [recentLocations, setRecentLocations] = useState([]);
+
+  // ⭐️ SearchLocationInput 리팩토링 ⭐️
+  const [searchResults, setSearchResults] = useState([]);
+  const addressRef = useRef();
 
   // 페이지 최초 렌더링시, 서버로부터 유저의 recentLocations 정보 가져와서(GET 요청) 렌더링
   useEffect(() => {
@@ -158,14 +161,27 @@ export default function LocationSearchPage() {
     ));
   };
 
+  // SearchLocationInput의 책임을 줄이고, 부모에서 모든 후처리를 담당 -> SearchLocationInput에서는 주소만 선택해서 넘기고, 부모 컴포넌트(LocationSearchPage)에서 이걸 받아 처리하는 방식
+  const handleSelectAddress = (fullAddress) => {
+    saveRecentLocationsToServer(fullAddress);
+
+    setTimeout(() => {
+      if (addressRef.current) addressRef.current.value = "";
+      setSearchResults([]);
+    }, 0);
+  };
+
   // 다음 함수는 검색창에서 주소리스트 <li>클릭할 때 onClick 이벤트 함수로 설정!
   const saveRecentLocationsToServer = async (fullAddress) => {
-    const keyword = fullAddress.split(" ").slice(-2); // 인천시 계양구 계산동 -> [계양구, 계산동]
+    const keyword = fullAddress.split(" ").slice(-2); // "인천시 계양구 계산동" -> [계양구, 계산동]
     const newItem = {
       id: Date.now(),
       keyword,
       isVerified: false,
     };
+
+    // ✅ selectedLocation(전역상태) 변경하여 해당 주소에 대한 게시글목록 페이지로 라우팅 및 서버 PATCH 요청 보내 데이터 수정
+    changeSelectedLocationOnServer(newItem);
 
     // ✨newList라는 최신 배열을 직접 만들어서✨
     // 1. 클라이언트 측 상태값을 이걸로 변경하고 => setRecentLocations(newList)
@@ -250,8 +266,10 @@ export default function LocationSearchPage() {
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message);
+      // 전역 상태 (selectedLocation) 바꾸고,
       setSelectedLocation(selectedLocation);
 
+      // 해당 주소에 맞는 게시글 목록을 담은 페이지로 이동 (✨쿼리스트링 rcode 추가)
       router.push(`/community/${router.query.from}`);
 
       console.log("✅ 현재 선택한 위치 변경 완료:", data.message);
@@ -279,8 +297,11 @@ export default function LocationSearchPage() {
       </div>
       <div className="flex gap-6 p-4">
         <SearchLocationInput
-          onSelect={(fullAddress) => saveRecentLocationsToServer(fullAddress)}
+          onSelect={(fullAddress) => handleSelectAddress(fullAddress)}
           setIsLoading={setIsLoading}
+          addressRef={addressRef}
+          searchResults={searchResults}
+          setSearchResults={setSearchResults}
         />
       </div>
       <div className="mx-4">

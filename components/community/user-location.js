@@ -39,7 +39,7 @@ export default function UserLocation({ mainCategory }) {
         />
       </button>
 
-      <Link href="/" className="relative w-[30px] aspect-square">
+      <Link href="/profile" className="relative w-[30px] aspect-square">
         <Image
           src={currentUser?.profileImage || "/icons/profile-signup.svg"}
           alt="icon"

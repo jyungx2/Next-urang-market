@@ -2,11 +2,14 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
 
-export default function SearchLocationInput({ onSelect, setIsLoading }) {
-  const [searchResults, setSearchResults] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-  const addressRef = useRef();
-
+// ⭐️단순히 "입력받고", "검색 결과를 보여주고", "선택 시 부모 콜백 호출"만 하는 구조로 리팩토링 (4/24)⭐️
+export default function SearchLocationInput({
+  onSelect,
+  setIsLoading,
+  addressRef,
+  searchResults,
+  setSearchResults,
+}) {
   // ✅ CSV로부터 MongoDB에 저장된 데이터를 기반으로 **검색어(keyword)**를 이용해 주소 리스트를 fetch하는 역할의 함수
   const fetchParsedLocationList = async (keyword) => {
     try {
@@ -47,11 +50,9 @@ export default function SearchLocationInput({ onSelect, setIsLoading }) {
               <li
                 key={idx}
                 className="p-4 hover:bg-gray-100 text-[1.5rem] cursor-pointer"
-                onClick={() => {
-                  addressRef.current.value = ""; // 인풋 리셋
-                  setSearchResults([]);
-                  onSelect(item.full); // ✅ 부모에서 전달받은 콜백
-                }}
+                onClick={
+                  () => onSelect(item.full) // ✅ 부모에서 전달받은 콜백 -> 가장 먼저 호출하여 라우팅
+                }
               >
                 {item.full}
               </li>

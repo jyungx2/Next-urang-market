@@ -85,7 +85,7 @@ export default function LocationPage() {
       isVerified: false,
     }; // 회원가입할 땐 위치인증절차 안거치므로 일단 무조건 false
     setLocation(addressObj);
-    console.log("zustand에 저장된 유저의 동네:", location);
+    console.log("zustand에 저장된 유저의 동네:", location, addressObj);
   };
 
   return (
