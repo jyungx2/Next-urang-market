@@ -4,30 +4,21 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function WriteArea({ titleRef, onCategorySelect }) {
+export default function WriteArea({ titleRef, category, onCategorySelect }) {
   const router = useRouter();
-
   const [modalOpen, setModalOpen] = useState(false);
-  const [selected, setSelected] = useState({
-    mainCategory: "",
-    subCategory: "",
-  });
-
-  const isNoticeCategory = selected.mainCategory === "공지사항";
-
+  const isNoticeCategory = category.mainCategory.name === "공지사항";
   const { currentUser } = useCurrentUserStore();
 
   useEffect(() => {
-    console.log("✅ selected:", selected);
-    console.log("✅ mainCategory:", selected.mainCategory);
+    console.log("✅ category:", category);
+    console.log("✅ mainCategory:", category.mainCategory);
     console.log("✅ isNoticeCategory:", isNoticeCategory);
-  }, [selected]);
+  }, [category]);
 
   const handleCategorySelect = (category) => {
-    setSelected(category);
-    onCategorySelect?.(category);
+    onCategorySelect(category);
   };
-  console.log("📍선택된 동네:", currentUser?.selectedLocation?.keyword);
 
   return (
     <div className="flex flex-col">
@@ -47,7 +38,7 @@ export default function WriteArea({ titleRef, onCategorySelect }) {
         </button>
       </div>
 
-      {selected.mainCategory.name === "공지사항" && (
+      {category.mainCategory.name === "공지사항" && (
         <div className="w-full p-4 border-b border-[var(--color-grey-200)]">
           <input
             ref={titleRef}
@@ -69,8 +60,8 @@ export default function WriteArea({ titleRef, onCategorySelect }) {
           className="w-full flex items-center py-3 text-left"
           type="button"
         >
-          {selected.mainCategory && selected.subCategory
-            ? `${selected.mainCategory.name} / ${selected.subCategory.label}`
+          {category.mainCategory.name && category.subCategory.label
+            ? `${category.mainCategory.name} / ${category.subCategory.label}`
             : "게시글의 주제를 선택해주세요."}
           <Image
             src="/icons/chevron-down.svg"

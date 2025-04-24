@@ -109,7 +109,11 @@ export default function PostAddPage() {
       className="flex flex-col bg-[var(--color-bg)] min-h-screen relative w-full"
       onSubmit={handleSubmit}
     >
-      <WriteArea titleRef={titleRef} onCategorySelect={setCategory} />
+      <WriteArea
+        titleRef={titleRef}
+        category={category}
+        onCategorySelect={setCategory}
+      />
       {/* 툴바 컴포넌트 (굵게, 이미지 추가, 이모지 등) */}
       <Toolbar editor={editor} />
       {/* 실제 에디터 콘텐츠가 렌더링되는 영역 */}
