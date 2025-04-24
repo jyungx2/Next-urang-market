@@ -1,4 +1,5 @@
 // components/common/SearchLocationInput.jsx
+import Image from "next/image";
 import { useState, useRef } from "react";
 
 export default function SearchLocationInput({ onSelect, setIsLoading }) {
@@ -30,32 +31,42 @@ export default function SearchLocationInput({ onSelect, setIsLoading }) {
   };
 
   return (
-    <div className="relative flex-grow rounded-2xl bg-[var(--color-grey-200)] p-1">
-      <input
-        ref={addressRef}
-        type="text"
-        className="w-full p-3 rounded-xl border text-[1.4rem]"
-        placeholder="주소를 입력하세요"
-        onKeyDown={(e) => e.key === "Enter" && fetchSearchResults()}
-      />
+    <>
+      <div className="relative flex-grow rounded-2xl bg-[var(--color-grey-200)] p-1">
+        <input
+          ref={addressRef}
+          type="text"
+          className="w-full p-3 rounded-xl text-[1.4rem]"
+          placeholder="주소를 입력하세요"
+          onKeyDown={(e) => e.key === "Enter" && fetchSearchResults()}
+        />
 
-      {searchResults.length > 0 && (
-        <ul className="absolute z-10 top-full left-0 w-full mt-2 bg-white border rounded-xl shadow-md max-h-[300px] overflow-y-auto">
-          {searchResults.map((item, idx) => (
-            <li
-              key={idx}
-              className="p-4 hover:bg-gray-100 text-[1.5rem] cursor-pointer"
-              onClick={() => {
-                addressRef.current.value = item.full;
-                setSearchResults([]);
-                onSelect(item.full); // ✅ 부모에서 전달받은 콜백
-              }}
-            >
-              {item.full}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+        {searchResults.length > 0 && (
+          <ul className="absolute z-10 top-full left-0 w-full mt-2 bg-white border rounded-xl shadow-md max-h-[300px] overflow-y-auto">
+            {searchResults.map((item, idx) => (
+              <li
+                key={idx}
+                className="p-4 hover:bg-gray-100 text-[1.5rem] cursor-pointer"
+                onClick={() => {
+                  addressRef.current.value = ""; // 인풋 리셋
+                  setSearchResults([]);
+                  onSelect(item.full); // ✅ 부모에서 전달받은 콜백
+                }}
+              >
+                {item.full}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <button className="cursor-pointer" onClick={() => fetchSearchResults()}>
+        <Image
+          src="/icons/search.svg"
+          alt="search-icon"
+          width={24}
+          height={24}
+        />
+      </button>
+    </>
   );
 }

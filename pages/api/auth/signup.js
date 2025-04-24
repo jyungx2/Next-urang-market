@@ -57,7 +57,7 @@ async function handler(req, res) {
       nickname,
       role: isAdmin ? "admin" : "user",
       recentLocations: [],
-      selectedLocation: {},
+      selectedLocation: null,
     };
 
     try {

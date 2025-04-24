@@ -100,6 +100,38 @@ export default function LocationSearchPage() {
     }, 1500); // 1.5초 로딩 타임
   };
 
+  const deleteRecentLocation = async (targetId) => {
+    const updatedList = currentUser?.recentLocations?.filter(
+      (loc) => loc.id !== targetId
+    );
+
+    // Zustand 상태 업데이트 (불변성 유지!)
+    setRecentLocations(updatedList);
+    setCurrentUser({ ...currentUser, recentLocations: updatedList });
+
+    try {
+      // ✅ 서버에도 반영하고 싶다면 PATCH/PUT 요청 추가 가능
+      const res = await fetch("/api/user/locations", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser?.id,
+          locationIdToRemove: targetId,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message);
+      console.log("최근 지역 삭제 성공 ✅", data.message);
+      console.log(
+        "🔥 삭제된 최근 지역",
+        currentUser.recentLocations.find((location) => location.id === targetId)
+      );
+    } catch (err) {
+      console.log("최근 지역 삭제 실패 💥", err.message);
+    }
+  };
+
   const renderRecentAddress = (recentLocations) => {
     return recentLocations?.map((location, index) => (
       <li
@@ -113,13 +145,15 @@ export default function LocationSearchPage() {
         >
           {location.keyword.join(" ")}
         </div>
-        <Image
-          className="cursor-pointer"
-          src="/icons/xbtn-bg.svg"
-          alt="icon"
-          width={20}
-          height={20}
-        />
+        <button onClick={() => deleteRecentLocation(location.id)}>
+          <Image
+            className="cursor-pointer"
+            src="/icons/xbtn-bg.svg"
+            alt="icon"
+            width={20}
+            height={20}
+          />
+        </button>
       </li>
     ));
   };
@@ -141,7 +175,7 @@ export default function LocationSearchPage() {
         (loc) => loc.keyword.join() === keyword.join()
       );
       if (exists) return currentUser?.recentLocations;
-      return [...currentUser?.recentLocations, newItem].slice(-3);
+      return [...currentUser?.recentLocations, newItem].slice(-3); // push(): 기존 배열을 직접 수정해버려서 리액트나 zustand는 값이 안바꼈다고 판단.. 업데이트 무시 & 렌더링 x => [...]으로 아예 새로운 배열을 만들어 새로운 참조값을 만들어 렌더링 정상 동작 하도록 불변성 유지하는 방식으로 상태 업데이트! (📍불변성 유지 = 원래 값을 직접 수정 하지 않고, 새로운 값을 만들어서 교체하는 것)
     })();
 
     // ✅ 컴포넌트(클라이언트) 상태 먼저 업데이트
@@ -244,23 +278,10 @@ export default function LocationSearchPage() {
         <div /> {/* 오른쪽 공간 채우기용 빈 div */}
       </div>
       <div className="flex gap-6 p-4">
-        {/* <input
-          className="flex-grow bg-[var(--color-grey-100)] rounded-full p-4 text-[1.4rem]"
-          placeholder='정확한 검색결과를 위해 반드시 "동" 단위로 입력하세요.'
-        /> */}
-
         <SearchLocationInput
           onSelect={(fullAddress) => saveRecentLocationsToServer(fullAddress)}
           setIsLoading={setIsLoading}
         />
-        <button className="cursor-pointer">
-          <Image
-            src="/icons/search.svg"
-            alt="search-icon"
-            width={24}
-            height={24}
-          />
-        </button>
       </div>
       <div className="mx-4">
         <div className="flex flex-col gap-6 text-[1.4rem]">

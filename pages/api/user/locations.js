@@ -7,14 +7,31 @@ export default async function handler(req, res) {
   const db = client.db(process.env.MONGODB_NAME); // 💢💢꼭 매개변수로 데이터베이스 이름(urang-market) 넣어주자! connectDatabase()은 DB 이름 포함 안 시켰다!!!💢💢
 
   if (req.method === "PATCH") {
-    const { userId, location, recentLocation, selectedLocation } = req.body;
+    const {
+      userId,
+      location,
+      recentLocation,
+      selectedLocation,
+      locationIdToRemove,
+    } = req.body;
 
     if (
       (!userId && !location) ||
       (!userId && !recentLocation) ||
-      (!userId && !selectedLocation)
+      (!userId && !selectedLocation) ||
+      (!userId && !locationIdToRemove)
     ) {
       return res.status(400).json({ message: "잘못된 요청입니다." });
+    }
+
+    if (locationIdToRemove) {
+      await db.collection("users").updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          $pull: { recentLocations: { id: locationIdToRemove } },
+        }
+      );
+      return res.status(200).json({ message: "최근 위치 삭제 완료" });
     }
 
     if (selectedLocation) {
