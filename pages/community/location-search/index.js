@@ -162,9 +162,44 @@ export default function LocationSearchPage() {
   };
 
   // SearchLocationInput의 책임을 줄이고, 부모에서 모든 후처리를 담당 -> SearchLocationInput에서는 주소만 선택해서 넘기고, 부모 컴포넌트(LocationSearchPage)에서 이걸 받아 처리하는 방식
-  const handleSelectAddress = (fullAddress) => {
+  const handleSelectAddress = async (fullAddress) => {
+    console.log("onSelect에서 받는 매개변수: ", fullAddress);
+    const fullAddressArr = fullAddress.split(" ");
+    const sigungu = fullAddressArr.at(-2);
+    const dong = fullAddressArr.at(-1);
+    console.log("시군구, 동: ", sigungu, dong);
+
+    //  api routes을 이용한 rcode 가져오는 서버 통신(GET)
+    try {
+      const res = await fetch(
+        `/api/user/rcode?sigungu=${sigungu}&dong=${dong}`
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      const isVerifiedCheck =
+        currentUser?.location?.keyword?.length === fullAddressArr.length &&
+        currentUser?.location?.keyword?.every(
+          (item, i) => item === fullAddressArr[i]
+        );
+
+      const location = {
+        id: Date.now(),
+        keyword: fullAddressArr, // EX: ['서울특별시', '종로구', '청운동']
+        isVerified: isVerifiedCheck,
+        rcode: data.rcode, // ✅ 붙이기!
+      };
+
+      setSelectedLocation(location); // Zustand 상태 업데이트
+    } catch (err) {
+      console.error("❌ rcode 조회 실패:", err.message);
+      alert("해당 주소의 rcode를 찾을 수 없습니다.");
+    }
+
+    // 최근 이용 지역 리스트 업데이트 (클라이언트 + 서버)
     saveRecentLocationsToServer(fullAddress);
 
+    // 부모 컴포넌트에서 처리하는 부가적인 작업(이전 페이지에서 정돈되어야 하는 것들.. -> 근데 딱히 없어도 되지 않나? 싶음.. 바로 다른 페이지(/community)로 이동하면...)
     setTimeout(() => {
       if (addressRef.current) addressRef.current.value = "";
       setSearchResults([]);

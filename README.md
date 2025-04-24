@@ -113,3 +113,9 @@ Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 �
 - 엔터 입력 및 드롭다운 주소 선택 기능 컴포넌트화
 - 주소 선택 시 onSelect 콜백으로 상위 컴포넌트에 값 전달
 - 공통 주소 검색 UI로 재사용 가능하도록 설계
+
+## 🐛 fix: hydration mismatch 원인인 SSR 환경에서 Tiptap 렌더링 방지 처리
+
+- Tiptap의 useEditor는 브라우저 환경에서만 DOM 생성이 가능하지만,
+- Next.js는 기본적으로 서버에서 HTML을 먼저 렌더링하므로 hydration mismatch 오류가 발생함.
+- 이를 해결하기 위해 next/dynamic을 사용해 글쓰기 컴포넌트를 CSR 전용으로 분리해 문제 해결.

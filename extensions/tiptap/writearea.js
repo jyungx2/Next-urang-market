@@ -1,4 +1,5 @@
 import CategoryModal from "@/components/community/category-modal";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -14,6 +15,8 @@ export default function WriteArea({ titleRef, onCategorySelect }) {
 
   const isNoticeCategory = selected.mainCategory === "공지사항";
 
+  const { currentUser } = useCurrentUserStore();
+
   useEffect(() => {
     console.log("✅ selected:", selected);
     console.log("✅ mainCategory:", selected.mainCategory);
@@ -24,6 +27,7 @@ export default function WriteArea({ titleRef, onCategorySelect }) {
     setSelected(category);
     onCategorySelect?.(category);
   };
+  console.log("📍선택된 동네:", currentUser?.selectedLocation?.keyword);
 
   return (
     <div className="flex flex-col">
@@ -43,19 +47,18 @@ export default function WriteArea({ titleRef, onCategorySelect }) {
         </button>
       </div>
 
-      {/* 적용안됨xx */}
       <div className="w-full p-4 border-b border-[var(--color-grey-200)]">
-        <label>TITLE</label>
         <input
           ref={titleRef}
           type="text"
           placeholder="제목을 입력하세요"
           required
+          className="focus:outline-none focus:ring-0"
         />
       </div>
 
       <div className="w-full p-4 border-b border-[var(--color-grey-200)]">
-        효성동
+        {currentUser?.selectedLocation?.keyword.slice(-1)[0]}
       </div>
 
       <div className="flex flex-col p-4 gap-4">

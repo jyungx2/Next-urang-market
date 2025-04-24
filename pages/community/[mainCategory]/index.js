@@ -5,7 +5,6 @@ import OddPostList from "@/components/community/odd-post-list";
 import categoryData from "@/data/category";
 import useSWR from "swr";
 import Layout from "@/components/layout/layout";
-import useCurrentUserStore from "@/zustand/currentUserStore";
 import UserLocation from "@/components/community/user-location";
 
 function getKoreanCategory(mainSlug, subSlug) {
