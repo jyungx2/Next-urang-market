@@ -127,3 +127,13 @@ Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 �
 - 사용자가 주소를 검색해 클릭하거나, 현재 위치를 통해 위치를 설정하면 rcode를 함께 상태로 저장
 - Zustand의 location, recentLocations, selectedLocation 객체에 모두 rcode 포함되도록 설계
 - 추후 rcode 기반 🔥게시글 필터링🔥 및 위치 구분 로직에 활용 가능
+
+## ✨ feat: 커뮤니티 rcode 필터링 + 리다이렉트 구조 개선 및 상태-라우팅 동기화 처리
+
+1. 유저가 선택한 지역의 rcode를 URL 쿼리스트링에 반영하여 커뮤니티 게시글을 필터링하는 기능을 구현함.
+
+2. 기존 커뮤니티 버튼의 링크 경로를 '/community/notice'에서 '/community'로 수정하여 리다이렉트 페이지(index.js)를 거쳐 selectedLocation/location의 rcode 기반으로 진입할 수 있도록 구조를 개선함.
+
+3. 또한, selectedLocation 등 상태 업데이트 직후 router.push 시점에서  
+   상태 값이 즉시 반영되지 않아 이전 값이 사용되는 문제를 방지하기 위해,  
+   라우팅 시점에 최신값을 직접 넘겨주는 방식으로 동기화를 처리함.

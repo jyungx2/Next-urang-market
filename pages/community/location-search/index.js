@@ -287,7 +287,13 @@ export default function LocationSearchPage() {
       setSelectedLocation(selectedLocation);
 
       // 해당 주소에 맞는 게시글 목록을 담은 페이지로 이동 (✨쿼리스트링 rcode 추가)
-      router.push(`/community/${router.query.from}`);
+      // 📍상태 변경 직후 바로 상태값을 사용하는 건 위험함 (selectedLocation은 아직 이전 값일 수 있음)
+      // ✅ 현재 최신 주소 객체(newLocation)를 이미 갖고 있으므로, 거기서 rcode를 직접 꺼내서 사용해야 함
+      // ✅ 상태 업데이트(setSelectedLocation)와 라우팅(router.push)가 동시에 필요한 상황에선 상태값을 참조하지 말고, 직접 넘길 것!
+      router.push({
+        pathname: `/community/${router.query.from}`,
+        query: { rcode: selectedLocation.rcode }, // currentUser?.selectedLocation?.rcode ==> 아직 변경(업데이트)되지 않은 Old value.. -> 두번째 클릭 때서야(?) 업데이트된 값 반영됨
+      });
 
       console.log("✅ 현재 선택한 위치 변경 완료:", data.message);
     } catch (err) {

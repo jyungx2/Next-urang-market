@@ -1,14 +1,23 @@
-// pages/community/index.js
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function CommunityRedirect() {
   const router = useRouter();
+  const { currentUser } = useCurrentUserStore();
 
   useEffect(() => {
-    // 첫번째 메인 카테고리로 리다이렉트
-    router.replace("/community/notice");
-  }, []);
+    const rcode =
+      currentUser?.selectedLocation?.rcode || currentUser?.location?.rcode;
 
-  return null; // 혹은 로딩 표시
+    if (!rcode) return;
+
+    console.log("🔥 라우팅 시도 중...");
+    router.replace({
+      pathname: "/community/notice",
+      query: { rcode },
+    });
+  }, [currentUser]);
+
+  return <p className="text-center mt-20 text-gray-500">로딩 중...</p>;
 }

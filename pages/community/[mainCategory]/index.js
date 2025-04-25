@@ -6,6 +6,7 @@ import categoryData from "@/data/category";
 import useSWR from "swr";
 import Layout from "@/components/layout/layout";
 import UserLocation from "@/components/community/user-location";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 
 function getKoreanCategory(mainSlug, subSlug) {
   const main = categoryData.find((cat) => cat.slug === mainSlug);
@@ -18,10 +19,15 @@ function getKoreanCategory(mainSlug, subSlug) {
 }
 
 export default function CommunityPage() {
+  const { currentUser } = useCurrentUserStore();
   const router = useRouter();
-  console.log("Community Query: ", router.query);
+
   const { mainCategory: mainSlug, tab: subSlug } = router.query;
+
   const { mainCategory, subCategory } = getKoreanCategory(mainSlug, subSlug);
+
+  console.log("🔥 selected-rcode: ", currentUser?.selectedLocation?.rcode);
+  console.log("🔥 location-rcode: ", currentUser?.location?.rcode);
 
   console.log("🇺🇸 main/sub:", mainSlug, subSlug);
   console.log("🇰🇷 메인/서브:", mainCategory, subCategory);
@@ -43,7 +49,9 @@ export default function CommunityPage() {
   // BUT, 실시간 채팅/실시간 알림/주식시세/환율/라이브 스코어 등의 기능에는 유용
   const { data, error, isLoading } = useSWR(
     shouldFetch
-      ? `/api/posts?mainCategory=${mainCategory}&subCategory=${subCategory}`
+      ? `/api/posts?mainCategory=${mainCategory}&subCategory=${subCategory}&rcode=${
+          currentUser?.selectedLocation?.rcode || currentUser?.location?.rcode
+        }`
       : null,
     fetcher
     // { refreshInterval: 5000 } // 5초마다 자동 갱신

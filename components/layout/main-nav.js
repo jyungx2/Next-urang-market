@@ -41,7 +41,7 @@ export default function MainNav() {
           </Link>
         </li>
         <li className={classes.navItem}>
-          <Link href="/community/notice" className={classes.navLink}>
+          <Link href="/community" className={classes.navLink}>
             <Image
               src={
                 currentPath.includes("/community")
