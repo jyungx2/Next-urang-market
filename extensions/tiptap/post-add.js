@@ -9,8 +9,6 @@ import { useRef, useState } from "react";
 import { CustomPlaceholder } from "@/extensions/custom-placeholder";
 import { useRouter } from "next/router";
 import { mutate } from "swr";
-import Layout from "@/components/layout/layout";
-import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function PostAddPage() {
   // ⭐️ 나중에 구현할 코드 ⭐️
@@ -161,8 +159,3 @@ export default function PostAddPage() {
     </form>
   );
 }
-
-// ✅ Layout 적용되도록 getLayout 설정
-PostAddPage.getLayout = function haveLayout(page) {
-  return <Layout>{page}</Layout>; // Layout 안 씌움
-};

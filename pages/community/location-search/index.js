@@ -386,5 +386,5 @@ export default function LocationSearchPage() {
 
 // ✅ Layout 적용되도록 getLayout 설정
 LocationSearchPage.getLayout = function haveLayout(page) {
-  return <Layout>{page}</Layout>; // Layout 안 씌움
+  return <Layout>{page}</Layout>;
 };
