@@ -9,12 +9,14 @@ import { useRef, useState } from "react";
 import { CustomPlaceholder } from "@/extensions/custom-placeholder";
 import { useRouter } from "next/router";
 import { mutate } from "swr";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function PostAddPage() {
   // ⭐️ 나중에 구현할 코드 ⭐️
   // selectedLocation.isVerified === false일 때, 특정 모달 띄우기 (post/verification.js 새 파일 만들기)
   // const { currentUser } = useCurrentUserStore();
   // if (!currentUser.selectedLocation.isVerified) { router.push('/community/post/verification/....')}
+  const { currentUser } = useCurrentUserStore();
 
   const router = useRouter();
   // CATEGORY
@@ -83,11 +85,12 @@ export default function PostAddPage() {
     const res = await fetch("/api/posts", {
       method: "POST",
       body: JSON.stringify({
+        writer: currentUser.nickname, // 작성자 닉네임
         title: category.mainCategory.name === "공지사항" ? title : null,
-        content,
+        content, // 내용
         mainCategory: category.mainCategory.name,
         subCategory: category.subCategory.label,
-        neighborhood,
+        rcode: currentUser.selectedLocation.rcode, // 주소('동') - api routes에서 지역코드로 필터링할 예정
       }),
       headers: {
         "Content-Type": "application/json",

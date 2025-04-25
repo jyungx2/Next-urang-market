@@ -17,21 +17,23 @@ export default async function handler(req, res) {
 
   // POST HTTP
   if (req.method === "POST") {
-    const { content, mainCategory, subCategory } = req.body;
+    const { writer, content, mainCategory, subCategory, rcode } = req.body;
     console.log(req.query);
 
     // Validation for server-side
-    if (!content || !mainCategory || !subCategory) {
+    if (!writer || !content || !mainCategory || !subCategory || !rcode) {
       res.status(422).json({ message: "Invalid input - post" });
       client.close();
       return;
     }
 
     const newPost = {
+      writer,
       content,
       mainCategory,
       subCategory,
       createdAt: new Date(),
+      rcode,
     };
 
     let result;
