@@ -41,5 +41,6 @@ export default async function handler(req, res) {
     sido: region.region_1depth_name, // 당장은 안쓰지만 나중 편의를 위해..
     sigungu: region.region_2depth_name, // 당장은 안쓰지만 나중 편의를 위해..
     dong: region.region_3depth_name, // 커뮤니티 페이지에서 내위치 설정 시에 사용할 데이터
+    rcode: region.code, // 지역코드도 같이 가져오자!
   });
 }

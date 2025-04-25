@@ -5,16 +5,21 @@ import classes from "@/components/main/search-form.module.css";
 import ClipLoader from "react-spinners/ClipLoader"; // ✅ 스피너 import
 import { useRef, useState } from "react";
 import MapContainer from "@/components/user/map";
-import SearchLocationInput from "@/components/common/search-location";
+import SearchLocationInput from "@/components/common/search-location-input";
 
 export default function LocationPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const { location, setLocation } = useUserStore();
+  const { setLocation } = useUserStore();
   const [coords, setCoords] = useState({ lat: null, lng: null });
   const [neighborhood, setNeighborhood] = useState("");
+  const [rcode, setRcode] = useState("");
 
-  const selectMyLocation = async (fullAddress) => {
+  // ⭐️ SearchLocationInput 리팩토링 ⭐️
+  const [searchResults, setSearchResults] = useState([]);
+  const addressRef = useRef();
+
+  const moveToLocation = async (fullAddress) => {
     // 1. 인풋 값 업데이트 => SearchLocationInput 컴포넌트로 이동
     // addressRef.current.value = fullAddress;
     // setSearchResults([]);
@@ -60,6 +65,8 @@ export default function LocationPage() {
 
             setIsLoading(false); // 스피너 종료
             setNeighborhood(data.regionName);
+            setRcode(data.rcode);
+
             console.log("✅ 위치 설정 완료:", data.regionName);
           } catch (err) {
             console.error("❌ 위치 요청 실패:", err);
@@ -76,14 +83,19 @@ export default function LocationPage() {
     }, 1500); // 1.5초 로딩 타임
   };
 
-  const goGetVerification = async (neighborhood) => {
+  const goGetVerification = async (neighborhood, rcode) => {
     console.log("인증절차");
     router.push("/auth/signup/phone-verify");
 
+    const keyword = neighborhood.split(" ");
+
     const addressObj = {
-      keyword: neighborhood.split(" "),
-      isVerified: false,
-    }; // 회원가입할 땐 위치인증절차 안거치므로 일단 무조건 false
+      id: Date.now(),
+      keyword,
+      isVerified: false, // 회원가입할 땐 위치인증절차 안거치므로 일단 무조건 false
+      rcode,
+    };
+
     setLocation(addressObj);
     console.log("zustand에 저장된 유저의 동네:", location, addressObj);
   };
@@ -105,9 +117,15 @@ export default function LocationPage() {
         </button>
 
         <SearchLocationInput
-          onSelect={(fullAddress) => {
-            selectMyLocation(fullAddress); // 지도 이동
+          addressRef={addressRef}
+          searchResults={searchResults}
+          setSearchResults={setSearchResults}
+          onSelect={(fullAddress, rcode) => {
+            moveToLocation(fullAddress); // 지도 이동
             setNeighborhood(fullAddress); // 주소값 UI 렌더링
+            setRcode(rcode); // 지역코드 상태 업데이트
+            addressRef.current.value = "";
+            setSearchResults([]);
           }}
           setIsLoading={setIsLoading}
         />
@@ -159,7 +177,7 @@ export default function LocationPage() {
       <footer className="mt-auto">
         <button
           className="font-bold h-[4rem] bg-[var(--color-primary-600)] p-4 w-full rounded-lg text-white cursor-pointer"
-          onClick={() => goGetVerification(neighborhood)}
+          onClick={() => goGetVerification(neighborhood, rcode)}
         >
           본인 인증하러 가기
         </button>

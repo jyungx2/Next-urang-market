@@ -103,6 +103,7 @@ export default NextAuth({
       session.user.role = token.role;
       session.user.recentLocations = token.recentLocations ?? []; // null or undefined일 경우에만 []을 넣겠다..
       session.user.selectedLocation = token.selectedLocation;
+
       return session;
     },
   },

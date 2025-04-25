@@ -1,4 +1,4 @@
-import SearchLocationInput from "@/components/common/search-location";
+import SearchLocationInput from "@/components/common/search-location-input";
 import Layout from "@/components/layout/layout";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
@@ -71,19 +71,21 @@ export default function LocationSearchPage() {
             setIsLoading(false); // 스피너 종료
             // setNeighborhood([data.sigungu, data.dong]);
 
+            console.log("✅ 주소 풀네임", data.regionName);
             console.log("✅ 주소 '구':", data.sigungu);
             console.log("✅ 주소 '동':", data.dong);
             // console.log(neighborhood);
             // 🚨 setNeighborhood([data.sigungu, data.dong]) 호출 직후에는 neighborhood 상태가 아직 이전 값을 유지... (∵ useState의 세터함수는 비동기적으로 작동하므로 바로 아래서 컨솔을 찍으면 업데이트 전 값이 나옴! => ✨useEffect로 변경된 값을 감지해서 출력하면 제대로 업데이트된 값을 알 수 있다.)
 
-            const fullAddress = [data.sigungu, data.dong].join(" ");
+            const fullAddress = data.regionName;
+            const rcode = data.rcode;
 
             // 서버에 PUT요청으로 유저의 location 값 fullAddress로 변경 (근데, IsVerified: true여야함! -> 여기서 객체를 만들어야할까? -> 일단 아래처럼 만듦 .. recentLocation이랑 똑같이..근데 배열이 아니라, 단일 객체이므로 그냥 newItem만 넘긴다.)
-            const keyword = fullAddress.split(" "); // 인천시 계양구 계산동 -> [계양구, 계산동]
             const newItem = {
               id: Date.now(),
-              keyword,
-              isVerified: true, // GPS로 현재 위치를 인증한 거니까..
+              keyword: fullAddress.split(" "),
+              isVerified: false,
+              rcode,
             };
             updateLocationOnServer(newItem);
             console.log("❗️업데이트된 location 객체: ", newItem);
@@ -146,7 +148,7 @@ export default function LocationSearchPage() {
           className="cursor-pointer"
           onClick={() => changeSelectedLocationOnServer(location)}
         >
-          {location.keyword.join(" ")}
+          {location.keyword.slice(-2).join(" ")}
         </div>
         <button onClick={() => deleteRecentLocation(location.id)}>
           <Image
@@ -162,44 +164,30 @@ export default function LocationSearchPage() {
   };
 
   // SearchLocationInput의 책임을 줄이고, 부모에서 모든 후처리를 담당 -> SearchLocationInput에서는 주소만 선택해서 넘기고, 부모 컴포넌트(LocationSearchPage)에서 이걸 받아 처리하는 방식
-  const handleSelectAddress = async (fullAddress) => {
-    console.log("onSelect에서 받는 매개변수: ", fullAddress);
-    const fullAddressArr = fullAddress.split(" ");
-    const sigungu = fullAddressArr.at(-2);
-    const dong = fullAddressArr.at(-1);
+  const handleSelectAddress = async (fullAddress, rcode) => {
+    console.log("onSelect에서 받는 매개변수: ", fullAddress, rcode);
+    const keyword = fullAddress.split(" ");
+    const sigungu = keyword.at(-2);
+    const dong = keyword.at(-1);
     console.log("시군구, 동: ", sigungu, dong);
 
-    //  api routes을 이용한 rcode 가져오는 서버 통신(GET)
-    try {
-      const res = await fetch(
-        `/api/user/rcode?sigungu=${sigungu}&dong=${dong}`
-      );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
+    const isVerifiedCheck =
+      currentUser?.location?.keyword?.length === keyword.length &&
+      currentUser?.location?.keyword?.every((item, i) => item === keyword[i]);
 
-      const isVerifiedCheck =
-        currentUser?.location?.keyword?.length === fullAddressArr.length &&
-        currentUser?.location?.keyword?.every(
-          (item, i) => item === fullAddressArr[i]
-        );
+    const location = {
+      id: Date.now(),
+      keyword, // EX: ['서울특별시', '종로구', '청운동']
+      isVerified: isVerifiedCheck,
+      rcode, // 별도의 api요청 없이, search-location.js으로부터 직접 받은 rcode 인자 사용
+    };
 
-      const location = {
-        id: Date.now(),
-        keyword: fullAddressArr, // EX: ['서울특별시', '종로구', '청운동']
-        isVerified: isVerifiedCheck,
-        rcode: data.rcode, // ✅ 붙이기!
-      };
-
-      setSelectedLocation(location); // Zustand 상태 업데이트
-    } catch (err) {
-      console.error("❌ rcode 조회 실패:", err.message);
-      alert("해당 주소의 rcode를 찾을 수 없습니다.");
-    }
+    setSelectedLocation(location); // Zustand 상태 업데이트
 
     // 최근 이용 지역 리스트 업데이트 (클라이언트 + 서버)
-    saveRecentLocationsToServer(fullAddress);
+    saveRecentLocationsToServer(location);
 
-    // 부모 컴포넌트에서 처리하는 부가적인 작업(이전 페이지에서 정돈되어야 하는 것들.. -> 근데 딱히 없어도 되지 않나? 싶음.. 바로 다른 페이지(/community)로 이동하면...)
+    // ⭐️ 부모 컴포넌트에서 처리하는 부가적인 작업(이전 페이지에서 정돈되어야 하는 것들.. -> 근데 딱히 없어도 되지 않나? 싶음.. 바로 다른 페이지(/community)로 이동하면...)
     setTimeout(() => {
       if (addressRef.current) addressRef.current.value = "";
       setSearchResults([]);
@@ -207,33 +195,27 @@ export default function LocationSearchPage() {
   };
 
   // 다음 함수는 검색창에서 주소리스트 <li>클릭할 때 onClick 이벤트 함수로 설정!
-  const saveRecentLocationsToServer = async (fullAddress) => {
-    const keyword = fullAddress.split(" ").slice(-2); // "인천시 계양구 계산동" -> [계양구, 계산동]
-    const newItem = {
-      id: Date.now(),
-      keyword,
-      isVerified: false,
-    };
-
+  const saveRecentLocationsToServer = async (location) => {
     // ✅ selectedLocation(전역상태) 변경하여 해당 주소에 대한 게시글목록 페이지로 라우팅 및 서버 PATCH 요청 보내 데이터 수정
-    changeSelectedLocationOnServer(newItem);
+    changeSelectedLocationOnServer(location);
 
+    const newRecentAddress = location;
     // ✨newList라는 최신 배열을 직접 만들어서✨
     // 1. 클라이언트 측 상태값을 이걸로 변경하고 => setRecentLocations(newList)
     // 2. 서버에 보낼 최신 데이터도 이걸로 보내자 =>  recentLocations: newList,
-    const newList = (() => {
+    const newRecentList = (() => {
       const exists = currentUser?.recentLocations?.some(
-        (loc) => loc.keyword.join() === keyword.join()
+        (loc) => loc.keyword.join() === newRecentAddress.keyword.join()
       );
       if (exists) return currentUser?.recentLocations;
-      return [...currentUser?.recentLocations, newItem].slice(-3); // push(): 기존 배열을 직접 수정해버려서 리액트나 zustand는 값이 안바꼈다고 판단.. 업데이트 무시 & 렌더링 x => [...]으로 아예 새로운 배열을 만들어 새로운 참조값을 만들어 렌더링 정상 동작 하도록 불변성 유지하는 방식으로 상태 업데이트! (📍불변성 유지 = 원래 값을 직접 수정 하지 않고, 새로운 값을 만들어서 교체하는 것)
+      return [...currentUser?.recentLocations, newRecentAddress].slice(-3); // push(): 기존 배열을 직접 수정해버려서 리액트나 zustand는 값이 안바꼈다고 판단.. 업데이트 무시 & 렌더링 x => [...]으로 아예 새로운 배열을 만들어 새로운 참조값을 만들어 렌더링 정상 동작 하도록 불변성 유지하는 방식으로 상태 업데이트! (📍불변성 유지 = 원래 값을 직접 수정 하지 않고, 새로운 값을 만들어서 교체하는 것)
     })();
 
     // ✅ 컴포넌트(클라이언트) 상태 먼저 업데이트
-    setRecentLocations(newList);
+    setRecentLocations(newRecentList);
 
     // 💥⚠️객체 전체를 갱신해줄 필요⚠️💥
-    setCurrentUser({ ...currentUser, recentLocations: newList });
+    setCurrentUser({ ...currentUser, recentLocations: newRecentList });
     // 위의 코드를 써주지 않으면, zustand는 상태가 변경되었는지 판단할 때, === 비교만 하기 때문에, 내부 속성(recentLocations 배열값)이 바뀌어도 currentUser 객체 자체가 동일하다면 React는 렌더링을 다시 하지 않으므로, currentUser 객체가 얕은 비교로 변경되지 않았다고 판단하여 렌더링을 다시 하지 x -> 아무리 setRecentLocations로 배열을 newList를 추가해 업데이트해줘도, 화면 상에 렌더링 되지 않음!
     // => 따라서, currentUser 자체를 업데이트해줌으로써 깊은 복사를 통해 currentUser 객체의 참조 자체를 바꿔주어 zustand가 변경 사항을 감지하고 리렌더링하도록 한다.
 
@@ -249,7 +231,7 @@ export default function LocationSearchPage() {
         },
         body: JSON.stringify({
           userId: currentUser.id,
-          recentLocation: newItem, // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
+          recentLocation: newRecentAddress, // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
           // 📌 api routes파일에서 PATCH 요청으로 $push, $each 메소드 이용해 요소 하나씩 받아서 recentLocations: [] 빈 배열에 넣는 방식이므로 newList가 아닌, newItem을 전달.. (250423 - 노션필기참고)
         }),
       });
@@ -308,7 +290,7 @@ export default function LocationSearchPage() {
       router.push(`/community/${router.query.from}`);
 
       console.log("✅ 현재 선택한 위치 변경 완료:", data.message);
-    } catch {
+    } catch (err) {
       console.error("❌ 현재 선택한 위치 변경 실패:", err.message);
     }
   };
@@ -332,7 +314,9 @@ export default function LocationSearchPage() {
       </div>
       <div className="flex gap-6 p-4">
         <SearchLocationInput
-          onSelect={(fullAddress) => handleSelectAddress(fullAddress)}
+          onSelect={(fullAddress, rcode) =>
+            handleSelectAddress(fullAddress, rcode)
+          }
           setIsLoading={setIsLoading}
           addressRef={addressRef}
           searchResults={searchResults}

@@ -77,22 +77,6 @@ export default function WriteArea({ titleRef, category, onCategorySelect }) {
           onSelect={handleCategorySelect}
         />
       </div>
-
-      {/* <div className="flex w-full p-4 border-b border-[var(--color-grey-200)]">
-        <select>
-          <option>카테고리를 선택하세요.</option>
-          <option>해외취업</option>
-          <option>해외살이</option>
-          <option>해외취업</option>
-        </select>
-        <Image
-          src="/icons/chevron-down.svg"
-          alt="icon"
-          width={18}
-          height={18}
-          className="cursor-pointer"
-        />
-      </div> */}
     </div>
   );
 }

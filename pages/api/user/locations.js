@@ -43,16 +43,6 @@ export default async function handler(req, res) {
     }
 
     if (location) {
-      // let formattedLocation = location;
-
-      // 무조건 회원가입 - 자동로그인할 때, 오브젝트 형태로 location값 저장!!
-      // if (typeof location === "string") {
-      //   formattedLocation = {
-      //     keyword: location.split(" "),
-      //     isVerified: false,
-      //   };
-      // }
-
       await db
         .collection("users")
         .updateOne({ _id: new ObjectId(userId) }, { $set: { location } });

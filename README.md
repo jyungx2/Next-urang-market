@@ -119,3 +119,11 @@ Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 �
 - Tiptap의 useEditor는 브라우저 환경에서만 DOM 생성이 가능하지만,
 - Next.js는 기본적으로 서버에서 HTML을 먼저 렌더링하므로 hydration mismatch 오류가 발생함.
 - 이를 해결하기 위해 next/dynamic을 사용해 글쓰기 컴포넌트를 CSR 전용으로 분리해 문제 해결.
+
+## ✨ feat: kakao-geocode 응답과 locations 컬렉션으로부터 rcode를 받아 상태로 관리하도록 구현
+
+- 위치 선택 시 별도의 API 요청 없이, Kakao 역지오코딩 API의 응답으로부터 rcode(법정동코드)를 직접 획득
+- import-locations 스크립트를 통해 MongoDB의 locations 컬렉션에 주소 및 법정동코드(r.code)를 미리 삽입
+- 사용자가 주소를 검색해 클릭하거나, 현재 위치를 통해 위치를 설정하면 rcode를 함께 상태로 저장
+- Zustand의 location, recentLocations, selectedLocation 객체에 모두 rcode 포함되도록 설계
+- 추후 rcode 기반 🔥게시글 필터링🔥 및 위치 구분 로직에 활용 가능

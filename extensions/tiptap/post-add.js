@@ -10,8 +10,14 @@ import { CustomPlaceholder } from "@/extensions/custom-placeholder";
 import { useRouter } from "next/router";
 import { mutate } from "swr";
 import Layout from "@/components/layout/layout";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function PostAddPage() {
+  // ⭐️ 나중에 구현할 코드 ⭐️
+  // selectedLocation.isVerified === false일 때, 특정 모달 띄우기 (post/verification.js 새 파일 만들기)
+  // const { currentUser } = useCurrentUserStore();
+  // if (!currentUser.selectedLocation.isVerified) { router.push('/community/post/verification/....')}
+
   const router = useRouter();
   // CATEGORY
   const [category, setCategory] = useState({

@@ -116,6 +116,7 @@ export default function ProfileRegisterPage() {
         nickname,
         profileImage: imageUrl,
         recentLocations: [],
+        selectedLocation: {},
       });
       const finalUser = useUserStore.getState().getUser();
       console.log("💿서버로 보낼 user: ", finalUser);

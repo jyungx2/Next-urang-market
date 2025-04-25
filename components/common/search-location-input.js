@@ -1,6 +1,5 @@
 // components/common/SearchLocationInput.jsx
 import Image from "next/image";
-import { useState, useRef } from "react";
 
 // ⭐️단순히 "입력받고", "검색 결과를 보여주고", "선택 시 부모 콜백 호출"만 하는 구조로 리팩토링 (4/24)⭐️
 export default function SearchLocationInput({
@@ -51,7 +50,7 @@ export default function SearchLocationInput({
                 key={idx}
                 className="p-4 hover:bg-gray-100 text-[1.5rem] cursor-pointer"
                 onClick={
-                  () => onSelect(item.full) // ✅ 부모에서 전달받은 콜백 -> 가장 먼저 호출하여 라우팅
+                  () => onSelect(item.full, item.code) // ✅ 부모에서 전달받은 콜백 -> 가장 먼저 호출하여 라우팅
                 }
               >
                 {item.full}

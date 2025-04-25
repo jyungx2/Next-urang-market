@@ -59,7 +59,7 @@ const UserStore = (set, get) => ({
   // ✅ 회원가입 완료 시 호출할 초기화 함수
   resetUser: () =>
     set({
-      location: "",
+      location: {},
       username: "",
       birthdate: "",
       phoneNumber: "",
