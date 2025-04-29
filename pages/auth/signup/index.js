@@ -53,7 +53,7 @@ export default function LocationPage() {
       navigator.geolocation.getCurrentPosition(
         async ({ coords }) => {
           const { latitude, longitude } = coords;
-          setCoords({ lat: latitude, lng: longitude }); // ✅ 좌표 저장
+          setCoords({ lat: latitude, lng: longitude }); // ✅ 좌표 저장(지도 표시용 상태)
 
           try {
             const res = await fetch(
