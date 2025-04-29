@@ -47,7 +47,7 @@ export default function Home() {
       </Head>
 
       <div
-        className={`bg-[var(--color-bg)] min-min-h-screen min-w-[640px] p-6 pt-0 flex flex-col gap-7 ${
+        className={`bg-[var(--color-bg)] min-h-screen min-w-[640px] p-6 pt-0 flex flex-col gap-7 ${
           isSidebarOpen || isSearchOpen ? "hidden" : ""
         }`}
       >
@@ -71,7 +71,7 @@ export default function Home() {
 
 // ✅ Layout 적용되도록 getLayout 설정
 Home.getLayout = function haveLayout(page) {
-  return <Layout>{page}</Layout>; // Layout 안 씌움
+  return <Layout>{page}</Layout>;
 };
 
 // 1) 워홀준비섹션: getStaticProps()로 데이터 페칭 함수 작성 -> props로 넘기기

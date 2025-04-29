@@ -1,4 +1,6 @@
+import Layout from "@/components/layout/layout";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 // pages/index.tsx 또는 app/page.tsx
@@ -27,19 +29,23 @@ export default function AuthPage() {
         </button>
         <p className="text-[1.6rem] text-gray-400">
           Have an account already?
-          <a
-            href="/auth"
+          <Link
+            href="/auth/login"
             className="text-[var(--color-primary-400)] font-medium ml-4 cursor-pointer"
           >
             Log in
-          </a>
+          </Link>
         </p>
       </div>
     </main>
   );
 }
 
-// ✅ Layout 적용 안 하도록 getLayout 설정
-AuthPage.getLayout = function noLayout(page) {
-  return <div className="max-w-[640px] mx-auto bg-black">{page}</div>; // Layout 안 씌움
+// ✅ Layout 적용되도록 getLayout 설정
+AuthPage.getLayout = function haveLayout(page) {
+  return (
+    <div className="min-h-screen max-w-[640px] mx-auto bg-[var(--color-com-bg)]">
+      {page}
+    </div>
+  ); // Layout 안 씌움
 };

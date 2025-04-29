@@ -1,5 +1,4 @@
 import MainNav from "@/components/layout/main-nav";
-import classes from "./layout.module.css";
 import { useContext } from "react";
 import UIContext from "@/store/ui-context";
 import PostItemNav from "@/components/layout/postItem-nav";
@@ -40,7 +39,7 @@ export default function Layout(props) {
   });
 
   return (
-    <div className={classes["layout-container"]}>
+    <div className="max-w-[640px] mx-auto">
       <main>{props.children}</main>
       {!(
         isSidebarOpen ||

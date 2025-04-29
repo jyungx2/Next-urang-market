@@ -134,6 +134,4 @@ Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 �
 
 2. 기존 커뮤니티 버튼의 링크 경로를 '/community/notice'에서 '/community'로 수정하여 리다이렉트 페이지(index.js)를 거쳐 selectedLocation/location의 rcode 기반으로 진입할 수 있도록 구조를 개선함.
 
-3. 또한, selectedLocation 등 상태 업데이트 직후 router.push 시점에서  
-   상태 값이 즉시 반영되지 않아 이전 값이 사용되는 문제를 방지하기 위해,  
-   라우팅 시점에 최신값을 직접 넘겨주는 방식으로 동기화를 처리함.
+3. 또한, selectedLocation 등 상태 업데이트 직후 router.push 시점에서 상태 값이 즉시 반영되지 않아 이전 값이 사용되는 문제를 방지하기 위해, 라우팅 시점에 최신값을 직접 넘겨주는 방식으로 동기화를 처리함.
