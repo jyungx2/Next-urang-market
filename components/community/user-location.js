@@ -26,10 +26,11 @@ export default function UserLocation({ mainCategory }) {
         />
         <h3 className="font-bold text-[1.6rem] text-[var(--color-grey-bg)] ml-2">
           {/* 삼항연산자에서 {}는 falsy가 아니라 truthy라서 if (obj)만으로는 빈 객체 체크가 안 됨.. => ✅ Object.keys(obj).length === 0 또는 lodash의 isEmpty() 로 체크 or ✅ store 업데이트 시 기본값을 null이나 undefined로 해주는 것도 조건 분기에 더 직관적일 수 있어요. */}
-          {currentUser?.selectedLocation
+          {/* {currentUser?.selectedLocation
             ? currentUser?.selectedLocation?.keyword?.slice(-1)[0]
-            : currentUser?.location?.keyword?.slice(-1)[0]}{" "}
-          이웃
+            : currentUser?.location?.keyword?.slice(-1)[0]}{" "} */}
+          {/* 🖍️2nd 수정:  */}
+          {currentUser?.selectedLocation?.keyword.slice(-1)[0]} 이웃
         </h3>
         <Image
           src="/icons/chevron-down-w-micro.svg"

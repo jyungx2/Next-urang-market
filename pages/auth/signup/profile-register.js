@@ -116,8 +116,10 @@ export default function ProfileRegisterPage() {
         nickname,
         profileImage: imageUrl,
         recentLocations: [],
-        selectedLocation: {},
+        selectedLocation: location,
       });
+
+      // ✅ getUser로 userStore에 저장된 유저정보들을 하나의 객체로 한꺼번에 가져오기
       const finalUser = useUserStore.getState().getUser();
       console.log("💿서버로 보낼 user: ", finalUser);
 
