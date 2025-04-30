@@ -17,11 +17,19 @@ export default async function handler(req, res) {
 
   // POST HTTP
   if (req.method === "POST") {
-    const { writer, content, mainCategory, subCategory, rcode } = req.body;
+    const { writer, title, content, mainCategory, subCategory, dong, rcode } =
+      req.body;
     console.log(req.query);
 
     // Validation for server-side
-    if (!writer || !content || !mainCategory || !subCategory || !rcode) {
+    if (
+      !writer ||
+      !content ||
+      !mainCategory ||
+      !subCategory ||
+      !dong ||
+      !rcode
+    ) {
       res.status(422).json({ message: "Invalid input - post" });
       client.close();
       return;
@@ -29,10 +37,12 @@ export default async function handler(req, res) {
 
     const newPost = {
       writer,
+      title,
       content,
       mainCategory,
       subCategory,
       createdAt: new Date(),
+      dong,
       rcode,
     };
 
