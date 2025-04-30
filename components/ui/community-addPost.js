@@ -92,9 +92,11 @@ export default function CommunityAddPost() {
       {/* 모달: 화면 정가운데 */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 w-[90%] max-w-md text-center relative">
+          <div className="bg-white rounded-2xl py-10 px-6 w-[90%] max-w-md text-center relative">
             {/* 제목 */}
-            <h2 className="text-3xl font-bold mb-4">우리동네 추가하기</h2>
+            {!neighborhood && (
+              <h2 className="text-3xl font-bold mb-4">우리동네 추가하기</h2>
+            )}
             {/* 닫기 버튼 */}
             <button
               className="absolute top-4 right-5 text-gray-500 hover:text-gray-800 cursor-pointer"
@@ -111,17 +113,19 @@ export default function CommunityAddPost() {
               </div>
             ) : isLocationMatched === false ? (
               <>
-                <p className="text-red-500 font-bold mb-2">
+                <p className="text-red-500 font-bold mb-2 text-[1.8rem]">
                   현재 위치 : {neighborhood.keyword.slice(-1)[0]}
                 </p>
-                <p className="font-bold mb-4">우리동네로 추가하지 못했어요.</p>
+                <p className="font-bold mb-4 text-[1.8rem]">
+                  우리동네로 추가하지 못했어요.
+                </p>
                 <p className="text-gray-600 mb-6 text-[1.4rem]">
                   지금 이웃에서 보고 있는 지역과 <br />
                   현재 위치가 일치해야 합니다.
                 </p>
                 {/* 버튼 */}
                 <button
-                  className="bg-green-100 text-green-700 font-semibold py-3 px-5 rounded-lg w-full hover:bg-green-200 transition mt-4"
+                  className="bg-green-100 text-green-700 font-semibold py-5 rounded-xl w-full hover:bg-green-200 transition mt-4"
                   onClick={() => {
                     router.push({
                       pathname: `/community/${router.query.mainCategory}`,
@@ -134,7 +138,7 @@ export default function CommunityAddPost() {
                   {neighborhood.keyword.slice(-1)[0]} 이웃소식 보러가기
                 </button>
                 <button
-                  className="bg-gray-100 text-gray-700 font-semibold py-3 px-5 rounded-lg w-full hover:bg-gray-200 transition mt-2"
+                  className="bg-gray-100 text-gray-700 font-semibold py-5 rounded-xl w-full hover:bg-gray-200 transition mt-4"
                   onClick={() => setShowModal(false)}
                 >
                   닫기

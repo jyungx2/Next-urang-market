@@ -135,3 +135,19 @@ Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 �
 2. 기존 커뮤니티 버튼의 링크 경로를 '/community/notice'에서 '/community'로 수정하여 리다이렉트 페이지(index.js)를 거쳐 selectedLocation/location의 rcode 기반으로 진입할 수 있도록 구조를 개선함.
 
 3. 또한, selectedLocation 등 상태 업데이트 직후 router.push 시점에서 상태 값이 즉시 반영되지 않아 이전 값이 사용되는 문제를 방지하기 위해, 라우팅 시점에 최신값을 직접 넘겨주는 방식으로 동기화를 처리함.
+
+✨ feat: 위치 인증 모달 및 selectedLocation 기반 글쓰기 진입 로직 구현
+
+1. +Post 버튼 클릭 시, currentUser.selectedLocation.isVerified 값을 기준으로 동작 분기
+
+- isVerified가 true일 경우: 글쓰기 페이지(/community/post/new)로 즉시 이동
+- isVerified가 false일 경우: 인증 모달 노출 + 현 위치 기반 동네 비교 로직 수행
+
+2. geolocation + kakao-geocode API를 통해 현재 위치 정보를 가져와 selectedLocation과 비교
+
+- "위치가 일치"하면 글쓰기 페이지로 이동
+  (**회원가입-자동로그인 직후, 바로 +Post버튼 클릭했을 경우 해당.. 실제 회원의 동네를 입력했더라도 무조건 isVerified=false로 저장되므로 어쩔 수 없이 인증로직을 거치게 되는 것.. 만약, 지역검색 페이지에서 위치인증로직을 통해 우리동네를 클릭할 경우엔 true로 설정되므로 +Post버튼 클릭 시에는 굳이 인증로직 거치지 않아도 OK.**)
+
+- "일치하지 않으면" 현재 위치 표시 및 현재 동네 이웃소식 페이지로 이동 유도 (페이지 이동 시, selectedLocation 상태(isVerified === true, keyword, rcode)도 갱신하여 이웃UI 및 URL 반영)
+
+- 이후 ‘우리동네 설정’ 페이지에서 GPS 인증을 통해 위치를 설정한 경우에는 isVerified=true가 되어 모달 없이 바로 이동
