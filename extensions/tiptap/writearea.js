@@ -10,11 +10,11 @@ export default function WriteArea({ titleRef, category, onCategorySelect }) {
   const isNoticeCategory = category.mainCategory.name === "공지사항";
   const { currentUser } = useCurrentUserStore();
 
-  useEffect(() => {
-    console.log("✅ category:", category);
-    console.log("✅ mainCategory:", category.mainCategory);
-    console.log("✅ isNoticeCategory:", isNoticeCategory);
-  }, [category]);
+  // useEffect(() => {
+  //   console.log("✅ category:", category);
+  //   console.log("✅ mainCategory:", category.mainCategory);
+  //   console.log("✅ isNoticeCategory:", isNoticeCategory);
+  // }, [category]);
 
   const handleCategorySelect = (category) => {
     onCategorySelect(category);

@@ -71,20 +71,20 @@ export default function LocationSearchPage() {
             setIsLoading(false); // 스피너 종료
             // setNeighborhood([data.sigungu, data.dong]);
 
-            console.log("✅ 주소 풀네임", data.regionName);
-            console.log("✅ 주소 '구':", data.sigungu);
-            console.log("✅ 주소 '동':", data.dong);
+            // console.log("✅ 주소 풀네임", data.regionName);
+            // console.log("✅ 주소 '구':", data.sigungu);
+            // console.log("✅ 주소 '동':", data.dong);
             // console.log(neighborhood);
             // 🚨 setNeighborhood([data.sigungu, data.dong]) 호출 직후에는 neighborhood 상태가 아직 이전 값을 유지... (∵ useState의 세터함수는 비동기적으로 작동하므로 바로 아래서 컨솔을 찍으면 업데이트 전 값이 나옴! => ✨useEffect로 변경된 값을 감지해서 출력하면 제대로 업데이트된 값을 알 수 있다.)
 
             const fullAddress = data.regionName;
             const rcode = data.rcode;
 
-            // 서버에 PUT요청으로 유저의 location 값 fullAddress로 변경 (근데, IsVerified: true여야함! -> 여기서 객체를 만들어야할까? -> 일단 아래처럼 만듦 .. recentLocation이랑 똑같이..근데 배열이 아니라, 단일 객체이므로 그냥 newItem만 넘긴다.)
+            // 서버에 PUT요청으로 유저의 location 값 fullAddress로 변경 (근데, IsVerified: ✨true✨여야함! -> 여기서 객체를 만들어야할까? -> 일단 아래처럼 만듦 .. recentLocation이랑 똑같이..근데 배열이 아니라, 단일 객체이므로 그냥 newItem만 넘긴다.)
             const newItem = {
               id: Date.now(),
               keyword: fullAddress.split(" "),
-              isVerified: false,
+              isVerified: true,
               rcode,
             };
             updateLocationOnServer(newItem);
