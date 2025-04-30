@@ -18,8 +18,8 @@ export default function NoticePostItem({
           <span>{title}</span>
           <div className="flex gap-3 text-[1.4rem]">
             <span>{writer}</span>
-            <span>{createdAt}</span>
-            <span>조회 {views}</span>
+            <span>{createdAt.split("T")[0]}</span>
+            <span>조회 {views || 1}</span>
           </div>
         </div>
         <div className="flex gap-4 items-center">

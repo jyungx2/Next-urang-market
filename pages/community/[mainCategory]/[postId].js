@@ -1,5 +1,5 @@
 import CommentItem from "@/components/community/comment-item";
-import categoryData from "@/data/category";
+import Layout from "@/components/layout/layout";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
@@ -43,7 +43,7 @@ export default function PostDetailPage({ selectedPost }) {
       <div className="flex gap-4 items-center mb-4">
         <div className="relative w-[40px] aspect-square">
           <Image
-            src="/images/example.jpg"
+            src={selectedPost.profileImage}
             alt="icon"
             fill
             className="object-cover rounded-full"
@@ -51,9 +51,9 @@ export default function PostDetailPage({ selectedPost }) {
         </div>
         <div className="flex flex-col gap-1 text-[1.2rem]">
           <div className="flex gap-2">
-            <span className="font-bold">you</span>
+            <span className="font-bold">{selectedPost.writer}</span>
             <span className="text-[var(--color-primary-600)] font-medium">
-              가정동
+              {selectedPost.dong}
             </span>
           </div>
 
@@ -212,6 +212,7 @@ export async function getStaticProps(context) {
 
   return {
     props: { selectedPost: data.post },
+    // revalidate: 60,
   };
 }
 
@@ -232,3 +233,8 @@ export async function getStaticPaths() {
     fallback: "blocking",
   };
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+PostDetailPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>; // Layout 안 씌움
+};

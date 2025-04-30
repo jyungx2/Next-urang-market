@@ -26,11 +26,11 @@ export default function CommunityPage() {
 
   const { mainCategory, subCategory } = getKoreanCategory(mainSlug, subSlug);
 
-  console.log("🔥 selected-rcode: ", currentUser?.selectedLocation?.rcode);
-  console.log("🔥 location-rcode: ", currentUser?.location?.rcode);
+  // console.log("🔥 selected-rcode: ", currentUser?.selectedLocation?.rcode);
+  // console.log("🔥 location-rcode: ", currentUser?.location?.rcode);
 
-  console.log("🇺🇸 main/sub:", mainSlug, subSlug);
-  console.log("🇰🇷 메인/서브:", mainCategory, subCategory);
+  // console.log("🇺🇸 main/sub:", mainSlug, subSlug);
+  // console.log("🇰🇷 메인/서브:", mainCategory, subCategory);
 
   // 🚨 mainCategoryegory가 아직 없을 땐 null을 key로 넘겨서 SWR을 멈춘다
   const shouldFetch = !!mainCategory && !!subCategory; // ✅ mainCategoryegory가 있을 때만 fetch
@@ -79,30 +79,13 @@ export default function CommunityPage() {
     );
   }
 
-  const DUMMY_DATA_ONE = [
-    {
-      id: 1,
-      writer: "김유랑",
-      createdAt: "2025.03.13",
-      views: 324,
-      title: "유랑마켓 중고거래 이용 가이드 (등업 및 이용)",
-    },
-    {
-      id: 2,
-      writer: "김유랑",
-      createdAt: "2025.02.28",
-      views: 56,
-      title: "유랑마켓 포인트 적립 꿀팁!",
-    },
-  ];
-
   // mainCategory(Processed data by a customed function, 한국어 카테고리) 기준으로 렌더링
   if (mainCategory === "공지사항") {
     return (
       <CommunityLayout
         userLocationSlot={<UserLocation mainCategory={mainSlug} />}
       >
-        <OddPostList items={DUMMY_DATA_ONE} />
+        <OddPostList items={data?.posts || []} />
       </CommunityLayout>
     );
   }

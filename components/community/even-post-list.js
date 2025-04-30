@@ -10,6 +10,7 @@ export default function EvenPostList({ items }) {
       {items.map((item) => (
         <EvenPostItem
           key={item._id}
+          postId={item._id}
           createdAt={String(item.createdAt)}
           writer={item.writer}
           title={item.title}
@@ -21,6 +22,9 @@ export default function EvenPostList({ items }) {
               query: { mainCategory, postId: item._id, tab },
             })
           }
+          // likesCount, dislikesCount는 게시글 자체의 속성이므로 prop으로 넘겨주기
+          likesCount={item.likesCount}
+          dislikesCount={item.dislikesCount}
         />
       ))}
     </ul>

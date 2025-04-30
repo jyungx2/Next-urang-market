@@ -86,6 +86,7 @@ export default function PostAddPage() {
       method: "POST",
       body: JSON.stringify({
         writer: currentUser.nickname, // 작성자 닉네임
+        profileImage: currentUser.profileImage,
         title: category.mainCategory.name === "공지사항" ? title : null,
         content, // 내용
         mainCategory: category.mainCategory.name,

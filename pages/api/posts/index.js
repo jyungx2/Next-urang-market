@@ -17,13 +17,22 @@ export default async function handler(req, res) {
 
   // POST HTTP
   if (req.method === "POST") {
-    const { writer, title, content, mainCategory, subCategory, dong, rcode } =
-      req.body;
+    const {
+      writer,
+      profileImage,
+      title,
+      content,
+      mainCategory,
+      subCategory,
+      dong,
+      rcode,
+    } = req.body;
     console.log(req.query);
 
     // Validation for server-side
     if (
       !writer ||
+      !profileImage ||
       !content ||
       !mainCategory ||
       !subCategory ||
@@ -37,6 +46,7 @@ export default async function handler(req, res) {
 
     const newPost = {
       writer,
+      profileImage,
       title,
       content,
       mainCategory,
