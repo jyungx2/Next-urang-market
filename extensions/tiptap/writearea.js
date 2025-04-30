@@ -2,7 +2,7 @@ import CategoryModal from "@/components/community/category-modal";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function WriteArea({ titleRef, category, onCategorySelect }) {
   const router = useRouter();

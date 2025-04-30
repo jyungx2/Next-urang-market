@@ -10,10 +10,11 @@ export default function EvenPostList({ items }) {
       {items.map((item) => (
         <EvenPostItem
           key={item._id}
-          writer={item.writer}
           createdAt={String(item.createdAt)}
-          location={item.location}
+          writer={item.writer}
+          title={item.title}
           content={item.content}
+          dong={item.dong}
           onDetail={() =>
             router.push({
               pathname: "/community/[mainCategory]/[postId]",

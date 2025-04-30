@@ -97,7 +97,7 @@ export default function CommunityPage() {
   ];
 
   // mainCategory(Processed data by a customed function, 한국어 카테고리) 기준으로 렌더링
-  if (mainCategory === "공지사항" || mainCategory === "워킹홀리데이") {
+  if (mainCategory === "공지사항") {
     return (
       <CommunityLayout
         userLocationSlot={<UserLocation mainCategory={mainSlug} />}
@@ -108,7 +108,11 @@ export default function CommunityPage() {
   }
 
   // mainSlug(Raw query data, 영어 카테고리) 기준으로 렌더링
-  if (mainSlug === "living-abroad" || mainSlug === "working-abroad") {
+  if (
+    mainSlug === "living-abroad" ||
+    mainSlug === "working-abroad" ||
+    mainCategory === "워킹홀리데이"
+  ) {
     return (
       <CommunityLayout
         userLocationSlot={<UserLocation mainCategory={mainSlug} />}

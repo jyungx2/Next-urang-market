@@ -90,6 +90,7 @@ export default function PostAddPage() {
         content, // 내용
         mainCategory: category.mainCategory.name,
         subCategory: category.subCategory.label,
+        dong: currentUser.selectedLocation.keyword.slice(-1)[0],
         rcode: currentUser.selectedLocation.rcode, // 주소('동') - api routes에서 지역코드로 필터링할 예정
       }),
       headers: {

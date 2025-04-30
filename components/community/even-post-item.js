@@ -1,7 +1,16 @@
+import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function TalkPostItem({ createdAt, content, onDetail }) {
+export default function TalkPostItem({
+  writer,
+  title,
+  createdAt,
+  content,
+  dong,
+  onDetail,
+}) {
+  const { currentUser } = useCurrentUserStore();
   return (
     <div
       className="flex flex-col gap-6 border-t-[10px] border-[var(--color-grey-100)] p-4 cursor-pointer"
@@ -10,16 +19,16 @@ export default function TalkPostItem({ createdAt, content, onDetail }) {
       <div id="post-header" className="flex gap-4 items-center text-[1.2rem]">
         <Link href="/" className="flex gap-2 items-center">
           <Image
-            src="/images/example.jpg"
+            src={currentUser?.profileImage || "/icons/profile-signup.svg"}
             alt="icon"
             width={24}
             height={24}
             className="rounded-full aspect-square object-cover"
           />
-          <span className="font-bold">지영</span>
+          <span className="font-bold">{writer}</span>
         </Link>
 
-        <span className="text-gray-500">{createdAt}</span>
+        <span className="text-gray-500">{createdAt.split("T")[0]}</span>
         <span className="flex items-center">
           <Image
             src="/icons/location-micro.svg"
@@ -27,7 +36,7 @@ export default function TalkPostItem({ createdAt, content, onDetail }) {
             width={14}
             height={14}
           />
-          하드코딩
+          {dong}
         </span>
       </div>
 
