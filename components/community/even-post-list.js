@@ -6,13 +6,14 @@ export default function EvenPostList({ items }) {
   const { mainCategory, tab } = router.query;
 
   return (
-    <ul className="flex flex-col gap-6">
+    <ul className="flex flex-col gap-1">
       {items.map((item) => (
         <EvenPostItem
           key={item._id}
           postId={item._id}
           createdAt={String(item.createdAt)}
           writer={item.writer}
+          profileImage={item.profileImage}
           title={item.title}
           content={item.content}
           dong={item.dong}

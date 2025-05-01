@@ -38,6 +38,17 @@ const CurrentUserStore = (set, get) => ({
       },
     });
   },
+
+  setLikePost: (postArray) => {
+    const user = get().currentUser;
+    if (!user) return;
+    set({
+      currentUser: {
+        ...user,
+        likes: postArray,
+      },
+    });
+  },
 });
 
 const useCurrentUserStore = create(

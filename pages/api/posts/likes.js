@@ -44,6 +44,8 @@ export default async function handler(req, res) {
             { returnDocument: "after" }
           );
 
+        const updatedUser = await getDocumentById(client, "users", userId);
+
         console.log("📦 postResult 전체:", postResult);
         console.log("📦 postResult 밸류:", postResult.value);
 
@@ -51,6 +53,7 @@ export default async function handler(req, res) {
           message: "I cancel like!",
           liked: false,
           likesCount: postResult.likesCount,
+          updatedLikes: updatedUser.likes,
         });
       } else {
         // 좋아요 추가
@@ -68,6 +71,8 @@ export default async function handler(req, res) {
             { returnDocument: "after" }
           );
 
+        const updatedUser = await getDocumentById(client, "users", userId);
+
         console.log("📦 postResult 전체:", postResult);
         console.log("📦 postResult 밸류:", postResult.value);
 
@@ -75,6 +80,7 @@ export default async function handler(req, res) {
           message: "I like it :)",
           liked: true,
           likesCount: postResult.likesCount,
+          updatedLikes: updatedUser.likes,
         });
       }
     } catch (err) {
