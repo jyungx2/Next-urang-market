@@ -25,6 +25,8 @@ export default function EvenpostItem({
   const [hasLiked, setHasLiked] = useState(initialHasLiked);
   const [hasDisliked, setHasDisliked] = useState(initialHasDisliked);
 
+  const isItYouself = writer === currentUser?.nickname;
+
   console.log("초기 싫어요", initialHasDisliked);
   console.log("초기 좋아요", initialHasLiked);
   console.log("유저 정보: ", currentUser);
@@ -34,6 +36,11 @@ export default function EvenpostItem({
     e.stopPropagation(); // 부모 클릭(onDetail) 방지
     if (hasDisliked) {
       alert("이미 비추천한 글은 추천할 수 없습니다.");
+      return;
+    }
+
+    if (isItYouself) {
+      alert("자신이 작성한 게시글은 추천할 수 없습니다.");
       return;
     }
 
@@ -61,6 +68,11 @@ export default function EvenpostItem({
     e.stopPropagation(); // 부모 클릭(onDetail) 방지
     if (hasLiked) {
       alert("이미 추천한 글은 비추천할 수 없습니다.");
+      return;
+    }
+
+    if (isItYouself) {
+      alert("자신이 작성한 게시글은 비추천할 수 없습니다.");
       return;
     }
 
