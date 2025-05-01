@@ -39,10 +39,13 @@ export default async function handler(req, res) {
             { returnDocument: "after" }
           );
 
+        const updatedUser = await getDocumentById(client, "users", userId);
+
         res.status(200).json({
           message: "I cancel dislike!",
           disliked: false,
           dislikesCount: postResult.dislikesCount,
+          updatedDislikes: updatedUser.dislikes,
         });
       } else {
         // 싫어요 추가
@@ -61,10 +64,13 @@ export default async function handler(req, res) {
             { returnDocument: "after" }
           );
 
+        const updatedUser = await getDocumentById(client, "users", userId);
+
         res.status(200).json({
           message: "I dislike it :(",
           disliked: true,
           dislikesCount: postResult.dislikesCount,
+          updatedDislikes: updatedUser.dislikes,
         });
       }
     } catch (err) {

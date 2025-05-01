@@ -14,7 +14,7 @@ export default function EvenpostItem({
   likesCount,
   dislikesCount,
 }) {
-  const { currentUser, setLikePost } = useCurrentUserStore();
+  const { currentUser, setLikePost, setDislikePost } = useCurrentUserStore();
 
   const [likes, setLikes] = useState(likesCount);
   const [dislikes, setDislikes] = useState(dislikesCount);
@@ -76,6 +76,7 @@ export default function EvenpostItem({
       const data = await res.json();
       setDislikes(data.dislikesCount);
       setHasDisliked(data.disliked);
+      setDislikePost(data.updatedDislikes);
     } catch (err) {
       console.error("좋아요 실패❗️", err.message);
     }

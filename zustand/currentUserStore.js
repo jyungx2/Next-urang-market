@@ -49,6 +49,17 @@ const CurrentUserStore = (set, get) => ({
       },
     });
   },
+
+  setDislikePost: (postArray) => {
+    const user = get().currentUser;
+    if (!user) return;
+    set({
+      currentUser: {
+        ...user,
+        dislikes: postArray,
+      },
+    });
+  },
 });
 
 const useCurrentUserStore = create(

@@ -46,9 +46,6 @@ export default async function handler(req, res) {
 
         const updatedUser = await getDocumentById(client, "users", userId);
 
-        console.log("📦 postResult 전체:", postResult);
-        console.log("📦 postResult 밸류:", postResult.value);
-
         res.status(200).json({
           message: "I cancel like!",
           liked: false,
@@ -72,9 +69,6 @@ export default async function handler(req, res) {
           );
 
         const updatedUser = await getDocumentById(client, "users", userId);
-
-        console.log("📦 postResult 전체:", postResult);
-        console.log("📦 postResult 밸류:", postResult.value);
 
         res.status(200).json({
           message: "I like it :)",
