@@ -27,10 +27,10 @@ export default function EvenpostItem({
 
   const isItYouself = writer === currentUser?.nickname;
 
-  console.log("초기 싫어요", initialHasDisliked);
-  console.log("초기 좋아요", initialHasLiked);
-  console.log("유저 정보: ", currentUser);
-  useEffect(() => console.log("💄 유저 정보:", currentUser), []);
+  // console.log("초기 싫어요", initialHasDisliked);
+  // console.log("초기 좋아요", initialHasLiked);
+  // console.log("유저 정보: ", currentUser);
+  // useEffect(() => console.log("💄 유저 정보:", currentUser), []);
 
   const handleLikes = async (e) => {
     e.stopPropagation(); // 부모 클릭(onDetail) 방지

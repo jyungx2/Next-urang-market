@@ -12,6 +12,10 @@ export default NextAuth({
       credentials: {
         phoneNumber: { label: "Phone Number", type: "text" },
         code: { label: "Code", type: "text" },
+
+        // 임시 로그인용 정보
+        username: { label: "name of user", type: "text" },
+        birthdate: { label: "Birthdate", type: "text" },
       },
       async authorize(credentials) {
         console.log("🔥 credentials:", credentials);
@@ -42,33 +46,43 @@ export default NextAuth({
             profileImage: user.profileImage, // DB에서 가져온 값
             recentLocations: user.recentLocations ?? [], // ⚠️꼭 추가!
             selectedLocation: user.selectedLocation,
+            likes: user.likes ?? [],
+            dislikes: user.dislikes ?? [],
           }; // ✅ 로그인 성공 => 유저입력값인 crendentials가 아니라 실제로 유효성이 검증된 DB에 존재하는 값들을 리턴해야 함!
         }
 
         // 2️⃣ 일반 로그인 (로그인 폼에서 인증번호 입력)
-        const storedCode = await redis.get(credentials.phoneNumber);
-        if (!storedCode || storedCode !== credentials.code) {
-          throw new Error("인증번호가 일치하지 않거나 만료되었습니다.");
+        // const storedCode = await redis.get(credentials.phoneNumber);
+        // if (!storedCode || storedCode !== credentials.code) {
+        //   throw new Error("인증번호가 일치하지 않거나 만료되었습니다.");
+        // }
+
+        if (credentials.username && credentials.birthdate) {
+          const user = await usersCollection.findOne({
+            // phoneNumber: credentials.phoneNumber,
+
+            // 임시 로그인용
+            username: credentials.username,
+            birthdate: credentials.birthdate,
+          });
+          if (!user) throw new Error("No user found");
+
+          // await redis.del(credentials.phoneNumber); // 인증번호 제거
+
+          return {
+            id: user._id.toString(), // DB에서 가져온 값
+            location: user.location, // DB에서 가져온 값
+            username: user.username, // DB에서 가져온 값
+            birthdate: user.birthdate, // DB에서 가져온 값
+            phoneNumber: user.phoneNumber, // DB에서 가져온 값
+            nickname: user.nickname, // DB에서 가져온 값
+            profileImage: user.profileImage, // DB에서 가져온 값
+            recentLocations: user.recentLocations,
+            selectedLocation: user.selectedLocation,
+            likes: user.likes ?? [],
+            dislikes: user.dislikes ?? [],
+          }; // ✅ 로그인 성공
         }
-
-        const user = await usersCollection.findOne({
-          phoneNumber: credentials.phoneNumber,
-        });
-        if (!user) throw new Error("No user found");
-
-        await redis.del(credentials.phoneNumber); // 인증번호 제거
-
-        return {
-          id: user._id.toString(), // DB에서 가져온 값
-          location: user.location, // DB에서 가져온 값
-          username: user.username, // DB에서 가져온 값
-          birthdate: user.birthdate, // DB에서 가져온 값
-          phoneNumber: user.phoneNumber, // DB에서 가져온 값
-          nickname: user.nickname, // DB에서 가져온 값
-          profileImage: user.profileImage, // DB에서 가져온 값
-          recentLocations: user.recentLocations ?? [], // ⚠️꼭 추가!
-          selectedLocation: user.selectedLocation,
-        }; // ✅ 로그인 성공
       },
     }),
   ],
@@ -88,6 +102,8 @@ export default NextAuth({
         token.role = user.role;
         token.recentLocations = user.recentLocations ?? [];
         token.selectedLocation = user.selectedLocation;
+        token.likes = user.likes;
+        token.dislikes = user.dislikes;
       }
       return token;
     },
@@ -103,6 +119,8 @@ export default NextAuth({
       session.user.role = token.role;
       session.user.recentLocations = token.recentLocations ?? []; // null or undefined일 경우에만 []을 넣겠다..
       session.user.selectedLocation = token.selectedLocation;
+      session.user.likes = token.likes;
+      session.user.dislikes = token.dislikes;
 
       return session;
     },

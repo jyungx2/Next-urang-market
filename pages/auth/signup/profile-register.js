@@ -173,7 +173,7 @@ export default function ProfileRegisterPage() {
       useCurrentUserStore.getState().setCurrentUser(session.user); // ✅ 로그인 유저 상태 저장
       console.log(currentUser, "유저 세션: ", session.user); // React 컴포넌트 내 currentUser 값은 다음 렌더링 사이클에서야 업데이트된 값을 반영하기 때문에 여전히 💥currentUser === null💥
 
-      // 5. 홈페이지로 이동
+      // 5. 프로필 페이지로 이동
       router.push("/profile");
     },
     onError: (err) => {
@@ -200,7 +200,7 @@ export default function ProfileRegisterPage() {
       </header>
 
       <form
-        className="flex flex-col gap-10 flex-grow"
+        className="flex flex-col gap-10"
         onSubmit={handleSubmit(finallyRegister.mutate)}
       >
         <div className="flex flex-col gap-6">

@@ -9,7 +9,7 @@ export default function OddPostList({ items }) {
     <ul className="flex flex-col gap-6">
       {items.map((item) => (
         <OddPostItem
-          key={item.id}
+          key={item._id}
           writer={item.writer}
           createdAt={String(item.createdAt)}
           views={item.views}

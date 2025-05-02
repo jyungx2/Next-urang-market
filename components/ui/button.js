@@ -17,7 +17,7 @@ export default function Button({
 }) {
   const classes = className(
     rest.className,
-    "flex items-center h-[44px] leading-[44px] rounded-lg h-12 font-bold",
+    "flex items-center justify-center h-[44px] leading-[44px] rounded-lg h-12 font-bold",
     {
       "opacity-80": loading,
       "text-[var(--color-primary-600)] bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]":
