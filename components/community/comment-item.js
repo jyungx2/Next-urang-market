@@ -1,11 +1,11 @@
 import Image from "next/image";
 
-export default function CommentItem() {
+export default function CommentItem({ item }) {
   return (
     <li className="p-4 border-b border-gray-200 font-sans flex gap-2">
       <div className="shrink-0">
         <Image
-          src="/images/example.jpg"
+          src={item.profileImage || ""}
           alt="user"
           className="rounded-full mr-2 aspect-square"
           width={24}
@@ -15,7 +15,7 @@ export default function CommentItem() {
 
       <div className="flex-grow">
         <div className="flex items-center mb-2">
-          <span className="font-bold text-[1.2rem]">no1</span>
+          <span className="font-bold text-[1.2rem]">{item.writer}</span>
           <span className="text-[1.2rem] text-gray-500 ml-2">1시간 전</span>
           <span className="bg-red-500 text-white text-[1rem] px-1 py-0.5 rounded-full ml-2">
             N
@@ -23,7 +23,7 @@ export default function CommentItem() {
         </div>
 
         <div className="text-[1.4rem] mb-4">
-          <p> 짬낙이면 무의도, 시방 정도 될 것 같네요.</p>
+          <p>{item.content}</p>
         </div>
 
         <div className="flex items-center text-[1.2rem] text-gray-600">

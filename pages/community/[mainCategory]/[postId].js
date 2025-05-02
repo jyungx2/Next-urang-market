@@ -1,20 +1,13 @@
 import CommentItem from "@/components/community/comment-item";
+import CommentList from "@/components/community/comment-list";
+import CommentNew from "@/components/community/comment-new";
 import Layout from "@/components/layout/layout";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
 
 export default function PostDetailPage({ selectedPost }) {
   const router = useRouter();
   const { mainCategory, tab } = router.query;
-
-  const editableRef = useRef(null);
-  const [isEmpty, setIsEmpty] = useState(true);
-
-  const handleInput = () => {
-    const text = editableRef.current.innerText.trim();
-    setIsEmpty(text === "");
-  };
 
   return (
     <div className="flex flex-col gap-4 p-4 pt-0 min-h-screen">
@@ -124,72 +117,10 @@ export default function PostDetailPage({ selectedPost }) {
       </div>
 
       {/* 댓글 추가 */}
-      <div className="mb-4">
-        <div className="bg-amber-50 p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="relative w-[28px] aspect-square">
-                <Image
-                  src="/images/example.jpg"
-                  alt="icon"
-                  fill
-                  className="object-cover rounded-full"
-                />
-              </div>
-              <span className="font-bold text-[1.4rem]">jiyoung</span>
-            </div>
-
-            <span className="text-[var(--color-grey-400)] text-[1.2rem]">
-              0/500
-            </span>
-          </div>
-
-          <div
-            ref={editableRef}
-            role="textbox"
-            aria-label="댓글 입력창"
-            contentEditable
-            className={`textarea ${isEmpty ? "empty" : ""}`}
-            placeholder="댓글을 남겨주세요"
-            onInput={handleInput}
-          ></div>
-
-          <div className="flex mt-2 justify-between">
-            <div className="flex gap-4 items-center">
-              <button className="cursor-pointer">
-                <Image
-                  src="/icons/emoji.svg"
-                  alt="icon"
-                  width={24}
-                  height={24}
-                />
-              </button>
-              <button className="cursor-pointer">
-                <Image
-                  src="/icons/camera.svg"
-                  alt="icon"
-                  width={24}
-                  height={24}
-                />
-              </button>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <button className="bg-[var(--color-grey-50)] p-3 rounded-lg text-[var(--color-grey-500)] font-bold text-[1.4rem] cursor-pointer">
-                취소
-              </button>
-              <button className="bg-[var(--color-primary-50)] p-3 rounded-lg text-[var(--color-primary-500)] font-bold text-[1.4rem] cursor-pointer">
-                등록
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <CommentNew postId={selectedPost._id} />
 
       {/* 댓글 목록 */}
-      <ul>
-        <CommentItem />
-      </ul>
+      <CommentList postId={selectedPost._id} />
     </div>
   );
 }
