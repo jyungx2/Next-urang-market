@@ -1,6 +1,21 @@
 import Image from "next/image";
+import { mutate } from "swr";
 
-export default function CommentItem({ item }) {
+export default function CommentItem({ item, postId }) {
+  const handleDelete = async () => {
+    const res = await fetch(`/api/posts/comments`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, commentId: item._id }),
+    });
+
+    const data = await res.json();
+    console.log(data.message);
+
+    // ✅ SWR 캐시 무효화 (댓글 리스트 다시 불러오기)
+    mutate(`/api/posts/comments?postId=${postId}`);
+  };
+
   return (
     <li className="p-4 border-b border-gray-200 font-sans flex gap-2">
       <div className="shrink-0">
@@ -15,11 +30,19 @@ export default function CommentItem({ item }) {
 
       <div className="flex-grow">
         <div className="flex items-center mb-2">
-          <span className="font-bold text-[1.2rem]">{item.writer}</span>
-          <span className="text-[1.2rem] text-gray-500 ml-2">1시간 전</span>
-          <span className="bg-red-500 text-white text-[1rem] px-1 py-0.5 rounded-full ml-2">
-            N
-          </span>
+          <div>
+            <span className="font-bold text-[1.2rem]">{item.writer}</span>
+            <span className="text-[1.2rem] text-gray-500 ml-2">1시간 전</span>
+            <span className="bg-red-500 text-white text-[1rem] px-1 py-0.5 rounded-full ml-2">
+              N
+            </span>
+          </div>
+          <button
+            onClick={handleDelete}
+            className="bg-red-400 p-2 rounded-lg text-white font-bold text-[1.4rem] ml-auto cursor-pointer hover:bg-red-500"
+          >
+            삭제
+          </button>
         </div>
 
         <div className="text-[1.4rem] mb-4">

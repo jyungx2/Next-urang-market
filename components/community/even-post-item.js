@@ -124,6 +124,13 @@ export default function EvenpostItem({
           />
           {dong}
         </span>
+
+        {/* ♻️ nickname이 아닌, user객체를 통째로 Prop으로 받아와 id로 비교하는게 더 안정적이지 않을까? */}
+        {currentUser.nickname === writer && (
+          <button className="ml-auto bg-[var(--color-red)] px-3 py-2 rounded-2xl font-bold cursor-pointer hover:bg-[var(--color-red-hover)]">
+            삭제
+          </button>
+        )}
       </div>
 
       <div id="post-content " className="px-4">

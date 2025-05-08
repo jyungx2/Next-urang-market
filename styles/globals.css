@@ -75,6 +75,9 @@ body {
   --color-secondary-800: #0ca156;
   --color-secondary-900: #008040;
 
+  --color-red: #ff9898f5;
+  --color-red-hover: #ffebebf5;
+
   --color-bg: #f7f7f7;
   --color-com-bg: #313030;
   --color-grey-bg: #f5f6f7;

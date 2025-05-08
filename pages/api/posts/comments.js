@@ -11,8 +11,36 @@ export default async function handler(req, res) {
     res.status(500).json({ message: "Connecting to the database failed!" });
     return;
   }
-  // POST HTTP
+
+  // DELETE HTTP
+  if (req.method === "DELETE") {
+    const { postId, commentId } = req.body;
+
+    if (!postId || !commentId) {
+      return res
+        .status(400)
+        .json({ message: "postId, commentId가 필요합니다." });
+    }
+
+    try {
+      const db = client.db(process.env.MONGODB_NAME); // ✅ 추가 필요
+
+      await db.collection("posts").updateOne(
+        { _id: new ObjectId(postId) },
+        {
+          $pull: {
+            comments: { _id: new ObjectId(commentId) },
+          },
+        }
+      );
+      return res.status(200).json({ message: "댓글이 삭제되었습니다." });
+    } catch (err) {
+      return res.status(500).json({ message: "댓글 삭제 실패" });
+    }
+  }
+
   if (req.method === "POST") {
+    // POST HTTP
     const { postId } = req.query;
     const { writer, profileImage, content } = req.body;
 

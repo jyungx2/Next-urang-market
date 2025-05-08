@@ -1,13 +1,13 @@
 import useCurrentUserStore from "@/zustand/currentUserStore";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { mutate } from "swr";
 
 export default function CommentNew({ postId }) {
   const editableRef = useRef(null);
   const [isEmpty, setIsEmpty] = useState(true);
   const { currentUser } = useCurrentUserStore();
+  const queryClient = useQueryClient();
 
   const handleInput = () => {
     const text = editableRef.current.innerText.trim();
@@ -36,7 +36,10 @@ export default function CommentNew({ postId }) {
       }
 
       // ✅ SWR 캐시 무효화 (댓글 리스트 다시 불러오기)
-      mutate(`/api/posts/comments?postId=${postId}`);
+      // mutate(`/api/posts/comments?postId=${postId}`);
+
+      // 쿼리 키 무효화 -> 리렌더링 유발
+      queryClient.invalidateQueries(["comments", postId]);
     },
   });
 

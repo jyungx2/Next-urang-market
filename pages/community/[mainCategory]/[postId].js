@@ -1,13 +1,23 @@
-import CommentItem from "@/components/community/comment-item";
 import CommentList from "@/components/community/comment-list";
 import CommentNew from "@/components/community/comment-new";
 import Layout from "@/components/layout/layout";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
 export default function PostDetailPage({ selectedPost }) {
   const router = useRouter();
   const { mainCategory, tab } = router.query;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["comments", selectedPost._id],
+    queryFn: async () => {
+      const res = await fetch(`/api/posts/comments?postId=${selectedPost._id}`);
+      const data = await res.json();
+      return data; // 👉 이게 select의 input이 됨
+    },
+    select: (data) => data.comments, // 👉 이게 최종적으로 data가 됨 (queryFn의 결과를 받아서 원하는 형태로 가공함 & 이 가공된 값이 useQuery() 훅의 최종 data 값이 됨)
+  });
 
   return (
     <div className="flex flex-col gap-4 p-4 pt-0 min-h-screen">
@@ -74,7 +84,7 @@ export default function PostDetailPage({ selectedPost }) {
       {/* 댓글 리셋 & 좋아요 섹션 */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-1 items-center">
-          <span className="font-bold text-[1.4rem]">댓글 1</span>
+          <span className="font-bold text-[1.4rem]">댓글 {data?.length}</span>
 
           <button className="cursor-pointer aspect-square bg-[var(--color-grey-50)] p-1 rounded-full">
             <Image
@@ -120,7 +130,11 @@ export default function PostDetailPage({ selectedPost }) {
       <CommentNew postId={selectedPost._id} />
 
       {/* 댓글 목록 */}
-      <CommentList postId={selectedPost._id} />
+      {isLoading ? (
+        <p className="text-center">Loading...</p>
+      ) : (
+        <CommentList comments={data} />
+      )}
     </div>
   );
 }
