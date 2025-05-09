@@ -133,7 +133,7 @@ export default function PostDetailPage({ selectedPost }) {
       {isLoading ? (
         <p className="text-center">Loading...</p>
       ) : (
-        <CommentList comments={data} />
+        <CommentList comments={data} postId={selectedPost._id} />
       )}
     </div>
   );

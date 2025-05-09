@@ -1,20 +1,26 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { mutate } from "swr";
 
 export default function CommentItem({ item, postId }) {
-  const handleDelete = async () => {
-    const res = await fetch(`/api/posts/comments`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ postId, commentId: item._id }),
-    });
+  const queryClient = useQueryClient();
 
-    const data = await res.json();
-    console.log(data.message);
+  const deleteMutation = useMutation({
+    mutationFn: async ({ postId, commentId }) => {
+      const res = await fetch(`/api/posts/comments`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ postId, commentId }),
+      });
 
-    // ✅ SWR 캐시 무효화 (댓글 리스트 다시 불러오기)
-    mutate(`/api/posts/comments?postId=${postId}`);
-  };
+      const data = await res.json();
+      console.log(data.message);
+    },
+    onSuccess: () => {
+      // ⭕️쿼리 키 무효화 -> 리렌더링 유발⭕️
+      queryClient.invalidateQueries(["comments", postId]);
+      alert("댓글이 삭제되었습니다.");
+    },
+  });
 
   return (
     <li className="p-4 border-b border-gray-200 font-sans flex gap-2">
@@ -38,7 +44,9 @@ export default function CommentItem({ item, postId }) {
             </span>
           </div>
           <button
-            onClick={handleDelete}
+            onClick={() =>
+              deleteMutation.mutate({ postId, commentId: item._id })
+            }
             className="bg-red-400 p-2 rounded-lg text-white font-bold text-[1.4rem] ml-auto cursor-pointer hover:bg-red-500"
           >
             삭제

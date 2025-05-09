@@ -35,10 +35,10 @@ export default function CommentNew({ postId }) {
         setIsEmpty(true);
       }
 
-      // ✅ SWR 캐시 무효화 (댓글 리스트 다시 불러오기)
+      // ❌SWR 캐시 무효화 (댓글 리스트 다시 불러오기)❌
       // mutate(`/api/posts/comments?postId=${postId}`);
 
-      // 쿼리 키 무효화 -> 리렌더링 유발
+      // ⭕️쿼리 키 무효화 -> 리렌더링 유발⭕️
       queryClient.invalidateQueries(["comments", postId]);
     },
   });
