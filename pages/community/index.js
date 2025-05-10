@@ -18,6 +18,4 @@ export default function CommunityRedirect() {
       query: { rcode },
     });
   }, [currentUser]);
-
-  return <p className="text-center mt-20 text-gray-500">로딩 중...</p>;
 }

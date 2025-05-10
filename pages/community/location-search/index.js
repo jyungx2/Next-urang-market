@@ -88,7 +88,6 @@ export default function LocationSearchPage() {
               rcode,
             };
             updateLocationOnServer(newItem);
-            console.log("❗️업데이트된 location 객체: ", newItem);
             // router.back();
           } catch (err) {
             console.error("❌ 위치 요청 실패:", err);
@@ -259,8 +258,13 @@ export default function LocationSearchPage() {
       });
 
       setNewLocation(newLocation);
+      setSelectedLocation(newLocation); // +post 버튼 추가시 별도의 인증절차 거치지 않도록 isVerified === true로 바뀐 주소객체로 상태 변경
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
+      router.push({
+        pathname: `/community/${router.query.from}`,
+        query: { rcode: newLocation.rcode },
+      });
       console.log("✅ 현재 위치 수정 완료:", data.message);
     } catch (err) {
       console.error("❌ 위치 수정 실패:", err.message);

@@ -16,7 +16,8 @@ export default function CommunityAddPost() {
   const { currentUser, setSelectedLocation } = useCurrentUserStore();
 
   const handlePostClick = () => {
-    if (currentUser?.selectedLocation?.isVerified === false) {
+    console.log("선택된 현재 위치: ", currentUser?.selectedLocation);
+    if (!currentUser?.selectedLocation?.isVerified) {
       setShowModal(true);
     } else {
       router.push("/community/post/new");
@@ -54,9 +55,11 @@ export default function CommunityAddPost() {
             // ✅ 위치 비교 후 바로 라우팅
             // setNeighborhood(비동기 상태 업데이트) 직후에 neighborhood 값을 바로 읽으면 갱신되지 않을 수 있으므로, neighborhood보다 data.dong으로 비교하는게 안전!
             if (
-              currentUser?.selectedLocation.keyword.slice(-1)[0] === data.dong
+              currentUser?.selectedLocation.keyword[1] === data.sigungu &&
+              currentUser?.selectedLocation.keyword[2] === data.dong
             ) {
               router.push("/community/post/new");
+              setSelectedLocation(addressObj); // 현재 위치와 유저가 선택한 위치가 일치하면 전역상태 selectedLocation 값도 반영해서 이후의 요청에 대해서는 isVerified === true에 의해 별도의 인증절차 거치지 않도록..
             } else {
               setIsLocationMatched(false); // 매칭 실패 상태로 변경
             }
