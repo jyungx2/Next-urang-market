@@ -1,7 +1,8 @@
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function EvenpostItem({
   postId,
@@ -15,6 +16,7 @@ export default function EvenpostItem({
   dislikesCount,
 }) {
   const { currentUser, setLikePost, setDislikePost } = useCurrentUserStore();
+  const queryClient = useQueryClient();
 
   const [likes, setLikes] = useState(likesCount);
   const [dislikes, setDislikes] = useState(dislikesCount);
@@ -94,6 +96,26 @@ export default function EvenpostItem({
     }
   };
 
+  const deletePostMutation = useMutation({
+    mutationFn: async (postId) => {
+      const res = await fetch(`/api/posts/${postId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "삭제 실패");
+      }
+    },
+    onSuccess: () => {
+      alert("게시물이 성공적으로 삭제되었습니다.");
+      queryClient.invalidateQueries(["posts"]);
+    },
+    onError: (error) => {
+      alert(`오류 발생: ${error.message}`);
+    },
+  });
+
   return (
     <div
       className="flex flex-col gap-4 border-t-[10px] border-[var(--color-grey-100)] cursor-pointer"
@@ -127,7 +149,13 @@ export default function EvenpostItem({
 
         {/* ♻️ nickname이 아닌, user객체를 통째로 Prop으로 받아와 id로 비교하는게 더 안정적이지 않을까? */}
         {currentUser.nickname === writer && (
-          <button className="ml-auto bg-[var(--color-red)] px-3 py-2 rounded-2xl font-bold cursor-pointer hover:bg-[var(--color-red-hover)]">
+          <button
+            className="ml-auto bg-[var(--color-red)] px-3 py-2 rounded-2xl font-bold cursor-pointer hover:bg-[var(--color-red-hover)]"
+            onClick={(e) => {
+              e.stopPropagation(); // 🔥 상세페이지 진입 방지!
+              deletePostMutation.mutate(postId);
+            }}
+          >
             삭제
           </button>
         )}

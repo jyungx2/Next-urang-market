@@ -17,6 +17,11 @@ export default function PostAddPage() {
   // const { currentUser } = useCurrentUserStore();
   // if (!currentUser.selectedLocation.isVerified) { router.push('/community/post/verification/....')}
   const { currentUser } = useCurrentUserStore();
+  console.log("3️⃣ 그럼 location은?", currentUser.location);
+  console.log(
+    "3️⃣업데이트 후, isVerified: true여야 하는 선택된 위치: ",
+    currentUser.selectedLocation
+  );
 
   const router = useRouter();
   // CATEGORY
@@ -56,6 +61,8 @@ export default function PostAddPage() {
           "ProseMirror focus:outline-none text-2xl flex-grow leading-relaxed",
       },
     },
+    immediatelyRender: false, // Tiptap 내부에서 hydration mismatch를 막는 역할
+    // cf) ssr: false는 Next.js 차원에서 SSR을 막는 것
   });
 
   async function handleSubmit(e) {

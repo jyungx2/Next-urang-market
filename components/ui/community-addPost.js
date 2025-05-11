@@ -15,6 +15,31 @@ export default function CommunityAddPost() {
   const [neighborhood, setNeighborhood] = useState("");
   const { currentUser, setSelectedLocation } = useCurrentUserStore();
 
+  const goToSeeMyNeighborhood = async () => {
+    router.push({
+      pathname: `/community/${router.query.mainCategory}`,
+      query: { rcode: neighborhood.rcode },
+    });
+    setShowModal(false);
+    setSelectedLocation(neighborhood);
+
+    const res = await fetch("/api/user/locations", {
+      method: "PATCH",
+      body: JSON.stringify({
+        userId: currentUser.id,
+        selectedLocation: neighborhood,
+      }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "서버 에러");
+    console.log(
+      "💌 내 이웃소식 보러가기 누른 후 api 요청 성공 시 받는 데이터: : ",
+      data
+    );
+  };
+
   const handlePostClick = () => {
     console.log("선택된 현재 위치: ", currentUser?.selectedLocation);
     if (!currentUser?.selectedLocation?.isVerified) {
@@ -59,7 +84,30 @@ export default function CommunityAddPost() {
               currentUser?.selectedLocation.keyword[2] === data.dong
             ) {
               router.push("/community/post/new");
+
+              // CLIENT SIDE: 현재 선택위치 업데이트
               setSelectedLocation(addressObj); // 현재 위치와 유저가 선택한 위치가 일치하면 전역상태 selectedLocation 값도 반영해서 이후의 요청에 대해서는 isVerified === true에 의해 별도의 인증절차 거치지 않도록..
+
+              // SEVER SIDE: 현재 선택위치 업뎃
+              const res = await fetch("/api/user/locations", {
+                method: "PATCH",
+                body: JSON.stringify({
+                  userId: currentUser.id,
+                  selectedLocation: addressObj,
+                }),
+                headers: { "Content-Type": "application/json" },
+              });
+              const data = await res.json();
+              console.log(
+                "📀 내 위치 인증 성공시, 서버에 선택위치 값 업데이트: ",
+                data
+              );
+
+              console.log(
+                "2️⃣ 업데이트 직후 선택된 위치: ",
+                currentUser.location,
+                currentUser.selectedLocation
+              );
             } else {
               setIsLocationMatched(false); // 매칭 실패 상태로 변경
             }
@@ -133,14 +181,7 @@ export default function CommunityAddPost() {
                 {/* 버튼 */}
                 <button
                   className="bg-green-100 text-green-700 font-semibold py-5 rounded-xl w-full hover:bg-green-200 transition mt-4"
-                  onClick={() => {
-                    router.push({
-                      pathname: `/community/${router.query.mainCategory}`,
-                      query: { rcode: neighborhood.rcode },
-                    });
-                    setShowModal(false);
-                    setSelectedLocation(neighborhood);
-                  }}
+                  onClick={() => goToSeeMyNeighborhood()}
                 >
                   {neighborhood.keyword.slice(-1)[0]} 이웃소식 보러가기
                 </button>

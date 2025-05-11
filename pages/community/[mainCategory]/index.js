@@ -3,10 +3,10 @@ import CommunityLayout from "@/pages/community/layout";
 import { useRouter } from "next/router";
 import OddPostList from "@/components/community/odd-post-list";
 import categoryData from "@/data/category";
-import useSWR from "swr";
 import Layout from "@/components/layout/layout";
 import UserLocation from "@/components/community/user-location";
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 function getKoreanCategory(mainSlug, subSlug) {
   const main = categoryData.find((cat) => cat.slug === mainSlug);
@@ -21,6 +21,7 @@ function getKoreanCategory(mainSlug, subSlug) {
 export default function CommunityPage() {
   const { currentUser } = useCurrentUserStore();
   const router = useRouter();
+  const rcode = router.query.rcode;
 
   const { mainCategory: mainSlug, tab: subSlug } = router.query;
 
@@ -47,17 +48,45 @@ export default function CommunityPage() {
   // 🖍️useSWR은 캐싱기능 보유. mutate()로 기존 데이터 revalidate 해주지 않으면 기존 데이터 가져다 써서 업데이트 불가.
   // ⚠️ refreshInterval은 가능은 하지만 비추천함 - 불필요한 네트워크 요청과 성능 낭비 때문. => 유저의 데이터 요청이 없어도 실행 & 여러 유저가 동시에 사용하면 서버 부하 & 모바일/저사양 디바이스에 부담 & 특정 이벤트 이후만 갱신한다는 CSR 사용목적에 맞지 않음
   // BUT, 실시간 채팅/실시간 알림/주식시세/환율/라이브 스코어 등의 기능에는 유용
-  const { data, error, isLoading } = useSWR(
-    shouldFetch
-      ? `/api/posts?mainCategory=${mainCategory}&subCategory=${subCategory}&rcode=${
+  // const { data, error, isLoading } = useSWR(
+  //   shouldFetch
+  //     ? `/api/posts?mainCategory=${mainCategory}&subCategory=${subCategory}&rcode=${
+  //         currentUser?.selectedLocation?.rcode || currentUser?.location?.rcode
+  //       }`
+  //     : null,
+  //   fetcher
+  //   // { refreshInterval: 5000 } // 5초마다 자동 갱신
+  // );
+
+  // useSWR대신 useQuery 사용!
+  // 💥 isError는 에러 발생 여부만 알려줌
+  // 💥 error는 에러 객체의 실제 정보
+  const {
+    data: postData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["posts", mainCategory, subCategory, rcode],
+    queryFn: async () => {
+      const res = await fetch(
+        `/api/posts?mainCategory=${mainCategory}&subCategory=${subCategory}&rcode=${
           currentUser?.selectedLocation?.rcode || currentUser?.location?.rcode
         }`
-      : null,
-    fetcher
-    // { refreshInterval: 5000 } // 5초마다 자동 갱신
-  );
+      );
 
-  if (error) {
+      if (!res.ok) {
+        throw new Error("데이터 요청 실패");
+      }
+      const data = await res.json();
+      return data;
+    },
+    select: (data) => data.posts,
+    enabled: shouldFetch, // 카테고리 정보가 없으면 fetch 막기
+  });
+
+  if (isError) {
+    console.log(error.message);
     return (
       <CommunityLayout
         userLocationSlot={<UserLocation mainCategory={mainSlug} />}
@@ -85,7 +114,7 @@ export default function CommunityPage() {
       <CommunityLayout
         userLocationSlot={<UserLocation mainCategory={mainSlug} />}
       >
-        <OddPostList items={data?.posts || []} />
+        <OddPostList items={postData || []} />
       </CommunityLayout>
     );
   }
@@ -100,7 +129,7 @@ export default function CommunityPage() {
       <CommunityLayout
         userLocationSlot={<UserLocation mainCategory={mainSlug} />}
       >
-        <EvenPostList items={data?.posts || []} />
+        <EvenPostList items={postData || []} />
       </CommunityLayout>
     );
   }

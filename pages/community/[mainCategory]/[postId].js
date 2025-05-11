@@ -108,7 +108,7 @@ export default function PostDetailPage({ selectedPost }) {
                 className="object-contain rounded-full"
               />
             </div>
-            <span className="text-[1.4rem]">2</span>
+            <span className="text-[1.4rem]">0</span>
           </button>
 
           <button className="flex items-center gap-2 bg-[var(--color-grey-50)] p-2 rounded-3xl cursor-pointer">

@@ -32,6 +32,14 @@ export async function getDocumentById(client, collection, id) {
   return document;
 }
 
+export async function deleteDocumentById(client, collection, id) {
+  const db = client.db(process.env.MONGODB_NAME);
+  const deletedResult = await db
+    .collection(collection)
+    .deleteOne({ _id: new ObjectId(id) });
+  return deletedResult;
+}
+
 export async function getDocumentsByKeyword(client, collection, keyword) {
   const db = client.db(process.env.MONGODB_NAME);
 
