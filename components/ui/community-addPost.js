@@ -16,14 +16,13 @@ export default function CommunityAddPost() {
   const { currentUser, setSelectedLocation } = useCurrentUserStore();
 
   const goToSeeMyNeighborhood = async () => {
-    router.push({
-      pathname: `/community/${router.query.mainCategory}`,
-      query: { rcode: neighborhood.rcode },
-    });
     setShowModal(false);
+
+    // ✅ CLIENT 측 selectedLocation 업데이트
     setSelectedLocation(neighborhood);
 
-    const res = await fetch("/api/user/locations", {
+    // ✅ SERVER 측 selectedLocation 업데이트
+    const res = await fetch("/api/user/selected-location", {
       method: "PATCH",
       body: JSON.stringify({
         userId: currentUser.id,
@@ -38,6 +37,10 @@ export default function CommunityAddPost() {
       "💌 내 이웃소식 보러가기 누른 후 api 요청 성공 시 받는 데이터: : ",
       data
     );
+    router.push({
+      pathname: `/community/${router.query.mainCategory}`,
+      query: { rcode: neighborhood.rcode },
+    });
   };
 
   const handlePostClick = () => {
@@ -83,13 +86,11 @@ export default function CommunityAddPost() {
               currentUser?.selectedLocation.keyword[1] === data.sigungu &&
               currentUser?.selectedLocation.keyword[2] === data.dong
             ) {
-              router.push("/community/post/new");
-
-              // CLIENT SIDE: 현재 선택위치 업데이트
+              // ✅ CLIENT SIDE: selectedLocation 업데이트
               setSelectedLocation(addressObj); // 현재 위치와 유저가 선택한 위치가 일치하면 전역상태 selectedLocation 값도 반영해서 이후의 요청에 대해서는 isVerified === true에 의해 별도의 인증절차 거치지 않도록..
 
-              // SEVER SIDE: 현재 선택위치 업뎃
-              const res = await fetch("/api/user/locations", {
+              // ✅ SEVER SIDE: selectedLocation 업데이트
+              const res = await fetch("/api/user/selected-location", {
                 method: "PATCH",
                 body: JSON.stringify({
                   userId: currentUser.id,
@@ -108,6 +109,9 @@ export default function CommunityAddPost() {
                 currentUser.location,
                 currentUser.selectedLocation
               );
+
+              // 📖 위치 인증 성공했으므로 글작성 페이지로 이동
+              router.push("/community/post/new");
             } else {
               setIsLocationMatched(false); // 매칭 실패 상태로 변경
             }

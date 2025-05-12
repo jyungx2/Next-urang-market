@@ -26,11 +26,13 @@ export default function LocationSearchPage() {
   const [searchResults, setSearchResults] = useState([]);
   const addressRef = useRef();
 
-  // 페이지 최초 렌더링시, 서버로부터 유저의 recentLocations 정보 가져와서(GET 요청) 렌더링
+  // 🎯 페이지 최초 렌더링시, 서버로부터 유저의 recentLocations 정보 가져와서(GET 요청) 렌더링
   useEffect(() => {
     const fetchRecentLocations = async () => {
       try {
-        const res = await fetch(`/api/user/locations?userId=${currentUser.id}`);
+        const res = await fetch(
+          `/api/user/recent-locations?userId=${currentUser.id}`
+        );
         const data = await res.json();
 
         if (!res.ok) throw new Error(data.message);
@@ -50,8 +52,9 @@ export default function LocationSearchPage() {
     if (currentUser?.id) {
       fetchRecentLocations();
     }
-  }, [currentUser?.id]);
+  }, [currentUser?.id, setRecentLocations]);
 
+  // 🎯 내위치 클릭 시, 현재 위치에 대한 인증절차를 통해 데이터를 받아와서 필요한 객체로 가공한 후, location 전역상태값으로 저장하는 상태관리코드
   const getMyLocation = () => {
     setIsLoading(true);
     // ✅ 1.5초간 인위적 로딩 시간
@@ -87,7 +90,7 @@ export default function LocationSearchPage() {
               isVerified: true,
               rcode,
             };
-            updateLocationOnServer(newItem);
+            updateLocationOverall(newItem);
             // router.back();
           } catch (err) {
             console.error("❌ 위치 요청 실패:", err);
@@ -115,14 +118,17 @@ export default function LocationSearchPage() {
 
     try {
       // ✅ 서버에도 반영하고 싶다면 PATCH/PUT 요청 추가 가능
-      const res = await fetch("/api/user/locations", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: currentUser?.id,
-          locationIdToRemove: targetId,
-        }),
-      });
+      const res = await fetch(
+        `/api/user/recent-locations?userId=${currentUser.id}&locationId=${targetId}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          // body: JSON.stringify({
+          //   userId: currentUser?.id,
+          //   locationIdToRemove: targetId,
+          // }),
+        }
+      );
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message);
@@ -136,7 +142,9 @@ export default function LocationSearchPage() {
     }
   };
 
+  // 🎨 유저가 검색한 주소에 대한 목록리스트 반환하는 UI 코드
   const renderRecentAddress = (recentLocations) => {
+    console.log("최근 이용 지역 배열:", recentLocations);
     return recentLocations?.map((location, index) => (
       <li
         key={index}
@@ -145,7 +153,7 @@ export default function LocationSearchPage() {
       >
         <div
           className="cursor-pointer"
-          onClick={() => changeSelectedLocationOnServer(location)}
+          onClick={() => changeSelectedLocationOverall(location)}
         >
           {location.keyword.slice(-2).join(" ")}
         </div>
@@ -162,6 +170,7 @@ export default function LocationSearchPage() {
     ));
   };
 
+  // 🎯 법정동 주소 API로부터 받아온 주소값과 지역코드를 필요한 상태(location 객체)값으로 가공하는 코드
   // SearchLocationInput의 책임을 줄이고, 부모에서 모든 후처리를 담당 -> SearchLocationInput에서는 주소만 선택해서 넘기고, 부모 컴포넌트(LocationSearchPage)에서 이걸 받아 처리하는 방식
   const handleSelectAddress = async (fullAddress, rcode) => {
     console.log("onSelect에서 받는 매개변수: ", fullAddress, rcode);
@@ -171,6 +180,7 @@ export default function LocationSearchPage() {
     console.log("시군구, 동: ", sigungu, dong);
 
     const isVerifiedCheck =
+      currentUser?.location?.isVerified === true &&
       currentUser?.location?.keyword?.length === keyword.length &&
       currentUser?.location?.keyword?.every((item, i) => item === keyword[i]);
 
@@ -181,10 +191,15 @@ export default function LocationSearchPage() {
       rcode, // 별도의 api요청 없이, search-location.js으로부터 직접 받은 rcode 인자 사용
     };
 
+    // ✅ CLIENT 측 selectedLocation 업데이트
     setSelectedLocation(location); // Zustand 상태 업데이트
 
-    // 최근 이용 지역 리스트 업데이트 (클라이언트 + 서버)
-    saveRecentLocationsToServer(location);
+    // ✅ SERVER 측 selectedLocation 업데이트
+    changeSelectedLocationOverall(location);
+
+    // 🔥 유저가 직접 검색하고 난 뒤에는 최근이용지역에 반영 필수
+    // ✅ CLIENT & SERVER 측 recentLocations 상태 업데이트
+    updateRecentLocationsOverall(location);
 
     // ⭐️ 부모 컴포넌트에서 처리하는 부가적인 작업(이전 페이지에서 정돈되어야 하는 것들.. -> 근데 딱히 없어도 되지 않나? 싶음.. 바로 다른 페이지(/community)로 이동하면...)
     setTimeout(() => {
@@ -193,11 +208,8 @@ export default function LocationSearchPage() {
     }, 0);
   };
 
-  // 다음 함수는 검색창에서 주소리스트 <li>클릭할 때 onClick 이벤트 함수로 설정!
-  const saveRecentLocationsToServer = async (location) => {
-    // ✅ selectedLocation(전역상태) 변경하여 해당 주소에 대한 게시글목록 페이지로 라우팅 및 서버 PATCH 요청 보내 데이터 수정
-    changeSelectedLocationOnServer(location);
-
+  // 🎯 recentLocations 상태 관리 코드 (C + S)
+  const updateRecentLocationsOverall = async (location) => {
     const newRecentAddress = location;
     // ✨newList라는 최신 배열을 직접 만들어서✨
     // 1. 클라이언트 측 상태값을 이걸로 변경하고 => setRecentLocations(newList)
@@ -210,30 +222,34 @@ export default function LocationSearchPage() {
       return [...currentUser?.recentLocations, newRecentAddress].slice(-3); // push(): 기존 배열을 직접 수정해버려서 리액트나 zustand는 값이 안바꼈다고 판단.. 업데이트 무시 & 렌더링 x => [...]으로 아예 새로운 배열을 만들어 새로운 참조값을 만들어 렌더링 정상 동작 하도록 불변성 유지하는 방식으로 상태 업데이트! (📍불변성 유지 = 원래 값을 직접 수정 하지 않고, 새로운 값을 만들어서 교체하는 것)
     })();
 
-    // ✅ 컴포넌트(클라이언트) 상태 먼저 업데이트
-    setRecentLocations(newRecentList);
+    // ✅ CLIENT 측 recentLocations 업데이트
+    setRecentLocations(newRecentList); // ❓ 아래에서 recentLocations를 바꿔줬으니까 굳이 여기서 해줄 필요 없는거 아닌가?
 
     // 💥⚠️객체 전체를 갱신해줄 필요⚠️💥
     setCurrentUser({ ...currentUser, recentLocations: newRecentList });
     // 위의 코드를 써주지 않으면, zustand는 상태가 변경되었는지 판단할 때, === 비교만 하기 때문에, 내부 속성(recentLocations 배열값)이 바뀌어도 currentUser 객체 자체가 동일하다면 React는 렌더링을 다시 하지 않으므로, currentUser 객체가 얕은 비교로 변경되지 않았다고 판단하여 렌더링을 다시 하지 x -> 아무리 setRecentLocations로 배열을 newList를 추가해 업데이트해줘도, 화면 상에 렌더링 되지 않음!
     // => 따라서, currentUser 자체를 업데이트해줌으로써 깊은 복사를 통해 currentUser 객체의 참조 자체를 바꿔주어 zustand가 변경 사항을 감지하고 리렌더링하도록 한다.
 
-    // ⚠️ GPS로 인증한 위치만 location으로 등록할건지, 아니면 그냥 사용자가 현재 선택한 인증되지 않은 위치도 location으로 등록할건지...=> 우리동네 = location이기 떄문에 내위치(GPS) 버튼 결과값만 location으로 등록되도록 하자! => 따라서 아래 코드는 지워야함..
+    // ⚠️ GPS로 인증한 위치만 location으로 등록할건지, 아니면 그냥 사용자가 단순히 현재 선택한, 인증되지 않은 위치도 location으로 등록할건지...=> 우리동네 = location이기 떄문에 내위치(GPS) 버튼 결과값만 location으로 등록되도록 하자! => 따라서 아래 코드는 지워야함..
     // setNewLocation(newItem); // 🔥 zustand currentUser.location 업데이트
 
-    // ✅ 그 다음 최신 데이터(newList)를 서버에 전송 (진짜 데이터)
+    // ✅ SERVER 측 recentLocations 업데이트
     try {
-      const res = await fetch("/api/user/locations", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: currentUser.id,
-          recentLocation: newRecentAddress, // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
-          // 📌 api routes파일에서 PATCH 요청으로 $push, $each 메소드 이용해 요소 하나씩 받아서 recentLocations: [] 빈 배열에 넣는 방식이므로 newList가 아닌, newItem을 전달.. (250423 - 노션필기참고)
-        }),
-      });
+      const res = await fetch(
+        `/api/user/recent-locations?userId=${currentUser.id}&recentLocation=${newRecentAddress}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: currentUser.id,
+            recentLocation: newRecentAddress,
+            //  // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
+            //   // 📌 api routes파일에서 PATCH 요청으로 $push, $each 메소드 이용해 요소 하나씩 받아서 recentLocations: [] 빈 배열에 넣는 방식이므로 newList가 아닌, newItem을 전달.. (250423 - 노션필기참고)
+          }),
+        }
+      );
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
@@ -244,9 +260,11 @@ export default function LocationSearchPage() {
     }
   };
 
-  const updateLocationOnServer = async (newLocation) => {
+  // 🎯 location 상태 관리 코드 (C + S)
+  const updateLocationOverall = async (newLocation) => {
     try {
-      const res = await fetch("/api/user/locations", {
+      // ✅ SERVER 측 location 업데이트
+      const res = await fetch(`/api/user/location`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -257,23 +275,28 @@ export default function LocationSearchPage() {
         }),
       });
 
+      // ✅ CLIENT 측 location 업데이트
       setNewLocation(newLocation);
-      setSelectedLocation(newLocation); // +post 버튼 추가시 별도의 인증절차 거치지 않도록 isVerified === true로 바뀐 주소객체로 상태 변경
+
+      // 🔥내위치 바꾸면, 선택된 위치도 같이 바꿔줘야 한다! (그 반대는 x)
+      // ✅ CLIENT & SERVER 측 selectedLocation 업데이트
+      changeSelectedLocationOverall(newLocation);
+      // +post 버튼 추가시 별도의 인증절차 거치지 않도록 isVerified === true로 바뀐 주소객체로 상태 변경
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      router.push({
-        pathname: `/community/${router.query.from}`,
-        query: { rcode: newLocation.rcode },
-      });
+
       console.log("✅ 현재 위치 수정 완료:", data.message);
     } catch (err) {
       console.error("❌ 위치 수정 실패:", err.message);
     }
   };
 
-  const changeSelectedLocationOnServer = async (selectedLocation) => {
+  // 🎯 selectedLocations 상태 관리 코드 (C + S)
+  const changeSelectedLocationOverall = async (selectedLocation) => {
     try {
-      const res = await fetch("/api/user/locations", {
+      // ✅ SERVER 측 selectedLocation 업데이트
+      const res = await fetch(`/api/user/selected-location`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -287,13 +310,14 @@ export default function LocationSearchPage() {
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message);
-      // 전역 상태 (selectedLocation) 바꾸고,
+
+      // ✅ CLIENT 측 selectedLocation 업데이트
       setSelectedLocation(selectedLocation);
 
       // 해당 주소에 맞는 게시글 목록을 담은 페이지로 이동 (✨쿼리스트링 rcode 추가)
       // 📍상태 변경 직후 바로 상태값을 사용하는 건 위험함 (selectedLocation은 아직 이전 값일 수 있음)
-      // ✅ 현재 최신 주소 객체(newLocation)를 이미 갖고 있으므로, 거기서 rcode를 직접 꺼내서 사용해야 함
-      // ✅ 상태 업데이트(setSelectedLocation)와 라우팅(router.push)가 동시에 필요한 상황에선 상태값을 참조하지 말고, 직접 넘길 것!
+      // > 현재 최신 주소 객체(newLocation)를 이미 갖고 있으므로, 거기서 rcode를 직접 꺼내서 사용해야 함
+      // > 상태 업데이트(setSelectedLocation)와 라우팅(router.push)가 동시에 필요한 상황에선 상태값을 참조하지 말고, 직접 넘길 것!
       router.push({
         pathname: `/community/${router.query.from}`,
         query: { rcode: selectedLocation.rcode }, // currentUser?.selectedLocation?.rcode ==> 아직 변경(업데이트)되지 않은 Old value.. -> 두번째 클릭 때서야(?) 업데이트된 값 반영됨
@@ -373,7 +397,7 @@ export default function LocationSearchPage() {
               <div
                 className="text-[1.6rem] cursor-pointer"
                 onClick={() =>
-                  changeSelectedLocationOnServer(currentUser?.location)
+                  changeSelectedLocationOverall(currentUser?.location)
                 }
               >
                 {currentUser?.location.keyword.slice(-2).join(" ")}
