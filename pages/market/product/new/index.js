@@ -2,6 +2,7 @@ import Image from "next/image";
 import classes from "./index.module.css";
 import ImagePicker from "@/components/market/image-picker";
 import { useRouter } from "next/router";
+import Layout from "@/components/layout/layout";
 
 export default function ProductAddPage() {
   const router = useRouter();
@@ -101,3 +102,8 @@ export default function ProductAddPage() {
     </div>
   );
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+ProductAddPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>;
+};

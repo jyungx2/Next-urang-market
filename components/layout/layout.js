@@ -1,8 +1,11 @@
 import MainNav from "@/components/layout/main-nav";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import UIContext from "@/store/ui-context";
 import PostItemNav from "@/components/layout/postItem-nav";
 import { useRouter } from "next/router";
+import Sidebar from "@/components/common/sidebar";
+import SearchPage from "@/components/common/searchPage";
+import Notification from "@/components/common/notification";
 
 export default function Layout(props) {
   const { isSidebarOpen, isSearchOpen, isSettingsOpen, isNotificationOpen } =
@@ -54,6 +57,23 @@ export default function Layout(props) {
           <MainNav />
         )
       ) : null}
+
+      {/* 상태에 따라 표시되는 전역 UI들 */}
+      {isSidebarOpen && (
+        <div className="bg-black bg-opacity-50 z-40">
+          <Sidebar />
+        </div>
+      )}
+      {isSearchOpen && (
+        <div className="bg-white z-50">
+          <SearchPage />
+        </div>
+      )}
+      {isNotificationOpen && (
+        <div className=" z-50">
+          <Notification />
+        </div>
+      )}
     </div>
   );
 }

@@ -36,14 +36,14 @@ export default function CommunityPage() {
   // 🚨 mainCategoryegory가 아직 없을 땐 null을 key로 넘겨서 SWR을 멈춘다
   const shouldFetch = !!mainCategory && !!subCategory; // ✅ mainCategoryegory가 있을 때만 fetch
 
-  const fetcher = async (url) => {
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error("데이터 요청 실패");
-    }
-    const data = await res.json();
-    return data;
-  };
+  // const fetcher = async (url) => {
+  //   const res = await fetch(url);
+  //   if (!res.ok) {
+  //     throw new Error("데이터 요청 실패");
+  //   }
+  //   const data = await res.json();
+  //   return data;
+  // };
 
   // 🖍️useSWR은 캐싱기능 보유. mutate()로 기존 데이터 revalidate 해주지 않으면 기존 데이터 가져다 써서 업데이트 불가.
   // ⚠️ refreshInterval은 가능은 하지만 비추천함 - 불필요한 네트워크 요청과 성능 낭비 때문. => 유저의 데이터 요청이 없어도 실행 & 여러 유저가 동시에 사용하면 서버 부하 & 모바일/저사양 디바이스에 부담 & 특정 이벤트 이후만 갱신한다는 CSR 사용목적에 맞지 않음

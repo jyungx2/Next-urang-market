@@ -2,7 +2,8 @@
   background-color: var(--color-com-bg);
   font-size: 2rem;
   font-weight: 400;
-  /* position: absolute; 홈페이지에 relative 포지션을 갖는 부모 div를 하나 추가해 해당 부모의 크기만큼 너비(640px)가 제한되고, 가운데 정렬될 수 있도록 */
+  /* position: absolute; */
+  /* 홈페이지에 relative 포지션을 갖는 부모 div를 하나 추가해 해당 부모의 크기만큼 너비(640px)가 제한되고, 가운데 정렬될 수 있도록 */
   top: 0; /* 헤더 아래에 위치 */
   left: 0;
   width: 100%; /* 전체 화면 덮기 */
@@ -10,7 +11,7 @@
   height: 100vh; /* 헤더 높이를 제외한 나머지 영역 */
   /* background: #333; */
   color: var(--color-bg);
-  padding: 20px;
+  padding: 1rem;
   transition: transform 0.5s ease-in-out;
   z-index: 99;
 

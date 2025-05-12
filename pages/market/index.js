@@ -1,10 +1,8 @@
 import SearchPage from "@/components/common/searchPage";
 import SubHeader from "@/components/market/sub-header";
-import Sidebar from "@/components/common/sidebar";
 import PostsList from "@/components/market/posts-list";
 import UIContext from "@/store/ui-context";
 import { useContext, useEffect, useState } from "react";
-import Notification from "@/components/common/notification";
 import MarketAddPost from "@/components/ui/market-addPost";
 import Layout from "@/components/layout/layout";
 
@@ -63,15 +61,6 @@ export default function MarketPage() {
     },
   ];
 
-  // 사이드바 오픈시, 스크롤 막는 코드
-  useEffect(() => {
-    if (isSearchOpen) {
-      document.body.style.overflow = "hidden"; // ✅ 스크롤 막기
-    } else {
-      document.body.style.overflow = "auto"; // ✅ 스크롤 다시 활성화
-    }
-  }, [isSearchOpen]);
-
   const toggleDropUp = () => {
     setIsDropUpOpen(!isDropUpOpen);
   };
@@ -80,7 +69,7 @@ export default function MarketPage() {
     <>
       {/* 전체 페이지 Wrapper */}
       <div
-        className={`flex flex-col min-min-h-screen min-w-[640px] px-6 mx-auto bg-[var(--color-bg)] relative ${
+        className={`flex flex-col min-h-screen px-6 bg-[var(--color-bg)] relative ${
           isSidebarOpen || isSearchOpen || isNotificationOpen ? "hidden" : ""
         }`}
       >
@@ -98,28 +87,11 @@ export default function MarketPage() {
           <PostsList posts={DUMMY_DATA} />
         </main>
       </div>
-
-      {/* 상태에 따라 표시되는 전역 UI들 */}
-      {isSidebarOpen && (
-        <div className="bg-black bg-opacity-50 z-40">
-          <Sidebar />
-        </div>
-      )}
-      {isSearchOpen && (
-        <div className="bg-white z-50">
-          <SearchPage />
-        </div>
-      )}
-      {isNotificationOpen && (
-        <div className=" z-50">
-          <Notification />
-        </div>
-      )}
     </>
   );
 }
 
 // ✅ Layout 적용되도록 getLayout 설정
 MarketPage.getLayout = function haveLayout(page) {
-  return <Layout>{page}</Layout>; // Layout 안 씌움
+  return <Layout>{page}</Layout>;
 };

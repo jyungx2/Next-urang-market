@@ -5,13 +5,13 @@ import { useContext } from "react";
 import UIContext from "@/store/ui-context";
 
 export default function Sidebar() {
-  const { isSidebarOpen, toggleSidebar } = useContext(UIContext);
+  const { toggleSidebar } = useContext(UIContext);
 
   return (
-    <>
-      <div className="flex font-bold text-4xl top-0 p-8 text-white bg-[var(--color-com-bg)] items-center justify-center relative">
+    <div className="flex flex-col gap-10 p-6 min-h-screen bg-[var(--color-com-bg)]">
+      <div className="flex font-bold text-4xl top-0 text-white items-center justify-center relative">
         <button
-          className="absolute left-0 p-4 cursor-pointer"
+          className="absolute left-0 cursor-pointer"
           onClick={toggleSidebar}
         >
           <Image
@@ -168,6 +168,6 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

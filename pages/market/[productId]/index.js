@@ -1,3 +1,4 @@
+import Layout from "@/components/layout/layout";
 import RelatedListings from "@/components/market/related-listings";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -157,3 +158,8 @@ export default function PostDetailPage() {
     </div>
   );
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+PostDetailPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>;
+};
