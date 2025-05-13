@@ -3,9 +3,10 @@ import { useRouter } from "next/router";
 
 export default function MarketAddPost({ isOpen, onToggle }) {
   const router = useRouter();
+  const rcode = router.query.rcode;
 
   function linkToPostPageHandler() {
-    router.push("/market/product/new");
+    router.push({ pathname: "/market/product/new", query: { rcode } });
   }
 
   return (

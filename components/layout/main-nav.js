@@ -2,10 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import classes from "./main-nav.module.css";
 import { useRouter } from "next/router";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function MainNav() {
   const router = useRouter();
   const currentPath = router.pathname;
+  const { currentUser } = useCurrentUserStore();
+  const rcode =
+    currentUser?.selectedLocation?.rcode || currentUser?.location?.rcode;
 
   return (
     <nav className={`${classes.navbar}`}>
@@ -26,7 +30,7 @@ export default function MainNav() {
           </Link>
         </li>
         <li className={classes.navItem}>
-          <Link href="/market" className={classes.navLink}>
+          <Link href={`/market?rcode=${rcode}`} className={classes.navLink}>
             <Image
               src={
                 currentPath === "/market"

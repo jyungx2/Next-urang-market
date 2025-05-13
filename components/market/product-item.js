@@ -1,16 +1,17 @@
 import Image from "next/image";
 
-export default function PostItem({
+export default function ProductItem({
+  productImage,
   title,
   location,
   time,
   price,
-  chatNum,
-  likeNum,
+  chatNum = 2,
+  likeNum = 2,
 }) {
   return (
     <>
-      <Image src="/images/example.jpg" alt="image" width={120} height={120} />
+      <Image src={productImage} alt="image" width={120} height={120} />
       <div className="flex flex-col gap-2 grow basis-0 min-w-0">
         <div className="flex justify-between">
           <h1 className="text-4xl">{title}</h1>
@@ -25,7 +26,7 @@ export default function PostItem({
         </div>
 
         <p className="text-[1.6rem]">
-          {location} · {time}
+          {location} · {time.split("T")[0]}
         </p>
         <p className="font-bold text-3xl">{price}</p>
         <div className="flex gap-4 ml-auto mt-auto">
