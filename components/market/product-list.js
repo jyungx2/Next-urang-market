@@ -13,12 +13,12 @@ export default function ProductList({ products }) {
       <ul className="flex flex-col gap-10">
         {products.map((product) => (
           <li
-            key={product.id}
+            key={product._id}
             className="flex gap-8 bg-[var(--color-primary-50)] rounded-2xl px-4 py-8 cursor-pointer"
-            onClick={() => linkToproductDetailPageHandler(product.id)}
+            onClick={() => linkToproductDetailPageHandler(product._id)}
           >
             <ProductItem
-              key={product.id}
+              key={product._id}
               productImage={product.productImage}
               title={product.title}
               price={product.price}

@@ -1,11 +1,14 @@
 import Layout from "@/components/layout/layout";
 import RelatedListings from "@/components/market/related-listings";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { FadeLoader } from "react-spinners";
 
-export default function PostDetailPage() {
+export default function PostDetailPage({ selectedProduct }) {
+  const { currentUser } = useCurrentUserStore();
   const router = useRouter();
-  console.log(router.pathname); // /market/post/[productId]
+  console.log(router.pathname); // /market/[productId]
   console.log(router.query); // {productId: '23'}
 
   const linkBackHandler = () => {
@@ -15,6 +18,18 @@ export default function PostDetailPage() {
   const linkHomeHandler = () => {
     router.push("/");
   };
+
+  console.log(selectedProduct);
+  // if (router.isFallback)
+  //   return (
+  //     <div className="min-h-screen flex justify-center items-center bg-[var(--color-bg)]">
+  //       <FadeLoader
+  //         color={"#2563eb"} // 파란색 (Tailwind 기준 var(--color-primary-500))
+  //         size={60}
+  //         speedMultiplier={1}
+  //       />
+  //     </div>
+  //   );
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
@@ -82,8 +97,10 @@ export default function PostDetailPage() {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <p className="text-3xl font-semibold">김테이</p>
-            <p className="text-gray-500 text-2xl">부평구 삼산1동</p>
+            <p className="text-3xl font-semibold">{selectedProduct?.writer}</p>
+            <p className="text-gray-500 text-2xl">
+              {selectedProduct?.location}
+            </p>
           </div>
           <div className="ml-auto text-blue-500 font-bold bg-blue-200 p-3 rounded-4xl">
             36.5℃
@@ -93,16 +110,13 @@ export default function PostDetailPage() {
         {/* 상품 정보 */}
         <div className="flex flex-col gap-4 border-t pt-8">
           <div className="flex flex-col gap-4">
-            <h1 className="text-4xl font-bold">루이비통 가방</h1>
+            <h1 className="text-4xl font-bold">{selectedProduct?.title}</h1>
             <p className="text-gray-500 text-2xl">
               <span className="underline">Womens Accessories</span> · 5 hours
               ago
             </p>
             <p className="mt-8 text-3xl font-medium">
-              빈티지샵에서 구매했던 제품입니다. 뱀부그린컬러로 포인트로 너무예쁜
-              가방이에요 가방끈 갈라짐 있으나 사용하는데 전혀지장없구요 사제로
-              크로스끈이나 체인 구매해서 달면 될듯해요 두번째 사진이
-              원컬러입니다
+              {selectedProduct?.description}
             </p>
           </div>
 
@@ -132,7 +146,7 @@ export default function PostDetailPage() {
         <div className="flex flex-col gap-4 mt-10 border-t p-6 px-0 font-bold">
           <header className="flex justify-between items-center">
             <h2 className="font-bold text-[2rem]">
-              Other listings by &apos;김테이&apos;
+              Other listings by &apos;{selectedProduct?.writer}&apos;
             </h2>
             <button className="cursor-pointer">
               <Image
@@ -149,7 +163,7 @@ export default function PostDetailPage() {
         <div className="flex flex-col gap-4 mt-10 border-t p-6 px-0 font-bold">
           <header className="flex justify-between items-center">
             <h2 className="font-bold text-[2rem]">
-              &apos;username&apos;님, have you seen these?
+              &apos;{currentUser?.nickname}&apos;님, have you seen these?
             </h2>
           </header>
           <RelatedListings />
@@ -157,6 +171,44 @@ export default function PostDetailPage() {
       </main>
     </div>
   );
+}
+
+export async function getStaticProps(context) {
+  const productId = context.params.productId;
+  console.log("✅ [getStaticProps] productId:", productId); // ← 이거 서버 터미널에 찍혀야 함
+
+  const res = await fetch(`http://localhost:3000/api/products/${productId}`);
+  const data = await res.json();
+  console.log("prodcutId: ", productId);
+  console.log("SSG로 받을 데이터: ", data);
+
+  if (!data.product) {
+    return {
+      notFound: true, // 404 페이지로 이동
+    };
+  }
+
+  return {
+    props: { selectedProduct: data.product },
+    // revalidate: 60,
+  };
+}
+
+// ✅ 어떤 URL을 빌드할지 결정 -> 모든 post의 productId 명시
+export async function getStaticPaths() {
+  const res = await fetch("http://localhost:3000/api/products");
+  const data = await res.json();
+
+  const paths = data.products.map((product) => ({
+    params: {
+      productId: product._id.toString(),
+    },
+  }));
+
+  return {
+    paths,
+    fallback: "blocking",
+  };
 }
 
 // ✅ Layout 적용되도록 getLayout 설정

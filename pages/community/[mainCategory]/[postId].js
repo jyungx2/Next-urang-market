@@ -175,7 +175,7 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: "blocking",
+    fallback: "blocking", // 처음 요청 들어올 때 서버에서 페이지를 생성한 뒤에 응답함 (완료될 때까지 기다림)
   };
 }
 

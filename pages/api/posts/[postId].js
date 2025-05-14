@@ -22,10 +22,10 @@ export default async function handler(req, res) {
     try {
       const document = await getDocumentById(client, "posts", postId);
 
-      // if (!document) {
-      //   res.status(404).json({ message: "Post not found." });
-      //   return;
-      // }
+      if (!document) {
+        res.status(404).json({ message: "Post not found." });
+        return;
+      }
 
       res.status(200).json({ post: document });
     } catch (err) {

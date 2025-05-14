@@ -55,7 +55,8 @@ export default async function handler(req, res) {
 
     // 📌 files: input type="file"로 업로드된 파일 객체들 => client-side 코드 내 formData.append('key', value)에서 보낼 때의 key 이름으로 files.['key'] 받아와야 한다! ex) files.file
 
-    // 📌 file.filePath: Cloudinary로 업로드할 때 사용하는 임시 경로 (Cloudinary는 로컬의 경로를 요구하므로 IncomingForm에서 추출한 filepath를 사용)
+    // 📌 file.filePath: Cloudinary가 직접 읽을 수 있는, Cloudinary로 업로드할 때 사용되는 로컬 임시 파일 경로 (Cloudinary는 로컬의 경로를 요구하므로 IncomingForm에서 추출한 filepath를 사용 => 이 경로의 파일을 읽어서 자체 서버로 업로드하기 때문에, 즉, Cloudinary에 저장되는 경로와는 무관하며, 내부적으로만 읽기 위해 쓰인다.)
+
     // 🔹 어떤 상황에서 등장?
     // formidable (또는 IncomingForm) 같은 라이브러리를 사용할 때, multipart/form-data로 업로드된 파일을 서버의 임시 폴더(로컬) 에 저장하고 그 저장된 로컬 경로를 가리키는 속성
 
