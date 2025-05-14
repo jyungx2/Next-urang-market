@@ -18,6 +18,7 @@ export default function ProductAddPage() {
   const { register, control, handleSubmit } = useForm({
     defaultValues: {
       writer: currentUser?.nickname,
+      productImage: "",
       title: "",
       price: "",
       description: "",

@@ -1,9 +1,11 @@
+import useSelectedProductStore from "@/zustand/selectedProduct";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
 export default function PostItemNav() {
   const router = useRouter();
   const postId = router.query.postId;
+  const { selectedProduct } = useSelectedProductStore();
 
   const linkToChatPageHandler = (postId) => {
     console.log(postId);
@@ -19,7 +21,7 @@ export default function PostItemNav() {
       </div>
       <div className="flex justify-between items-center w-full p-4">
         <p className="text-[1.8rem] font-bold text-[var(--color-bg)]">
-          60,000원
+          {selectedProduct?.price?.toLocaleString()}원
         </p>
         <button
           className="px-6 py-3 bg-[var(--color-primary-400)] text-white rounded-full font-semibold cursor-pointer hover:bg-[var(--color-primary-300)] focus:bg-[var(--color-primary-300)]"

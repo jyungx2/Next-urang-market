@@ -1,9 +1,10 @@
 import Layout from "@/components/layout/layout";
 import RelatedListings from "@/components/market/related-listings";
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import useSelectedProductStore from "@/zustand/selectedProduct";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { FadeLoader } from "react-spinners";
+import { useEffect } from "react";
 
 export default function PostDetailPage({ selectedProduct }) {
   const { currentUser } = useCurrentUserStore();
@@ -11,6 +12,12 @@ export default function PostDetailPage({ selectedProduct }) {
   const rcode = router.query.rcode;
   console.log(router.pathname); // /market/[productId]
   console.log(router.query); // {productId: '23'}
+
+  const setProduct = useSelectedProductStore((state) => state.setProduct);
+
+  useEffect(() => {
+    setProduct(selectedProduct); // 페이지 진입 시 전역 상태로 저장
+  }, [setProduct, selectedProduct]);
 
   const linkBackHandler = () => {
     router.push({ pathname: `/market`, query: { rcode } });
@@ -56,7 +63,7 @@ export default function PostDetailPage({ selectedProduct }) {
       <header className="relative flex justify-between top-0 w-full z-50 p-4 aspect-[5/4]">
         {/* 배경 이미지 */}
         <Image
-          src="/images/product.jpg"
+          src={selectedProduct?.productImage}
           alt="image"
           fill
           className="absolute top-0 left-0 object-cover -z-10"

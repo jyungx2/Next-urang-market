@@ -28,7 +28,7 @@ export default function ProductItem({
         <p className="text-[1.6rem]">
           {location} · {createdAt.split("T")[0]}
         </p>
-        <p className="font-bold text-3xl">{price}</p>
+        <p className="font-bold text-3xl">{price}원</p>
         <div className="flex gap-4 ml-auto mt-auto">
           <button className="flex items-center gap-1 cursor-pointer">
             <Image src="/icons/chat.svg" alt="icons" width={28} height={28} />
