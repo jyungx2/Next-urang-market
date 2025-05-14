@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 export default function ProductList({ products }) {
   const router = useRouter();
 
-  const linkToproductDetailPageHandler = (productId) => {
-    router.push(`/market/${productId}`);
+  const linkToproductDetailPageHandler = (productId, rcode) => {
+    router.push({ pathname: `/market/${productId}`, query: { rcode } });
   };
 
   return (
@@ -15,7 +15,9 @@ export default function ProductList({ products }) {
           <li
             key={product._id}
             className="flex gap-8 bg-[var(--color-primary-50)] rounded-2xl px-4 py-8 cursor-pointer"
-            onClick={() => linkToproductDetailPageHandler(product._id)}
+            onClick={() =>
+              linkToproductDetailPageHandler(product._id, product.rcode)
+            }
           >
             <ProductItem
               key={product._id}

@@ -8,11 +8,12 @@ import { FadeLoader } from "react-spinners";
 export default function PostDetailPage({ selectedProduct }) {
   const { currentUser } = useCurrentUserStore();
   const router = useRouter();
+  const rcode = router.query.rcode;
   console.log(router.pathname); // /market/[productId]
   console.log(router.query); // {productId: '23'}
 
   const linkBackHandler = () => {
-    router.push("/market");
+    router.push({ pathname: `/market`, query: { rcode } });
   };
 
   const linkHomeHandler = () => {

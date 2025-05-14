@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { create } from "zustand";
 
 export default function ProductItem({
   productImage,
