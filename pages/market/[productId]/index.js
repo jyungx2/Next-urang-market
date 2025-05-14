@@ -36,7 +36,7 @@ export default function PostDetailPage({ selectedProduct }) {
     const past = new Date(date); // createdAt
     const diffInSeconds = Math.floor((now - past) / 1000);
 
-    const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+    const rtf = new Intl.RelativeTimeFormat("ko", { numeric: "always" });
 
     if (diffInSeconds < 60) {
       return rtf.format(-diffInSeconds, "second");
