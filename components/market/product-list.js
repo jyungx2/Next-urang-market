@@ -23,7 +23,7 @@ export default function ProductList({ products }) {
               title={product.title}
               price={product.price}
               description={product.description}
-              time={product.createdAt}
+              createdAt={product.createdAt}
               location={product.location}
               // chatNum={product.chatNum}
               // likeNum={product.likeNum}

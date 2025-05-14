@@ -31,6 +31,24 @@ export default function PostDetailPage({ selectedProduct }) {
   //     </div>
   //   );
 
+  function getTimeAgo(date) {
+    const now = new Date();
+    const past = new Date(date); // createdAt
+    const diffInSeconds = Math.floor((now - past) / 1000);
+
+    const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+    if (diffInSeconds < 60) {
+      return rtf.format(-diffInSeconds, "second");
+    } else if (diffInSeconds < 3600) {
+      return rtf.format(-Math.floor(diffInSeconds / 60), "minute");
+    } else if (diffInSeconds < 86400) {
+      return rtf.format(-Math.floor(diffInSeconds / 3600), "hour");
+    } else {
+      return rtf.format(-Math.floor(diffInSeconds / 86400), "day");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
       {/* 헤더 (배경 이미지 포함) */}
@@ -112,8 +130,8 @@ export default function PostDetailPage({ selectedProduct }) {
           <div className="flex flex-col gap-4">
             <h1 className="text-4xl font-bold">{selectedProduct?.title}</h1>
             <p className="text-gray-500 text-2xl">
-              <span className="underline">Womens Accessories</span> · 5 hours
-              ago
+              <span className="underline">Womens Accessories</span> ·{" "}
+              {getTimeAgo(selectedProduct?.createdAt)}
             </p>
             <p className="mt-8 text-3xl font-medium">
               {selectedProduct?.description}
@@ -207,7 +225,7 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: "blocking",
+    fallback: "blocking", // ✅나중에 fallback: true로 바꾸고, loading 표시 렌더링 구현하기..
   };
 }
 

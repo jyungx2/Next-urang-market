@@ -1,10 +1,11 @@
 import Image from "next/image";
+import { create } from "zustand";
 
 export default function ProductItem({
   productImage,
   title,
   location,
-  time,
+  createdAt,
   price,
   chatNum = 2,
   likeNum = 2,
@@ -26,7 +27,7 @@ export default function ProductItem({
         </div>
 
         <p className="text-[1.6rem]">
-          {location} · {time.split("T")[0]}
+          {location} · {createdAt.split("T")[0]}
         </p>
         <p className="font-bold text-3xl">{price}</p>
         <div className="flex gap-4 ml-auto mt-auto">
