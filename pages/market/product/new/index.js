@@ -175,15 +175,27 @@ export default function ProductAddPage() {
           </div>
           <div className={classes.inputBox}>
             <label htmlFor="instructions">Where to meet</label>
-            <select
+            <button
               id="where"
               name="where"
               required
-              className={classes.inputCustom}
+              className={`flex cursor-pointer p-[0.8rem] border border-neutral-400 rounded-[0.6rem]`}
+              onClick={() =>
+                router.push({
+                  pathname: "/market/product/new/choose-location",
+                  query: { rcode },
+                })
+              }
             >
-              <option value="작전">작전동</option>
-              <option value="서운">서운동</option>
-            </select>
+              <span className="font-bold">Select</span>
+              <Image
+                src="/icons/chevron-right.svg"
+                alt="icon"
+                width={20}
+                height={20}
+                className="ml-auto"
+              />
+            </button>
           </div>
           {/* <ImagePicker label="Your image" name="image" /> */}
           {/* {state.message && <p>{state.message}</p>} */}

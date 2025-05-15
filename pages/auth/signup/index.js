@@ -1,7 +1,6 @@
 import useUserStore from "@/zustand/userStore";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import classes from "@/components/main/search-form.module.css";
 import ClipLoader from "react-spinners/ClipLoader"; // ✅ 스피너 import
 import { useRef, useState } from "react";
 import MapContainer from "@/components/user/map";
