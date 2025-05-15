@@ -32,11 +32,15 @@
   border: 1px rgb(164, 164, 164) solid;
   border-radius: 0.6rem;
   padding: 0.8rem;
-  width: 100%;
 }
 
 .inputCustom:focus {
   border: 2px rgb(0, 0, 0) solid;
+}
+
+.error,
+.error:focus-within {
+  border: 2px solid var(--color-error-500);
 }
 
 .fileInputCustom {

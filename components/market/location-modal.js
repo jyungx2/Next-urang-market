@@ -2,10 +2,10 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function LocationModal({ onClose, onSave }) {
+export default function LocationModal({ coords, onClose, onSave }) {
   const [location, setLocation] = useState("");
   const router = useRouter();
-  const rcode = router.query.rcode;
+  const { rcode } = router.query;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,7 +15,12 @@ export default function LocationModal({ onClose, onSave }) {
 
     router.push({
       pathname: "/market/product/new",
-      query: { rcode, placeName: location.trim() },
+      query: {
+        rcode,
+        placeName: location.trim(),
+        lat: parseFloat(coords.lat),
+        lng: parseFloat(coords.lng),
+      },
     });
   };
 

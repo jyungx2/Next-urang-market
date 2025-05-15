@@ -15,6 +15,11 @@ export default function ChooseLocation() {
 
   // 페이지 접속하자마자 내 위치 가져오기
   useEffect(() => {
+    console.log(
+      "choose-location 페이지 마운팅 후 실행되는 useEffect: ",
+      coords.lat,
+      coords.lng
+    );
     if (coords.lat !== null && coords.lng !== null) return;
 
     const getMyLocation = () => {
@@ -30,8 +35,6 @@ export default function ChooseLocation() {
         }
       );
     };
-
-    console.log("useEffect 실행!", coords.lat, coords.lng);
     getMyLocation();
   }, []);
 
@@ -50,7 +53,7 @@ export default function ChooseLocation() {
         <p>We recommend public places that are easy to get to.</p>
       </header>
 
-      <div className="relative h-[60rem] mt-10 bg-amber-100">
+      <div className="relative h-[60rem] mt-10">
         {/* 지도 컴포넌트 */}
         {coords.lat != null && coords.lng != null && (
           <MapChooseContainer
@@ -65,6 +68,7 @@ export default function ChooseLocation() {
 
         {showModal ? (
           <LocationModal
+            coords={coords}
             onClose={() => setShowModal(false)}
             onSave={(value) => {
               setPlaceName(value); // 라벨 내용 설정

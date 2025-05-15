@@ -8,15 +8,20 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useState } from "react";
+import ErrorMsg from "@/components/common/error-msg";
 
 export default function ProductAddPage() {
   const [pickedFile, setPickedFile] = useState(null); // ✅ 원본 File 객체 저장
   const { currentUser } = useCurrentUserStore();
   const router = useRouter();
-  const rcode = router.query.rcode;
-  const placeName = router.query.placeName;
+  const { rcode, coords, placeName } = router.query;
 
-  const { register, control, handleSubmit } = useForm({
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       writer: currentUser?.nickname,
       productImage: "",
@@ -25,6 +30,8 @@ export default function ProductAddPage() {
       description: "",
       location: currentUser?.selectedLocation.keyword.slice(-1)[0],
       rcode,
+      coords,
+      placeName,
     },
   });
 
@@ -136,12 +143,15 @@ export default function ProductAddPage() {
               type="text"
               id="title"
               name="title"
-              required
-              className={classes.inputCustom}
+              className={`${classes.inputCustom} ${
+                errors.title ? `${classes.error}` : ""
+              }`}
               placeholder="What are you selling or giving away?"
               {...register("title", { required: "제목은 필수입니다." })}
             />
+            <ErrorMsg target={errors.title} />
           </div>
+
           <div className={classes.inputBox}>
             <label htmlFor="listing-type">Listing type</label>
             <div className={classes.btnCollection}>
@@ -153,33 +163,38 @@ export default function ProductAddPage() {
               type="text"
               id="listing-type"
               name="listing-type"
-              className={classes.inputCustom}
-              required
+              className={`${classes.inputCustom} ${
+                errors.title ? `${classes.error}` : ""
+              }`}
               placeholder="$ price"
               {...register("price", { required: "가격은 필수입니다." })}
             />
+            <ErrorMsg target={errors.price} />
           </div>
+
           <div className={classes.inputBox}>
             <label htmlFor="description">Description</label>
             <textarea
               type="text"
               id="description"
               name="description"
-              className={classes.inputCustom}
+              className={`${classes.inputCustom} ${
+                errors.title ? `${classes.error}` : ""
+              }`}
               rows="10"
-              required
               placeholder="Tell us about your item e.g. brand, material, condition and size. Include anything that you think toue neighbors would like to know."
               {...register("description", {
                 required: "제품 설명은 필수입니다.",
               })}
             ></textarea>
+            <ErrorMsg target={errors.description} />
           </div>
+
           <div className={classes.inputBox}>
             <label htmlFor="instructions">Where to meet</label>
             <button
               id="where"
               name="where"
-              required
               className={`flex cursor-pointer p-[0.8rem] border border-neutral-400 rounded-[0.6rem]`}
               onClick={() =>
                 router.push({

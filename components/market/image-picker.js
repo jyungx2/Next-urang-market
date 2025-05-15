@@ -50,7 +50,11 @@ export default function ImagePicker({ name, control, rules, onImagePick }) {
           {/* <label htmlFor={name}>{label}</label> */}
           <div className={classes.controls}>
             {/* 이미지 미리보기 */}
-            <div className={classes.preview}>
+            <div
+              className={`${classes.preview} ${
+                error ? `${classes.error}` : ""
+              } `}
+            >
               {!previewUrl && <p>No image picked yet.</p>}
               {previewUrl && (
                 <Image
@@ -83,7 +87,7 @@ export default function ImagePicker({ name, control, rules, onImagePick }) {
           </div>
 
           {error && (
-            <p className="text-red-500 text-sm mt-1">{error.message}</p>
+            <p className="text-red-500 text-[1.4rem] mt-1">{error.message}</p>
           )}
         </div>
       )}

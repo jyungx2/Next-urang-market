@@ -89,7 +89,7 @@ body {
   --color-warning-500: #f6dc43;
 
   --color-error-100: #f1acc9;
-  --color-error-500: #a10c4a;
+  --color-error-500: #e73434;
 
   --size-1: 0.25rem;
   --size-2: 0.5rem;
@@ -233,3 +233,8 @@ body {
   left: 0.5rem;
   white-space: pre-wrap;
 }
+
+/* .error,
+.error:focus-within {
+  border: 2px solid #e73434;
+} */

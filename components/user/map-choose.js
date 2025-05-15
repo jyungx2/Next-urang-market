@@ -13,11 +13,13 @@ export default function MapChooseContainer({
   const mapRef = useRef(null);
 
   useEffect(() => {
-    if (!lat || !lng) return;
+    const container = mapRef.current;
+    if (!lat || !lng || !container) return;
+    // console.warn("지도가 아직 렌더되지 않았습니다.");
 
     loadKakaoMapScript().then((kakao) => {
       const position = new kakao.maps.LatLng(lat, lng);
-      const container = mapRef.current;
+
       const options = {
         center: position,
         level: 4,

@@ -17,8 +17,16 @@ export default async function handler(req, res) {
 
   // POST HTTP
   if (req.method === "POST") {
-    const { writer, productImage, title, price, description, location, rcode } =
-      req.body;
+    const {
+      writer,
+      productImage,
+      title,
+      price,
+      description,
+      location,
+      rcode,
+      placeName,
+    } = req.body;
     console.log(req.query);
 
     // Validation for server-side
@@ -29,7 +37,8 @@ export default async function handler(req, res) {
       !price ||
       !description ||
       !location ||
-      !rcode
+      !rcode ||
+      !placeName
     ) {
       res.status(422).json({ message: "Invalid input - post" });
       client.close();
@@ -45,6 +54,7 @@ export default async function handler(req, res) {
       location,
       rcode,
       createdAt: new Date(),
+      placeName,
     };
 
     let result;

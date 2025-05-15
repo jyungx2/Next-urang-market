@@ -35,6 +35,11 @@
   position: relative;
 }
 
+.error,
+.error:focus-within {
+  border: 2px solid var(--color-error-500);
+}
+
 .preview p {
   margin: 0;
   padding: 1rem;
