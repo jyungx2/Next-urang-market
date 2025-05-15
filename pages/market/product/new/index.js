@@ -14,6 +14,7 @@ export default function ProductAddPage() {
   const { currentUser } = useCurrentUserStore();
   const router = useRouter();
   const rcode = router.query.rcode;
+  const placeName = router.query.placeName;
 
   const { register, control, handleSubmit } = useForm({
     defaultValues: {
@@ -187,7 +188,7 @@ export default function ProductAddPage() {
                 })
               }
             >
-              <span className="font-bold">Select</span>
+              <span className="font-bold">{placeName || "Select"}</span>
               <Image
                 src="/icons/chevron-right.svg"
                 alt="icon"
