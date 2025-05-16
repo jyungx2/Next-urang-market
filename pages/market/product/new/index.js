@@ -9,12 +9,14 @@ import { useMutation } from "@tanstack/react-query";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useState } from "react";
 import ErrorMsg from "@/components/common/error-msg";
+import LocationSlide from "@/components/market/location-slide";
 
 export default function ProductAddPage() {
   const [pickedFile, setPickedFile] = useState(null); // ✅ 원본 File 객체 저장
   const { currentUser } = useCurrentUserStore();
   const router = useRouter();
-  const { rcode, coords, placeName } = router.query;
+  const { rcode, lat, lng, placeName } = router.query;
+  const [showSlide, setShowSlide] = useState(false); // 1️⃣ 라우팅 없이 조건분기로 한 페이지 안에서 렌더링 여부 조정
 
   const {
     register,
@@ -30,7 +32,8 @@ export default function ProductAddPage() {
       description: "",
       location: currentUser?.selectedLocation.keyword.slice(-1)[0],
       rcode,
-      coords,
+      lat,
+      lng,
       placeName,
     },
   });
@@ -97,30 +100,34 @@ export default function ProductAddPage() {
 
   return (
     <div className="flex flex-col gap-[2rem] min-h-screen p-6 bg-[var(--color-bg)]">
-      <header className={classes.header}>
-        <button
-          className="absolute top-0 left-0 cursor-pointer"
-          onClick={() => router.push("/market")}
-        >
-          <Image src="/icons/xbtn.svg" alt="btn" height={30} width={30} />
-        </button>
-        <h1 className="font-bold text-[2.4rem] text-[var(--color-com-bg)]">
-          New listing
-        </h1>
-      </header>
+      {showSlide ? (
+        <LocationSlide setShowSlide={setShowSlide} />
+      ) : (
+        <>
+          <header className={classes.header}>
+            <button
+              className="absolute top-0 left-0 cursor-pointer"
+              onClick={() => router.push("/market")}
+            >
+              <Image src="/icons/xbtn.svg" alt="btn" height={30} width={30} />
+            </button>
+            <h1 className="font-bold text-[2.4rem] text-[var(--color-com-bg)]">
+              New listing
+            </h1>
+          </header>
 
-      <main className={classes.main}>
-        <form
-          onSubmit={handleSubmit(postProduct.mutate)}
-          className={classes.form}
-        >
-          <ImagePicker
-            name="productImage"
-            control={control}
-            rules={{ required: "이미지는 필수입니다." }}
-            onImagePick={(file) => setPickedFile(file)}
-          />
-          {/* <div className={classes.cameraBox}>
+          <main className={classes.main}>
+            <form
+              onSubmit={handleSubmit(postProduct.mutate)}
+              className={classes.form}
+            >
+              <ImagePicker
+                name="productImage"
+                control={control}
+                rules={{ required: "이미지는 필수입니다." }}
+                onImagePick={(file) => setPickedFile(file)}
+              />
+              {/* <div className={classes.cameraBox}>
             <label htmlFor="post-image">
               <input
                 type="file"
@@ -137,100 +144,99 @@ export default function ProductAddPage() {
             </label>
             <span className="text-[1.2rem]">0/10</span>
           </div> */}
-          <div className={classes.inputBox}>
-            <label htmlFor="name">Title</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              className={`${classes.inputCustom} ${
-                errors.title ? `${classes.error}` : ""
-              }`}
-              placeholder="What are you selling or giving away?"
-              {...register("title", { required: "제목은 필수입니다." })}
-            />
-            <ErrorMsg target={errors.title} />
-          </div>
+              <div className={classes.inputBox}>
+                <label htmlFor="name">Title</label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  className={`${classes.inputCustom} ${
+                    errors.title ? `${classes.error}` : ""
+                  }`}
+                  placeholder="What are you selling or giving away?"
+                  {...register("title", { required: "제목은 필수입니다." })}
+                />
+                <ErrorMsg target={errors.title} />
+              </div>
 
-          <div className={classes.inputBox}>
-            <label htmlFor="listing-type">Listing type</label>
-            <div className={classes.btnCollection}>
-              <button className={classes.button}>For Sale</button>
-              <button className={classes.button}>Free</button>
-            </div>
+              <div className={classes.inputBox}>
+                <label htmlFor="listing-type">Listing type</label>
+                <div className={classes.btnCollection}>
+                  <button className={classes.button}>For Sale</button>
+                  <button className={classes.button}>Free</button>
+                </div>
 
-            <input
-              type="text"
-              id="listing-type"
-              name="listing-type"
-              className={`${classes.inputCustom} ${
-                errors.title ? `${classes.error}` : ""
-              }`}
-              placeholder="$ price"
-              {...register("price", { required: "가격은 필수입니다." })}
-            />
-            <ErrorMsg target={errors.price} />
-          </div>
+                <input
+                  type="text"
+                  id="listing-type"
+                  name="listing-type"
+                  className={`${classes.inputCustom} ${
+                    errors.title ? `${classes.error}` : ""
+                  }`}
+                  placeholder="$ price"
+                  {...register("price", { required: "가격은 필수입니다." })}
+                />
+                <ErrorMsg target={errors.price} />
+              </div>
 
-          <div className={classes.inputBox}>
-            <label htmlFor="description">Description</label>
-            <textarea
-              type="text"
-              id="description"
-              name="description"
-              className={`${classes.inputCustom} ${
-                errors.title ? `${classes.error}` : ""
-              }`}
-              rows="10"
-              placeholder="Tell us about your item e.g. brand, material, condition and size. Include anything that you think toue neighbors would like to know."
-              {...register("description", {
-                required: "제품 설명은 필수입니다.",
-              })}
-            ></textarea>
-            <ErrorMsg target={errors.description} />
-          </div>
+              <div className={classes.inputBox}>
+                <label htmlFor="description">Description</label>
+                <textarea
+                  type="text"
+                  id="description"
+                  name="description"
+                  className={classes.inputCustom}
+                  rows="10"
+                  placeholder="Tell us about your item e.g. brand, material, condition and size. Include anything that you think toue neighbors would like to know."
+                  {...register("description", {
+                    required: "제품 설명은 필수입니다.",
+                  })}
+                ></textarea>
+                <ErrorMsg target={errors.description} />
+              </div>
 
-          <div className={classes.inputBox}>
-            <label htmlFor="instructions">Where to meet</label>
-            <button
-              id="where"
-              name="where"
-              className={`flex cursor-pointer p-[0.8rem] border border-neutral-400 rounded-[0.6rem]`}
-              onClick={() =>
-                router.push({
-                  pathname: "/market/product/new/choose-location",
-                  query: { rcode },
-                })
-              }
-            >
-              <span className="font-bold">{placeName || "Select"}</span>
-              <Image
-                src="/icons/chevron-right.svg"
-                alt="icon"
-                width={20}
-                height={20}
-                className="ml-auto"
-              />
-            </button>
-          </div>
-          {/* <ImagePicker label="Your image" name="image" /> */}
-          {/* {state.message && <p>{state.message}</p>} */}
-          <div className={classes.actions}>{/* <MealsFormSubmit /> */}</div>
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              link="/market"
-              secondary
-              className="flex-grow justify-center"
-            >
-              취소
-            </Button>
-            <Button type="submit" primary className="flex-grow justify-center">
-              등록
-            </Button>
-          </div>
-        </form>
-      </main>
+              <div className={classes.inputBox}>
+                <label htmlFor="instructions">Where to meet</label>
+                <button
+                  id="where"
+                  name="where"
+                  className={`flex cursor-pointer p-[0.8rem] border border-neutral-400 rounded-[0.6rem]`}
+                  onClick={() => setShowSlide(true)}
+                >
+                  <span className="font-bold">{placeName || "Select"}</span>
+                  <Image
+                    src="/icons/chevron-right.svg"
+                    alt="icon"
+                    width={20}
+                    height={20}
+                    className="ml-auto"
+                  />
+                </button>
+              </div>
+              {/* <ImagePicker label="Your image" name="image" /> */}
+              {/* {state.message && <p>{state.message}</p>} */}
+              <div className={classes.actions}>{/* <MealsFormSubmit /> */}</div>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  link="/market"
+                  secondary
+                  className="flex-grow justify-center"
+                >
+                  취소
+                </Button>
+                <Button
+                  type="submit"
+                  primary
+                  className="flex-grow justify-center"
+                >
+                  등록
+                </Button>
+              </div>
+            </form>
+          </main>
+        </>
+      )}
     </div>
   );
 }

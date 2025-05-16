@@ -83,6 +83,11 @@ export default function LocationPage() {
   };
 
   const goGetVerification = async (neighborhood, rcode) => {
+    if (!neighborhood && !rcode) {
+      alert("주소를 선택해주세요!");
+      return;
+    }
+
     console.log("인증절차");
     router.push("/auth/signup/phone-verify");
 
@@ -175,8 +180,9 @@ export default function LocationPage() {
 
       <footer className="mt-auto">
         <button
-          className="font-bold h-[4rem] bg-[var(--color-primary-600)] p-4 w-full rounded-lg text-white cursor-pointer"
+          className={`font-bold h-[4rem] bg-[var(--color-primary-600)] p-4 w-full rounded-lg text-white cursor-pointer disabled:bg-[var(--color-grey-400)]`}
           onClick={() => goGetVerification(neighborhood, rcode)}
+          disabled={!neighborhood.trim()}
         >
           본인 인증하러 가기
         </button>

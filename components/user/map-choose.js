@@ -1,16 +1,17 @@
 // components/MapContainer.jsx
 import { loadKakaoMapScript } from "@/lib/\bkakaoMapLoader";
+import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 
 export default function MapChooseContainer({
   lat,
   lng,
   setCoords,
-  placeName,
   showOverlay,
   setShowOverlay,
 }) {
   const mapRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     const container = mapRef.current;
@@ -50,7 +51,7 @@ export default function MapChooseContainer({
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
             transform: translateY(-100%);
           ">
-           ${placeName || "지도를 움직여 장소를 설정해주세요."}
+           ${router.query.placeName || "지도를 움직여 장소를 설정해주세요."}
           </div>
         `;
 
@@ -78,7 +79,7 @@ export default function MapChooseContainer({
       //   }
       // });
 
-      // ✅ 지도 중심이 바뀔 때마다 마커 위치 이동 & 상태 저장
+      // ✅ 지도 중심이 바뀔 때마다(=마커의 위치가 바뀔 때마다) 마커는 사라지고(Done 버튼 누르면 다시 생김), 위/경도 상태값 저장
       kakao.maps.event.addListener(map, "idle", () => {
         const center = map.getCenter();
         // marker.setPosition(center); // 마커를 중심으로 이동
@@ -92,7 +93,7 @@ export default function MapChooseContainer({
         lng: map.getCenter().getLng(),
       });
     });
-  }, [lat, lng, showOverlay, placeName]);
+  }, [lat, lng, showOverlay]);
 
   return <div ref={mapRef} className="w-full h-full rounded-xl" id="map" />;
 }

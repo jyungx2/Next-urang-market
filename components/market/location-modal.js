@@ -13,7 +13,7 @@ export default function LocationModal({ coords, onClose, onSave }) {
     onSave(location.trim());
     onClose();
 
-    router.push({
+    router.replace({
       pathname: "/market/product/new",
       query: {
         rcode,

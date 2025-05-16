@@ -5,13 +5,15 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function ChooseLocation() {
+export default function LocationSlide({ setShowSlide }) {
   const router = useRouter();
-  const [coords, setCoords] = useState({ lat: null, lng: null });
+  const initialLat = parseFloat(router.query.lat) || null;
+  const initialLng = parseFloat(router.query.lng) || null;
+  const [coords, setCoords] = useState({ lat: initialLat, lng: initialLng });
 
   const [showOverlay, setShowOverlay] = useState(true); // 라벨 표시 여부
   const [showModal, setShowModal] = useState(false); // 사용자 입력 장소 이름
-  const [placeName, setPlaceName] = useState("");
+  // const [placeName, setPlaceName] = useState("");
 
   // 페이지 접속하자마자 내 위치 가져오기
   useEffect(() => {
@@ -20,7 +22,7 @@ export default function ChooseLocation() {
       coords.lat,
       coords.lng
     );
-    if (coords.lat !== null && coords.lng !== null) return;
+    if (initialLat !== null && initialLng !== null) return;
 
     const getMyLocation = () => {
       navigator.geolocation.getCurrentPosition(
@@ -39,10 +41,10 @@ export default function ChooseLocation() {
   }, []);
 
   return (
-    <div className="bg-[var(--color-bg)] p-6 flex flex-col min-h-screen">
+    <div className="bg-[var(--color-bg)] flex flex-col min-h-screen">
       <header className="shrink-0">
         <button
-          onClick={() => router.back()}
+          onClick={() => setShowSlide(false)}
           type="button"
           className="cursor-pointer mb-4"
         >
@@ -60,7 +62,6 @@ export default function ChooseLocation() {
             lat={coords.lat}
             lng={coords.lng}
             setCoords={setCoords}
-            placeName={placeName}
             showOverlay={showOverlay}
             setShowOverlay={setShowOverlay}
           />
@@ -71,9 +72,9 @@ export default function ChooseLocation() {
             coords={coords}
             onClose={() => setShowModal(false)}
             onSave={(value) => {
-              setPlaceName(value); // 라벨 내용 설정
+              // setPlaceName(value); // 라벨 내용 설정
               setShowOverlay(true); // 라벨 표시 트리거
-              setShowModal(false); // 인풋 모달 닫기
+              setShowSlide(false); // 인풋 모달 닫기
             }}
           />
         ) : (
@@ -90,6 +91,6 @@ export default function ChooseLocation() {
 }
 
 // ✅ Layout 적용되도록 getLayout 설정
-ChooseLocation.getLayout = function haveLayout(page) {
+LocationSlide.getLayout = function haveLayout(page) {
   return <Layout>{page}</Layout>;
 };
