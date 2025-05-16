@@ -185,7 +185,9 @@ export default function ProductAddPage() {
                   type="text"
                   id="description"
                   name="description"
-                  className={classes.inputCustom}
+                  className={`${classes.inputCustom} ${
+                    errors.title ? `${classes.error}` : ""
+                  }`}
                   rows="10"
                   placeholder="Tell us about your item e.g. brand, material, condition and size. Include anything that you think toue neighbors would like to know."
                   {...register("description", {
