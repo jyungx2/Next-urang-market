@@ -107,7 +107,7 @@ export default function ProductAddPage() {
           <header className={classes.header}>
             <button
               className="absolute top-0 left-0 cursor-pointer"
-              onClick={() => router.push("/market")}
+              onClick={() => router.push(`/market?rcode=${rcode}`)}
             >
               <Image src="/icons/xbtn.svg" alt="btn" height={30} width={30} />
             </button>
