@@ -35,6 +35,7 @@ export default function ProductAddPage() {
     reValidateMode: "onChange", // ✅ 에러 상태일 때, 언제 다시 검사할지
     // shouldUnregister: false, // ✅ 이걸 추가하면 Controller 필드가 언마운트될 때 값을 잃지 않음
     defaultValues: {
+      writerImage: currentUser?.profileImage,
       writer: currentUser?.nickname,
       productImage: "",
       title: "",

@@ -24,6 +24,7 @@ export default function ProductList({ products }) {
               productImage={product.productImage}
               title={product.title}
               price={product.price}
+              type={product.type}
               description={product.description}
               createdAt={product.createdAt}
               location={product.location}

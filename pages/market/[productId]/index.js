@@ -1,5 +1,7 @@
 import Layout from "@/components/layout/layout";
 import RelatedListings from "@/components/market/related-listings";
+import MapContainer from "@/components/user/map";
+import WhereToMeet from "@/components/user/where-to-meet";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import useSelectedProductStore from "@/zustand/selectedProduct";
 import Image from "next/image";
@@ -28,6 +30,7 @@ export default function PostDetailPage({ selectedProduct }) {
   };
 
   console.log(selectedProduct);
+
   // if (router.isFallback)
   //   return (
   //     <div className="min-h-screen flex justify-center items-center bg-[var(--color-bg)]">
@@ -58,7 +61,7 @@ export default function PostDetailPage({ selectedProduct }) {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
+    <div className="min-h-screen bg-[var(--color-grey-50)]">
       {/* 헤더 (배경 이미지 포함) */}
       <header className="relative flex justify-between top-0 w-full z-50 p-4 aspect-[5/4]">
         {/* 배경 이미지 */}
@@ -66,7 +69,7 @@ export default function PostDetailPage({ selectedProduct }) {
           src={selectedProduct?.productImage}
           alt="image"
           fill
-          className="absolute top-0 left-0 object-cover -z-10"
+          className="absolute top-0 left-0 -z-10 object-contain"
         />
 
         {/* 상단 네비게이션 버튼들 */}
@@ -116,7 +119,7 @@ export default function PostDetailPage({ selectedProduct }) {
         <div className="flex items-center gap-4 pb-4">
           <div className="relative w-[50px] aspect-square rounded-full">
             <Image
-              src="/images/example.jpg"
+              src={selectedProduct?.writerImage}
               alt="image"
               fill
               className="rounded-full"
@@ -150,7 +153,7 @@ export default function PostDetailPage({ selectedProduct }) {
             <div className="flex justify-between items-center">
               <h2 className="font-bold text-[2rem]">Where to meet</h2>
               <div className="flex items-center cursor-pointer">
-                <span>올리브영</span>
+                <span>{selectedProduct?.placeName}</span>
                 <Image
                   src="/icons/chevron-right.svg"
                   alt="image"
@@ -159,7 +162,11 @@ export default function PostDetailPage({ selectedProduct }) {
                 />
               </div>
             </div>
-            <div className="p-10 border text-center">GPS</div>
+
+            <WhereToMeet
+              lat={selectedProduct?.lat}
+              lng={selectedProduct?.lng}
+            />
           </div>
 
           <div className="flex mt-8">
