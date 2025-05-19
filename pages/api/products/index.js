@@ -21,6 +21,7 @@ export default async function handler(req, res) {
       writer,
       productImage,
       title,
+      type,
       price,
       description,
       location,
@@ -34,6 +35,7 @@ export default async function handler(req, res) {
       !writer ||
       !productImage ||
       !title ||
+      !type ||
       !price ||
       !description ||
       !location ||
@@ -49,6 +51,7 @@ export default async function handler(req, res) {
       writer,
       productImage,
       title,
+      type,
       description,
       price,
       location,

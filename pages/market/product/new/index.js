@@ -4,10 +4,10 @@ import ImagePicker from "@/components/market/image-picker";
 import { useRouter } from "next/router";
 import Layout from "@/components/layout/layout";
 import Button from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import useCurrentUserStore from "@/zustand/currentUserStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ErrorMsg from "@/components/common/error-msg";
 import LocationSlide from "@/components/market/location-slide";
 
@@ -15,31 +15,50 @@ export default function ProductAddPage() {
   const [pickedFile, setPickedFile] = useState(null); // ✅ 원본 File 객체 저장
   const { currentUser } = useCurrentUserStore();
   const router = useRouter();
-  const { rcode, lat, lng, placeName } = router.query;
+  const { rcode } = router.query;
   const [showSlide, setShowSlide] = useState(false); // 1️⃣ 라우팅 없이 조건분기로 한 페이지 안에서 렌더링 여부 조정
+
+  // const initialLat = parseFloat(router.query.lat) || null;
+  // const initialLng = parseFloat(router.query.lng) || null;
+  const [coords, setCoords] = useState({ lat: null, lng: null });
+  const [placeName, setPlaceName] = useState("");
 
   const {
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
+    mode: "onSubmit", // ✅ submit 시에만 유효성 검사 (기본값)
+    reValidateMode: "onChange", // ✅ 에러 상태일 때, 언제 다시 검사할지
+    // shouldUnregister: false, // ✅ 이걸 추가하면 Controller 필드가 언마운트될 때 값을 잃지 않음
     defaultValues: {
       writer: currentUser?.nickname,
       productImage: "",
       title: "",
+      type: "",
       price: "",
       description: "",
       location: currentUser?.selectedLocation.keyword.slice(-1)[0],
-      rcode,
-      lat,
-      lng,
-      placeName,
+      // lat: coords.lat,
+      // lng: coords.lng,
     },
   });
 
+  useEffect(() => {
+    if (rcode) setValue("rcode", rcode);
+    if (placeName) setValue("placeName", placeName);
+    if (coords.lat) setValue("lat", coords.lat);
+    if (coords.lng) setValue("lng", coords.lng);
+  }, [placeName, coords, rcode, setValue]);
+
+  // const [watchedType, setwatchedType] = useState("");
+  // const watchedType = useWatch({ control, name: "type", defaultValue: "" });
+
   const postProduct = useMutation({
     mutationFn: async (productInfo) => {
+      console.log("🔥 폼 최종 값:", productInfo);
       // 1. productInfo에서 이미지 파일객체(name: productImage)만 분리
       const { productImage, ...rest } = productInfo;
       let imageUrl = null;
@@ -101,7 +120,12 @@ export default function ProductAddPage() {
   return (
     <div className="flex flex-col gap-[2rem] min-h-screen p-6 bg-[var(--color-bg)]">
       {showSlide ? (
-        <LocationSlide setShowSlide={setShowSlide} />
+        <LocationSlide
+          setShowSlide={setShowSlide}
+          coords={coords}
+          setCoords={setCoords}
+          setPlaceName={setPlaceName}
+        />
       ) : (
         <>
           <header className={classes.header}>
@@ -130,7 +154,7 @@ export default function ProductAddPage() {
               {/* <div className={classes.cameraBox}>
             <label htmlFor="post-image">
               <input
-                type="file"
+                watchedType="file"
                 id="post-image"
                 name="post-image"
                 className={classes.fileInputCustom}
@@ -161,22 +185,76 @@ export default function ProductAddPage() {
 
               <div className={classes.inputBox}>
                 <label htmlFor="listing-type">Listing type</label>
-                <div className={classes.btnCollection}>
-                  <button className={classes.button}>For Sale</button>
-                  <button className={classes.button}>Free</button>
-                </div>
+                <Controller
+                  name="type"
+                  control={control}
+                  // defaultValue=""
+                  rules={{ required: "판매 타입은 필수입니다." }}
+                  render={({ field }) => {
+                    console.log("🔥 field.value:", field.value); // 디버깅
+                    console.log(typeof field.value, field.value);
 
-                <input
-                  type="text"
-                  id="listing-type"
-                  name="listing-type"
-                  className={`${classes.inputCustom} ${
-                    errors.title ? `${classes.error}` : ""
-                  }`}
-                  placeholder="$ price"
-                  {...register("price", { required: "가격은 필수입니다." })}
+                    return (
+                      <>
+                        <div className={classes.btnCollection}>
+                          <button
+                            type="button"
+                            className={`${classes.button} ${
+                              field.value === "Sale"
+                                ? classes["button-selected"]
+                                : ""
+                            }`}
+                            onClick={() => {
+                              field.onChange("Sale");
+                              console.log("type 값:", field.value);
+                            }}
+                          >
+                            For Sale
+                          </button>
+                          <button
+                            type="button"
+                            className={`${classes.button} ${
+                              field.value === "Free"
+                                ? classes["button-selected"]
+                                : ""
+                            }`}
+                            onClick={() => {
+                              field.onChange("Free");
+                              console.log("type 값:", field.value);
+                            }}
+                          >
+                            Free
+                          </button>
+                        </div>
+                        <ErrorMsg target={errors.type} />
+
+                        <input
+                          type="text"
+                          id="listing-type"
+                          name="listing-type"
+                          className={`${classes.inputCustom} ${
+                            errors.title ? `${classes.error}` : ""
+                          } disabled:bg-[var(--color-grey-200)]`}
+                          placeholder={field.value === "Free" ? "" : "₩ price"}
+                          {...register("price", {
+                            required: "가격은 필수입니다.",
+                          })}
+                          disabled={field.value === "Free"}
+                        />
+                        <ErrorMsg target={errors.price} />
+                      </>
+                    );
+                  }}
                 />
-                <ErrorMsg target={errors.price} />
+
+                {/* 실제로 서버에 전송될 숨겨진 input - useForm의 register 함수는 버튼에 등록 불가능, setValue를 사용하기 위해선 register 함수를 이용해 해당 필드 명시적 등록 필수 & 에러메시지 표시하기 위함 */}
+                {/* <input
+                    type="hidden"
+                    // value={type} // 🚨🚨react-hook-form은 setValue()로 값을 넣어주면 자동으로 내부 상태에서 관리하는데, 외부에서 강제로 value를 지정하면 오히려 리렌더링 간 충돌이 나기 때문에 절대 지정❌❌ -> useForm사용 시에는 useState 또는 value를 주입하는 게 아닌, useWatch&setValue로만 상태관리할 것!!
+                    {...register("type", {
+                      required: "⬅️ 판매 타입을 선택해주세요.",
+                    })}
+                  /> */}
               </div>
 
               <div className={classes.inputBox}>

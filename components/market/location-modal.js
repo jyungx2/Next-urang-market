@@ -66,6 +66,14 @@ export default function LocationModal({ coords, onClose, onSave }) {
             type="submit"
             className="w-full bg-[var(--color-primary-500)] text-white font-semibold py-3 rounded-lg disabled:opacity-60"
             disabled={!location.trim()}
+            onClick={() =>
+              console.log(
+                "전송된 placeName 및 위경도: ",
+                location,
+                coords.lat,
+                coords.lng
+              )
+            }
           >
             Save place
           </button>

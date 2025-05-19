@@ -5,23 +5,30 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function LocationSlide({ setShowSlide }) {
+export default function LocationSlide({
+  setShowSlide,
+  coords,
+  setCoords,
+  setPlaceName,
+}) {
   const router = useRouter();
+
+  // 유저가 이미 지정한 위치가 있다면, 위치 마커가 router.query.lat/lng 포지션으로 설정되어 있어야 되기 때문에 아래와 같은 변수 설정
   const initialLat = parseFloat(router.query.lat) || null;
   const initialLng = parseFloat(router.query.lng) || null;
-  const [coords, setCoords] = useState({ lat: initialLat, lng: initialLng });
 
   const [showOverlay, setShowOverlay] = useState(true); // 라벨 표시 여부
   const [showModal, setShowModal] = useState(false); // 사용자 입력 장소 이름
-  // const [placeName, setPlaceName] = useState("");
 
-  // 페이지 접속하자마자 내 위치 가져오기
+  // 페이지 접속하자마자 내 위치 가져오기(최초 접속 시에만 실행)
   useEffect(() => {
     console.log(
       "choose-location 페이지 마운팅 후 실행되는 useEffect: ",
       coords.lat,
       coords.lng
     );
+
+    // 유저가 이미 지정한 위치가 있다면, router.query.lat/lng이 null이 아니고, 그 위치로 남아있어야 하기 때문에 아래와 같이 설정..
     if (initialLat !== null && initialLng !== null) return;
 
     const getMyLocation = () => {
@@ -30,6 +37,7 @@ export default function LocationSlide({ setShowSlide }) {
           const { latitude, longitude } = coords;
           setCoords({ lat: latitude, lng: longitude }); // ✅ 좌표 저장(지도 표시용 상태)
           console.log(latitude, longitude);
+          console.log("😃 coords.lat: ", coords.lat);
         },
         (err) => {
           console.error("위치 에러:", err);
@@ -72,7 +80,7 @@ export default function LocationSlide({ setShowSlide }) {
             coords={coords}
             onClose={() => setShowModal(false)}
             onSave={(value) => {
-              // setPlaceName(value); // 라벨 내용 설정
+              setPlaceName(value); // 라벨 내용 설정
               setShowOverlay(true); // 라벨 표시 트리거
               setShowSlide(false); // 인풋 모달 닫기
             }}
