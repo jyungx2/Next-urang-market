@@ -43,6 +43,10 @@
   border: 2px solid var(--color-error-500);
 }
 
+.disabled {
+  background-color: var(--color-grey-200);
+}
+
 .fileInputCustom {
   display: none;
 }

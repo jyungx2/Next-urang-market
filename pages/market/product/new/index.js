@@ -28,6 +28,7 @@ export default function ProductAddPage() {
     control,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     mode: "onSubmit", // ✅ submit 시에만 유효성 검사 (기본값)
@@ -190,9 +191,9 @@ export default function ProductAddPage() {
                   control={control}
                   // defaultValue=""
                   rules={{ required: "판매 타입은 필수입니다." }}
-                  render={({ field }) => {
-                    console.log("🔥 field.value:", field.value); // 디버깅
-                    console.log(typeof field.value, field.value);
+                  render={({ field: typeField }) => {
+                    console.log("🔥 field.value:", typeField.value); // 디버깅
+                    console.log(typeof typeField.value, typeField.value);
 
                     return (
                       <>
@@ -200,13 +201,13 @@ export default function ProductAddPage() {
                           <button
                             type="button"
                             className={`${classes.button} ${
-                              field.value === "Sale"
+                              typeField.value === "Sale"
                                 ? classes["button-selected"]
                                 : ""
                             }`}
                             onClick={() => {
-                              field.onChange("Sale");
-                              console.log("type 값:", field.value);
+                              typeField.onChange("Sale");
+                              console.log("type 값:", typeField.value);
                             }}
                           >
                             For Sale
@@ -214,13 +215,13 @@ export default function ProductAddPage() {
                           <button
                             type="button"
                             className={`${classes.button} ${
-                              field.value === "Free"
+                              typeField.value === "Free"
                                 ? classes["button-selected"]
                                 : ""
                             }`}
                             onClick={() => {
-                              field.onChange("Free");
-                              console.log("type 값:", field.value);
+                              typeField.onChange("Free");
+                              console.log("type 값:", typeField.value);
                             }}
                           >
                             Free
@@ -228,7 +229,46 @@ export default function ProductAddPage() {
                         </div>
                         <ErrorMsg target={errors.type} />
 
-                        <input
+                        <Controller
+                          name="price"
+                          control={control}
+                          rules={{
+                            // formValues: 폼에 등록된 모든 필드의 현재 값 객체 (별도로 useWatch()나 getValues()를 호출하지 않아도 해당 필드의 유효성 검사 시점에서 다른 필드의 값들도 접근 가능)
+                            validate: (value, formValues) => {
+                              if (formValues.type === "Free") return true;
+                              if (!value) return "가격은 필수입니다.";
+                              return true;
+                            },
+                          }}
+                          render={({ field: priceField }) => (
+                            <>
+                              <input
+                                type="text"
+                                placeholder={
+                                  watch("type") === "Free" ? "" : "₩ price"
+                                }
+                                className={`${classes.inputCustom} ${
+                                  errors.price ? `${classes.error}` : ""
+                                } ${
+                                  watch("type") === "Free"
+                                    ? `${classes.disabled}`
+                                    : ""
+                                }`}
+                                disabled={watch("type") === "Free"}
+                                {...priceField}
+                                // ⭐️ priceField는 폼과 Input을 연결해주는 모든 필수 속성들인 다음 코드들을 내포하고 있음
+                                // name={priceField.name}
+                                // value={priceField.value}
+                                // onChange={priceField.onChange}
+                                // onBlur={priceField.onBlur}
+                                // ref={priceField.ref}
+                              />
+                              <ErrorMsg target={errors.price} />
+                            </>
+                          )}
+                        />
+
+                        {/* <input
                           type="text"
                           id="listing-type"
                           name="listing-type"
@@ -241,7 +281,7 @@ export default function ProductAddPage() {
                           })}
                           disabled={field.value === "Free"}
                         />
-                        <ErrorMsg target={errors.price} />
+                        <ErrorMsg target={errors.price} /> */}
                       </>
                     );
                   }}

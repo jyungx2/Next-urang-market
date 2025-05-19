@@ -14,6 +14,7 @@ export default function LocationSlide({
   const router = useRouter();
 
   // 유저가 이미 지정한 위치가 있다면, 위치 마커가 router.query.lat/lng 포지션으로 설정되어 있어야 되기 때문에 아래와 같은 변수 설정
+  // ❓여기서 router.query로부터 가져오기보다, 이미 Prop으로 가져온 coord로부터 밸류 유무를 판단하는 게 낫지 않나?
   const initialLat = parseFloat(router.query.lat) || null;
   const initialLng = parseFloat(router.query.lng) || null;
 
@@ -37,7 +38,7 @@ export default function LocationSlide({
           const { latitude, longitude } = coords;
           setCoords({ lat: latitude, lng: longitude }); // ✅ 좌표 저장(지도 표시용 상태)
           console.log(latitude, longitude);
-          console.log("😃 coords.lat: ", coords.lat);
+          console.log("😃 coords.lat: ", coords.lat); // 이 시점에서는 coords 상태가 업데이트x -> 'undefined'로 출력
         },
         (err) => {
           console.error("위치 에러:", err);
