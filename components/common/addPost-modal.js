@@ -14,6 +14,7 @@ export default function AddPostModal({
 }) {
   const { currentUser, setSelectedLocation } = useCurrentUserStore();
   const router = useRouter();
+  console.log("⭐️", router.query);
 
   const currentDong = neighborhood?.keyword?.slice(-1)[0];
 
@@ -171,7 +172,9 @@ export default function AddPostModal({
               className="bg-green-100 text-green-700 font-semibold py-5 rounded-xl w-full hover:bg-green-200 transition mt-4"
               onClick={() => goToSeeMyNeighborhood()}
             >
-              {currentDong} 이웃소식 보러가기
+              {router.query.mainCategory
+                ? `${currentDong} 이웃소식 보러가기`
+                : `${currentDong} 중고마켓 보러가기`}
             </button>
             <button
               className="bg-gray-100 text-gray-700 font-semibold py-5 rounded-xl w-full hover:bg-gray-200 transition mt-4"

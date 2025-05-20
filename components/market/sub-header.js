@@ -62,43 +62,15 @@ export default function SubHeader() {
     },
   });
 
-  // const changeSelectedLocation = async (selectedLocation) => {
-  //   // ✅ CLIENT 측 selectedLocation 업데이트
-  //   setSelectedLocation(selectedLocation);
-  //   console.log("🔥", selectedLocation);
-
-  //   try {
-  //     // ✅ SERVER 측 selectedLocation 업데이트
-  //     const res = await fetch(`/api/user/selected-location`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         userId: currentUser.id,
-  //         selectedLocation,
-  //       }),
-  //     });
-
-  //     const data = await res.json();
-
-  //     if (!res.ok) throw new Error(data.message);
-
-  //     // router.push({
-  //     //   pathname: `/market/${router.query.from}`,
-  //     //   query: { rcode: selectedLocation.rcode }, // currentUser?.selectedLocation?.rcode ==> 아직 변경(업데이트)되지 않은 Old value.. -> 두번째 클릭 때서야(?) 업데이트된 값 반영됨
-  //     // });
-
-  //     console.log("✅ 현재 선택한 위치 변경 완료:", data.message);
-  //   } catch (err) {
-  //     console.error("❌ 현재 선택한 위치 변경 실패:", err.message);
-  //   }
-  // };
+  const [isInputOpen, setIsInputOpen] = useState(false);
+  const showSearchInput = () => {
+    setIsInputOpen((prev) => !prev);
+  };
 
   return (
-    <div className="flex font-bold text-4xl sticky top-0 py-8 bg-[var(--color-bg)]">
+    <div className="flex sticky top-0 py-8 bg-[var(--color-bg)]">
       <button
-        className="flex items-center gap-1 cursor-pointer relative"
+        className="flex items-center gap-1 cursor-pointer relative text-4xl font-bold"
         onClick={showRecentAddresses}
       >
         <span>{currentUser?.selectedLocation?.keyword.slice(-1)}</span>
@@ -129,11 +101,27 @@ export default function SubHeader() {
           </div>
         </div>
       </button>
+
+      <div
+        className={`flex-grow mx-4 transition-all duration-300 ease-in-out transform text-[1.8rem] border rounded-lg ${
+          isInputOpen
+            ? "translate-x-0 opacity-100"
+            : "translate-x-15 opacity-0 pointer-events-none"
+        }`}
+        onClick={toggleSearchPage}
+      >
+        <input
+          type="text"
+          placeholder="검색어를 입력해주세요."
+          className="inputUnset inputCustom w-full p-2 border rounded "
+        />
+      </div>
+
       <div className="flex ml-auto gap-6">
         <button className="cursor-pointer" onClick={toggleSidebar}>
           <Image src="/icons/menu.svg" alt="menu-icon" width={28} height={28} />
         </button>
-        <button className="cursor-pointer" onClick={toggleSearchPage}>
+        <button className="cursor-pointer" onClick={showSearchInput}>
           <Image
             src="/icons/search.svg"
             alt="menu-icon"
