@@ -1,7 +1,7 @@
 import Image from "next/image";
 import classes from "./searchPage.module.css";
 import UIContext from "@/store/ui-context";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useRouter } from "next/router";
@@ -11,6 +11,8 @@ export default function SearchPage() {
   const searchInputRef = useRef(null);
   const router = useRouter();
   const { rcode } = router.query;
+  const { currentUser } = useCurrentUserStore();
+  console.log(currentUser);
 
   //  DOM에 직접 접근해야 하는 상황이기 때문에 useRef가 적절.
   // cf) autoFocus속성은 React가 실제 DOM에 붙이기 전에 놓치는 경우가 있어서 브라우저마다 포커스 안 될 수도 있음 → ❌ 불안정
@@ -31,10 +33,49 @@ export default function SearchPage() {
       pathname: "/market",
       query: { rcode, keyword },
     });
+    // 같은 페이지(/market)이기 때문에 단순 라우팅으로는 페이지 이동 X -> Context API로 관리하는 검색페이지를 직접 토글해주자!!
     toggleSearchPage();
 
     // 2. 최근 검색어에 PATCH 요청
+    try {
+      const res = await fetch(`/api/user/search-history`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          keyword, // 디코딩 과정은 쿼리스트링에서만 필요, body에서는 문자열 그대로 보내도 괜찮!
+        }),
+      });
+      const data = await res.json();
+      console.log("검색어 추가 요청 성공: ", data);
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  const { data: searchHistory } = useQuery({
+    queryKey: ["search", "history"],
+    queryFn: async () => {
+      const res = await fetch(
+        `/api/user/search-history?userId=${currentUser.id}`
+      );
+      const data = res.json();
+      return data;
+    },
+    select: (data) => data.searchHistory,
+  });
+
+  const searchHistoryList = searchHistory?.map((item, index) => {
+    return (
+      <li key={index} className={classes.col}>
+        <Image src="/icons/clock.svg" alt="icon" width={20} height={20} />
+        <span>{item}</span>
+        <button className="p-2 mx-2" type="button">
+          <Image src="/icons/xbtn.svg" alt="icon" width={20} height={20} />
+        </button>
+      </li>
+    );
+  });
 
   return (
     <div className="flex flex-col gap-10 p-6 min-h-screen bg-[var(--color-bg)]">
@@ -91,15 +132,7 @@ export default function SearchPage() {
           </button>
         </div>
 
-        <ul className="flex flex-col gap-6">
-          <li className={classes.col}>
-            <Image src="/icons/clock.svg" alt="icon" width={20} height={20} />
-            <span>밥솥</span>
-            <button className="p-2 mx-2" type="button">
-              <Image src="/icons/xbtn.svg" alt="icon" width={20} height={20} />
-            </button>
-          </li>
-        </ul>
+        <ul className="flex flex-col gap-6">{searchHistoryList}</ul>
       </div>
     </div>
   );
