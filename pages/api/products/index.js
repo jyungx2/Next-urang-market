@@ -83,9 +83,19 @@ export default async function handler(req, res) {
 
   // GET HTTP
   if (req.method === "GET") {
-    const { rcode } = req.query;
+    const { rcode, keyword } = req.query;
 
-    const filter = { rcode };
+    if (!rcode) {
+      client.close();
+      return res.status(400).json({ message: "Missing rcode in query" });
+    }
+
+    const filter = {
+      rcode,
+      ...(keyword && {
+        title: { $regex: keyword, $options: "i" }, // keyword가 있을 경우 대소문자 무시 + 부분일치 검색
+      }),
+    };
 
     try {
       const documents = await getAllDocuments(

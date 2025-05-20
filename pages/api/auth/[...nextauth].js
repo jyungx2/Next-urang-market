@@ -48,6 +48,7 @@ export default NextAuth({
             selectedLocation: user.selectedLocation,
             likes: user.likes ?? [],
             dislikes: user.dislikes ?? [],
+            searchHistory: user.searchHistory ?? [],
           }; // ✅ 로그인 성공 => 유저입력값인 crendentials가 아니라 실제로 유효성이 검증된 DB에 존재하는 값들을 리턴해야 함!
         }
 
@@ -81,6 +82,7 @@ export default NextAuth({
             selectedLocation: user.selectedLocation,
             likes: user.likes ?? [],
             dislikes: user.dislikes ?? [],
+            searchHistory: user.searchHistory ?? [],
           }; // ✅ 로그인 성공
         }
       },
@@ -104,6 +106,7 @@ export default NextAuth({
         token.selectedLocation = user.selectedLocation;
         token.likes = user.likes;
         token.dislikes = user.dislikes;
+        token.searchHistory = user.searchHistory;
       }
       return token;
     },
@@ -121,6 +124,7 @@ export default NextAuth({
       session.user.selectedLocation = token.selectedLocation;
       session.user.likes = token.likes;
       session.user.dislikes = token.dislikes;
+      session.user.searchHistory = token.searchHistory;
 
       return session;
     },

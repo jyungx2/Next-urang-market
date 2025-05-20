@@ -13,6 +13,7 @@ export default function MarketPage() {
   const [isDropUpOpen, setIsDropUpOpen] = useState(false);
   const router = useRouter();
   const rcode = router.query.rcode;
+  const keyword = router.query.keyword;
 
   // 🖍️특정 컴포넌트에서 렌더링할 데이터는 페이지 단위에서 가져오는 게 SEO측면에서 좋음!
   // 컴포넌트 내부에서 useEffect로 데이터 가져오는 방식(CSR)보단(검색 엔진이 데이터를 가져오기 전에 빈 페이지를 먼저 크롤링할 가능성이 높음. & 구글 검색에 노출되지 않을 가능성이 높아짐.), 페이지 단위에서 데이터를 가져오는 방식(SSR, SSG)이 서버에서 데이터를 가져온 후, 정적 HTML을 생성하기 때문에 검색엔진이 완전한 페이지를 크롤링 가능하게 하여 SEO최적화가 잘 되어 검색노출이 쉬워진다!
@@ -26,9 +27,13 @@ export default function MarketPage() {
     isError,
     error,
   } = useQuery({
-    queryKey: ["products", rcode],
+    queryKey: ["products", rcode, keyword], // keyword를 key에 넣어서 리렌더링 트리거
     queryFn: async () => {
-      const res = await fetch(`/api/products?rcode=${rcode}`);
+      const res = await fetch(
+        `/api/products?rcode=${rcode}${
+          keyword ? `&keyword=${encodeURIComponent(keyword)}` : ""
+        }`
+      );
 
       if (!res.ok) {
         throw new Error("데이터 요청 실패");
