@@ -39,10 +39,18 @@ export default function AddPostModal({
       "💌 내 이웃소식 보러가기 누른 후 api 요청 성공 시 받는 데이터: : ",
       data
     );
-    router.push({
-      pathname: `/community/${router.query.mainCategory}`,
-      query: { rcode: neighborhood.rcode },
-    });
+
+    if (router.query.mainCategory) {
+      router.push({
+        pathname: `/community/${router.query.mainCategory}`,
+        query: { rcode: neighborhood.rcode },
+      });
+    } else {
+      router.push({
+        pathname: `/market`,
+        query: { rcode: neighborhood.rcode },
+      });
+    }
   };
 
   const getMyLocation = () => {

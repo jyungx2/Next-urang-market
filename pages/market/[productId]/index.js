@@ -1,6 +1,5 @@
 import Layout from "@/components/layout/layout";
 import RelatedListings from "@/components/market/related-listings";
-import MapContainer from "@/components/user/map";
 import WhereToMeet from "@/components/user/where-to-meet";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import useSelectedProductStore from "@/zustand/selectedProduct";

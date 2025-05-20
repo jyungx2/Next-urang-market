@@ -63,9 +63,7 @@ export default function MarketPage() {
           <SubHeader />
         </header>
 
-        <div className="fixed bottom-300 left-1/2 -translate-x-1/2 w-full max-w-[640px] px-6 z-50">
-          <MarketAddPost isOpen={isDropUpOpen} onToggle={toggleDropUp} />
-        </div>
+        <MarketAddPost isOpen={isDropUpOpen} onToggle={toggleDropUp} />
 
         {/* 메인 컨텐츠 (제품 리스트) */}
         <main className="flex-1 overflow-y-auto pb-6">
