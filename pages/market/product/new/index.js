@@ -110,6 +110,8 @@ export default function ProductAddPage() {
       }
 
       console.log("✅ 게시글 등록 완료:", data);
+
+      // 4. user 데이터의 listings 배열에 해당 게시글 정보(사진, 제목, 가격) 추가
     },
     onSuccess: async () => {
       router.push({ pathname: "/market", query: { rcode } });

@@ -85,13 +85,13 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const { rcode, keyword } = req.query;
 
-    if (!rcode) {
-      client.close();
-      return res.status(400).json({ message: "Missing rcode in query" });
-    }
+    // if (!rcode) {
+    //   client.close();
+    //   return res.status(400).json({ message: "Missing rcode in query" });
+    // }
 
     const filter = {
-      rcode,
+      ...(rcode && { rcode }),
       ...(keyword && {
         title: { $regex: keyword, $options: "i" }, // keyword가 있을 경우 대소문자 무시 + 부분일치 검색
       }),
