@@ -73,6 +73,44 @@ export default async function handler(req, res) {
     });
   }
 
+  if (req.method === "DELETE") {
+    const { userId, keywordIndex } = req.body;
+
+    if (!userId || keywordIndex === undefined) {
+      return res
+        .status(400)
+        .json({ message: "userId와 keywordIndex는 필수입니다." });
+    }
+
+    // 1. 유저 조회
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(userId) });
+
+    if (!user) {
+      return res.status(404).json({ message: "유저를 찾을 수 없습니다." });
+    }
+
+    try {
+      // 2. 기존 검색어 배열 복사 + index 제거
+      const updatedSearchHistory = [...user.searchHistory];
+      updatedSearchHistory.splice(keywordIndex, 1); // index 제거
+
+      // 3. 업데이트
+      await db
+        .collection("users")
+        .updateOne(
+          { _id: new ObjectId(userId) },
+          { $set: { searchHistory: updatedSearchHistory } }
+        );
+
+      return res.status(200).json({ message: "검색어 삭제 완료" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "삭제 중 서버 오류" });
+    }
+  }
+
   client.close();
   return res.status(405).json({ message: "허용되지 않은 메서드입니다." });
 }

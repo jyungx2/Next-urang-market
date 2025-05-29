@@ -228,8 +228,9 @@ export async function getStaticProps(context) {
 
 // ✅ 어떤 URL을 빌드할지 결정 -> 모든 post의 productId 명시
 export async function getStaticPaths() {
-  const res = await fetch("http://localhost:3000/api/products");
+  const res = await fetch(`http://localhost:3000/api/products?rcode=${rcode}`);
   const data = await res.json();
+  console.log("전체 데이터:", data);
 
   const paths = data.products.map((product) => ({
     params: {

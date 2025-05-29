@@ -2,7 +2,7 @@ import Image from "next/image";
 import classes from "./searchPage.module.css";
 import UIContext from "@/store/ui-context";
 import { useContext, useEffect, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useRouter } from "next/router";
 
@@ -13,6 +13,7 @@ export default function SearchPage() {
   const { rcode } = router.query;
   const { currentUser } = useCurrentUserStore();
   console.log(currentUser);
+  const queryClient = useQueryClient();
 
   //  DOM에 직접 접근해야 하는 상황이기 때문에 useRef가 적절.
   // cf) autoFocus속성은 React가 실제 DOM에 붙이기 전에 놓치는 경우가 있어서 브라우저마다 포커스 안 될 수도 있음 → ❌ 불안정
@@ -65,12 +66,39 @@ export default function SearchPage() {
     select: (data) => data.searchHistory,
   });
 
+  const deleteSearchMutation = useMutation({
+    mutationFn: async ({ userId, keywordIndex }) => {
+      const res = await fetch(`/api/user/search-history`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, keywordIndex }),
+      });
+
+      const data = await res.json();
+      console.log(data.message);
+    },
+    onSuccess: () => {
+      // ⭕️쿼리 키 무효화 -> 리렌더링 유발⭕️
+      queryClient.invalidateQueries(["search", "history"]);
+      alert("최근 검색어가 삭제되었습니다.");
+    },
+  });
+
   const searchHistoryList = searchHistory?.map((item, index) => {
     return (
       <li key={index} className={classes.col}>
         <Image src="/icons/clock.svg" alt="icon" width={20} height={20} />
         <span>{item}</span>
-        <button className="p-2 mx-2" type="button">
+        <button
+          className="p-2 mx-2"
+          type="button"
+          onClick={() =>
+            deleteSearchMutation.mutate({
+              userId: currentUser.id,
+              keywordIndex: index,
+            })
+          }
+        >
           <Image src="/icons/xbtn.svg" alt="icon" width={20} height={20} />
         </button>
       </li>
