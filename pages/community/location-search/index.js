@@ -235,21 +235,18 @@ export default function LocationSearchPage() {
 
     // ✅ SERVER 측 recentLocations 업데이트
     try {
-      const res = await fetch(
-        `/api/user/recent-locations?userId=${currentUser.id}&recentLocation=${newRecentAddress}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: currentUser.id,
-            recentLocation: newRecentAddress,
-            //  // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
-            //   // 📌 api routes파일에서 PATCH 요청으로 $push, $each 메소드 이용해 요소 하나씩 받아서 recentLocations: [] 빈 배열에 넣는 방식이므로 newList가 아닌, newItem을 전달.. (250423 - 노션필기참고)
-          }),
-        }
-      );
+      const res = await fetch(`/api/user/recent-locations`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          recentLocation: newRecentAddress,
+          //  // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
+          //   // 📌 api routes파일에서 PATCH 요청으로 $push, $each 메소드 이용해 요소 하나씩 받아서 recentLocations: [] 빈 배열에 넣는 방식이므로 newList가 아닌, newItem을 전달.. (250423 - 노션필기참고)
+        }),
+      });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);

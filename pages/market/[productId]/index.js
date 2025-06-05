@@ -28,7 +28,7 @@ export default function PostDetailPage({ selectedProduct }) {
     router.push("/");
   };
 
-  console.log(selectedProduct);
+  console.log("🎯 product: ", selectedProduct);
 
   // if (router.isFallback)
   //   return (

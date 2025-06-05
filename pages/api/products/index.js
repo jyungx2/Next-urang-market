@@ -18,6 +18,7 @@ export default async function handler(req, res) {
   // POST HTTP
   if (req.method === "POST") {
     const {
+      sellerId,
       writer,
       writerImage,
       productImage,
@@ -35,6 +36,7 @@ export default async function handler(req, res) {
 
     // Validation for server-side
     if (
+      !sellerId ||
       !writer ||
       !writerImage ||
       !productImage ||
@@ -54,6 +56,7 @@ export default async function handler(req, res) {
     }
 
     const newProduct = {
+      sellerId,
       writer,
       writerImage,
       productImage,

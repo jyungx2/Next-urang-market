@@ -3,8 +3,18 @@ import { connectDatabase } from "@/helpers/db-util";
 import { ObjectId } from "mongodb";
 
 export default async function handler(req, res) {
-  const client = await connectDatabase();
+  let client;
+
+  // CONNECT TO DB
+  try {
+    client = await connectDatabase();
+  } catch (err) {
+    res.status(500).json({ message: "Connecting to the database failed!" });
+    return;
+  }
+
   const db = client.db(process.env.MONGODB_NAME); // 💢💢꼭 매개변수로 데이터베이스 이름(urang-market) 넣어주자! connectDatabase()은 DB 이름 포함 안 시켰다!!!💢💢
+
   if (req.method === "GET") {
     const { userId } = req.query;
     console.log("서버가 받은 userId: ", userId);
