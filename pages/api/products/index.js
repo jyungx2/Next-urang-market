@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import {
   connectDatabase,
   getAllDocuments,
@@ -56,7 +57,15 @@ export default async function handler(req, res) {
     }
 
     const newProduct = {
-      sellerId,
+      sellerId: new ObjectId(sellerId), // 🚨 프론트가 아닌 백엔드 파일(api routes)에서 string -> ObjectId로 변환해야 net관련 오류 발생 X
+      // 1. 프론트에서 sellerId	string으로 전송 (예: "6821a4c58440811e50afb12c")
+      // 2. API Route에서 처리	반드시 new ObjectId(sellerId) 로 변환해서 저장
+
+      // 🤖: new ObjectId()는 **Node.js (MongoDB driver)**에서 제공하는 함수로, 프론트는 브라우저 환경이라 이 함수를 쓸 수 없고, 쓰려고 하면 이런 에러가 뜹니다:
+      // Module not found: Can't resolve 'bson' or 'net'
+
+      // ❓왜 이러한 변환작업이 필요한가?:
+      // MongoDB에선 ObjectId 타입으로 저장하는 게 인덱싱/쿼리 최적화에 유리하고, 나중에 join 및 비교 시 오류 없음
       writer,
       writerImage,
       productImage,

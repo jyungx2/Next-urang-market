@@ -48,15 +48,41 @@ export default function ProductAddPage() {
     },
   });
 
+  // 🔍 useForm()의 defaultValues는 최초 렌더링 시 한 번만 반영되기 때문에, currentUser처럼 비동기적으로 받아오는 데이터로부터 값을 추출해서 form 데이터로 보내야 할 때는 useEffect안에 조건문을 활용해서 setValue()로 값을 설정하는 게 의도도 명확하고, 값이 undefined로 저장될 수 있는 가능성을 줄이는 안정적인 방식!
+
+  // 📖 공식문서: If your defaultValues rely on asynchronous data (e.g., fetched user info), use reset() or setValue() inside a useEffect instead.
+
+  // ✏️ 디버깅 방식 정리
+  // ✅ 비동기 데이터(currentUser)일 경우에는 useEffect + setValue() 방식이 더 안정적이고 명확합니다.
+  // ❌ defaultValues에 바로 currentUser?.xxx를 넣으면 초기값이 undefined로 굳어져 버릴 수 있음.
+  useEffect(() => {
+    if (currentUser) {
+      setValue("writer", currentUser.nickname);
+      setValue("writerImage", currentUser.profileImage);
+      setValue("location", currentUser.selectedLocation?.keyword.slice(-1)[0]);
+    }
+  }, [currentUser, setValue]);
+
+  // 🖍️ 아래 useEffect 함수를 하나로 통합해서 코드 수를 줄이고 싶지만...
+  // 다음과 같은 단점이 존재한다.
+  // 1. 상태 중 하나만 바뀌어도 불필요한 setValue 재실행
+  // 2. 의존성 배열이 길어짐
+  // 3. 의도가 덜 명확하다. (어떤 조건일 때 어떤 값이 갱신되는지 흐릿함)
+  // ex) placeName만 바뀌었는데도 lat, rcode 조건문이 다시 실행됨
   useEffect(() => {
     if (rcode) setValue("rcode", rcode);
-    if (placeName) setValue("placeName", placeName);
-    if (coords.lat) setValue("lat", coords.lat);
-    if (coords.lng) setValue("lng", coords.lng);
-  }, [placeName, coords, rcode, setValue]);
+  }, [rcode, setValue]);
 
-  // const [watchedType, setwatchedType] = useState("");
-  // const watchedType = useWatch({ control, name: "type", defaultValue: "" });
+  useEffect(() => {
+    if (coords.lat && coords.lng) {
+      setValue("lat", coords.lat);
+      setValue("lng", coords.lng);
+    }
+  }, [coords, setValue]);
+
+  useEffect(() => {
+    if (placeName) setValue("placeName", placeName);
+  }, [placeName, setValue]);
 
   const postProduct = useMutation({
     mutationFn: async (productInfo) => {
@@ -144,6 +170,23 @@ export default function ProductAddPage() {
             <h1 className="font-bold text-[2.4rem] text-[var(--color-com-bg)]">
               New listing
             </h1>
+
+            {/* 📌 currentUser로부터 오는 값들 */}
+            <input type="hidden" {...register("writer")} />
+            <input type="hidden" {...register("writerImage")} />
+            <input type="hidden" {...register("location")} />
+
+            {/* 📌 라우터·지도에서 가져오는 값들 */}
+            <input type="hidden" {...register("rcode")} />
+            <input
+              type="hidden"
+              {...register("lat", { valueAsNumber: true })}
+            />
+            <input
+              type="hidden"
+              {...register("lng", { valueAsNumber: true })}
+            />
+            <input type="hidden" {...register("placeName")} />
           </header>
 
           <main className={classes.main}>

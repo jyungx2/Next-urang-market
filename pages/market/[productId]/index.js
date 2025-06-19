@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export default function PostDetailPage({ selectedProduct }) {
+export default function PostDetailPage({ selectedProduct, relatedListings }) {
   const { currentUser } = useCurrentUserStore();
   const router = useRouter();
   const rcode = router.query.rcode;
@@ -29,6 +29,8 @@ export default function PostDetailPage({ selectedProduct }) {
   };
 
   console.log("🎯 product: ", selectedProduct);
+
+  console.log("sellerId 확인:", selectedProduct?.sellerId); // ✅ 문자열이어야 함
 
   // if (router.isFallback)
   //   return (
@@ -189,7 +191,7 @@ export default function PostDetailPage({ selectedProduct }) {
               />
             </button>
           </header>
-          <RelatedListings />
+          <RelatedListings items={relatedListings} />
         </div>
 
         <div className="flex flex-col gap-4 mt-10 border-t p-6 px-0 font-bold">
@@ -207,21 +209,31 @@ export default function PostDetailPage({ selectedProduct }) {
 
 export async function getStaticProps(context) {
   const productId = context.params.productId;
-  console.log("✅ [getStaticProps] productId:", productId); // ← 이거 서버 터미널에 찍혀야 함
 
-  const res = await fetch(`http://localhost:3000/api/products/${productId}`);
-  const data = await res.json();
-  console.log("prodcutId: ", productId);
-  console.log("SSG로 받을 데이터: ", data);
+  const productRes = await fetch(
+    `http://localhost:3000/api/products/${productId}`
+  );
+  const { product } = await productRes.json();
 
-  if (!data.product) {
+  const relatedRes = await fetch(
+    `http://localhost:3000/api/products/by-seller?sellerId=${product.sellerId}`
+  );
+  console.log("해당 작성자의 다른 게시물 요청: ", relatedRes);
+
+  const { products } = await relatedRes.json();
+  console.log("해당 작성자가 게시한 다른 물건들: ", products);
+
+  const relatedListings = products.filter((p) => p._id !== product._id);
+  console.log("💄 related listings: ", relatedListings);
+
+  if (!product) {
     return {
       notFound: true, // 404 페이지로 이동
     };
   }
 
   return {
-    props: { selectedProduct: data.product },
+    props: { selectedProduct: product, relatedListings },
     // revalidate: 60,
   };
 }
@@ -230,7 +242,6 @@ export async function getStaticProps(context) {
 export async function getStaticPaths() {
   const res = await fetch(`http://localhost:3000/api/products`);
   const data = await res.json();
-  console.log("전체 데이터:", data);
 
   const paths = data.products.map((product) => ({
     params: {
