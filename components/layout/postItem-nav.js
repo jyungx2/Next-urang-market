@@ -21,7 +21,7 @@ export default function PostItemNav() {
       </div>
       <div className="flex justify-between items-center w-full p-4">
         <p className="text-[1.8rem] font-bold text-[var(--color-bg)]">
-          {selectedProduct.price
+          {selectedProduct?.price
             ? `${selectedProduct?.price?.toLocaleString()}원`
             : "Free"}
         </p>
