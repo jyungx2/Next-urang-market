@@ -21,7 +21,9 @@ export default function PostItemNav() {
       </div>
       <div className="flex justify-between items-center w-full p-4">
         <p className="text-[1.8rem] font-bold text-[var(--color-bg)]">
-          {selectedProduct?.price?.toLocaleString()}원
+          {selectedProduct.price
+            ? `${selectedProduct?.price?.toLocaleString()}원`
+            : "Free"}
         </p>
         <button
           className="px-6 py-3 bg-[var(--color-primary-400)] text-white rounded-full font-semibold cursor-pointer hover:bg-[var(--color-primary-300)] focus:bg-[var(--color-primary-300)]"

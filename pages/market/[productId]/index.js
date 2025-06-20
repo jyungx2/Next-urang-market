@@ -3,6 +3,7 @@ import RelatedListings from "@/components/market/related-listings";
 import WhereToMeet from "@/components/user/where-to-meet";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import useSelectedProductStore from "@/zustand/selectedProduct";
+import { ObjectId } from "mongodb";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -222,6 +223,9 @@ export async function getStaticProps(context) {
 
   const { products } = await relatedRes.json();
   console.log("해당 작성자가 게시한 다른 물건들: ", products);
+
+  console.log("📦 요청된 sellerId:", product.sellerId);
+  console.log("🧱 변환된 ObjectId:", new ObjectId(product.sellerId));
 
   const relatedListings = products.filter((p) => p._id !== product._id);
   console.log("💄 related listings: ", relatedListings);
