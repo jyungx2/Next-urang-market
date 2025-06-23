@@ -1,5 +1,5 @@
 import SubHeader from "@/components/market/sub-header";
-import PostsList from "@/components/market/product-list";
+import ProductsList from "@/components/market/product-list";
 import UIContext from "@/store/ui-context";
 import { useContext, useState } from "react";
 import MarketAddPost from "@/components/ui/market-addPost";
@@ -64,7 +64,7 @@ export default function MarketPage() {
         }`}
       >
         {/* 헤더 (상단 고정) */}
-        <header className="sticky top-0 left-0 w-full">
+        <header className="sticky top-0 left-0 w-full z-50">
           <SubHeader />
         </header>
 
@@ -77,7 +77,7 @@ export default function MarketPage() {
               ⏳ 데이터를 불러오는 중입니다...
             </p>
           ) : (
-            <PostsList products={productData || []} />
+            <ProductsList products={productData || []} />
           )}
         </main>
       </div>
