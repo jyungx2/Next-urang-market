@@ -1,10 +1,9 @@
 import AddPostModal from "@/components/common/addPost-modal";
 import useCurrentUserStore from "@/zustand/currentUserStore";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function MarketAddPost({ isOpen, onToggle }) {
+export default function MarketAddPost({ isOpen }) {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLocationMatched, setIsLocationMatched] = useState(null); // null, true, false
@@ -38,9 +37,8 @@ export default function MarketAddPost({ isOpen, onToggle }) {
         />
       )}
 
-      <div className="fixed bottom-0 right-0 w-full max-w-[640px] px-10">
-        <div
-          className={`absolute right-170 bottom-60 transition-all duration-300 ease-in-out ${
+      {/* <div
+          className={`w-fit mb-2 -translate-x-20 transition-all duration-300 ease-in-out ${
             isOpen
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-5 pointer-events-none"
@@ -73,11 +71,12 @@ export default function MarketAddPost({ isOpen, onToggle }) {
               </button>
             </li>
           </ul>
-        </div>
+        </div> */}
 
+      <div className="fixed bottom-36 left-1/2 translate-x-80 w-full max-w-[640px] z-50">
         <button
-          className="absolute right-170 bottom-36 bg-[var(--color-secondary-600)] rounded-full py-6 px-8 text-white font-bold cursor-pointer hover:bg-[var(--color-secondary-300)] shadow-lg"
-          onClick={onToggle}
+          onClick={handlePostClick}
+          className="bg-[var(--color-secondary-600)] rounded-full py-6 px-8 text-white font-bold shadow-lg hover:bg-[var(--color-secondary-300)]"
         >
           + Post
         </button>

@@ -17,9 +17,9 @@ export default function MarketPage() {
 
   // 🖍️특정 컴포넌트에서 렌더링할 데이터는 페이지 단위에서 가져오는 게 SEO측면에서 좋음!
   // 컴포넌트 내부에서 useEffect로 데이터 가져오는 방식(CSR)보단(검색 엔진이 데이터를 가져오기 전에 빈 페이지를 먼저 크롤링할 가능성이 높음. & 구글 검색에 노출되지 않을 가능성이 높아짐.), 페이지 단위에서 데이터를 가져오는 방식(SSR, SSG)이 서버에서 데이터를 가져온 후, 정적 HTML을 생성하기 때문에 검색엔진이 완전한 페이지를 크롤링 가능하게 하여 SEO최적화가 잘 되어 검색노출이 쉬워진다!
-  const toggleDropUp = () => {
-    setIsDropUpOpen(!isDropUpOpen);
-  };
+  // const toggleDropUp = () => {
+  //   setIsDropUpOpen(!isDropUpOpen);
+  // };
 
   const {
     data: productData,
@@ -68,7 +68,7 @@ export default function MarketPage() {
           <SubHeader />
         </header>
 
-        <MarketAddPost isOpen={isDropUpOpen} onToggle={toggleDropUp} />
+        <MarketAddPost isOpen={isDropUpOpen} />
 
         {/* 메인 컨텐츠 (제품 리스트) */}
         <main className="flex-1 overflow-y-auto pb-6">

@@ -226,6 +226,7 @@ export async function getStaticProps(context) {
 
   console.log("📦 요청된 sellerId:", product.sellerId);
   console.log("🧱 변환된 ObjectId:", new ObjectId(product.sellerId));
+  console.log("🔎 product.sellerId 타입:", typeof product.sellerId); // string or object
 
   const relatedListings = products.filter((p) => p._id !== product._id);
   console.log("💄 related listings: ", relatedListings);
