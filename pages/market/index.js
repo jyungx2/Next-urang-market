@@ -6,11 +6,14 @@ import MarketAddPost from "@/components/ui/market-addPost";
 import Layout from "@/components/layout/layout";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import { PropagateLoader } from "react-spinners";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function MarketPage() {
   const { isSidebarOpen, isSearchOpen, isNotificationOpen } =
     useContext(UIContext);
-  const [isDropUpOpen, setIsDropUpOpen] = useState(false);
+  const { currentUser } = useCurrentUserStore();
+  const [isDropUpOpen] = useState(false);
   const router = useRouter();
   const rcode = router.query.rcode;
   const keyword = router.query.keyword;
@@ -71,11 +74,13 @@ export default function MarketPage() {
         <MarketAddPost isOpen={isDropUpOpen} />
 
         {/* 메인 컨텐츠 (제품 리스트) */}
-        <main className="flex-1 overflow-y-auto pb-6">
+        <main className="flex grow overflow-y-auto pb-6 items-center justify-center">
           {isLoading ? (
-            <p className="text-center font-medium text-[1.8rem]">
-              ⏳ 데이터를 불러오는 중입니다...
-            </p>
+            <div className="flex flex-col justify-center items-center text-center gap-12">
+              <PropagateLoader color={"#009afa"} />
+
+              <p className="font-medium">{`"${currentUser?.selectedLocation?.keyword[2]}" 주민들의 중고거래 물품 리스트를 가져오고 있어요..`}</p>
+            </div>
           ) : (
             <ProductsList products={productData || []} />
           )}

@@ -6,7 +6,8 @@ import categoryData from "@/data/category";
 import Layout from "@/components/layout/layout";
 import UserLocation from "@/components/community/user-location";
 import useCurrentUserStore from "@/zustand/currentUserStore";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { PropagateLoader } from "react-spinners";
 
 function getKoreanCategory(mainSlug, subSlug) {
   const main = categoryData.find((cat) => cat.slug === mainSlug);
@@ -101,9 +102,9 @@ export default function CommunityPage() {
       <CommunityLayout
         userLocationSlot={<UserLocation mainCategory={mainSlug} />}
       >
-        <p className="text-center font-medium text-[2rem]">
-          ⏳ 데이터를 불러오는 중입니다...
-        </p>
+        <PropagateLoader color={"#009afa"} />
+
+        <p className="font-medium">{`"${currentUser?.selectedLocation?.keyword[2]}" 주민들의 게시물 리스트를 가져오고 있어요..`}</p>
       </CommunityLayout>
     );
   }

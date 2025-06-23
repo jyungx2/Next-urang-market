@@ -6,7 +6,7 @@ export default function Activities() {
       <h2 className="mb-6 font-bold text-[2rem]">Activity</h2>
       <div className="flex flex-col gap-6">
         <button className="font-medium cursor-pointer flex justify-between items-center">
-          <span>즐겨찾기</span>
+          <span>장바구니</span>
           <Image
             src="/icons/chevron-right.svg"
             alt="icon"
@@ -15,7 +15,7 @@ export default function Activities() {
           />
         </button>
         <button className="font-medium cursor-pointer flex justify-between items-center">
-          <span>최근 본 상품</span>
+          <span>위시리스트</span>
           <Image
             src="/icons/chevron-right.svg"
             alt="icon"

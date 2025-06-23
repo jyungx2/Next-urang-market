@@ -17,9 +17,9 @@ export default function MyProfile() {
       />
       <div className="flex items-center gap-4 grow">
         <span className="font-bold text-[2.2rem]">{currentUser?.nickname}</span>
-        <div className="font-bold text-[1.4rem] bg-blue-400 rounded-2xl p-2 text-blue-50">
+        {/* <div className="font-bold text-[1.4rem] bg-blue-400 rounded-2xl p-2 text-blue-50">
           36.5℃
-        </div>
+        </div> */}
       </div>
       <button className="cursor-pointer">
         <Image

@@ -12,7 +12,7 @@ export default function ProductList({ products }) {
     <>
       {/* 너비 100%는 block 상속 때문 (ul은 기본적으로 block 요소고, 가로로 100% 너비를 갖고 있음, 따라서 li에 w-full을 주면 → ul의 전체 너비를 상속해서 쭉 늘어남) */}
       {/* 높이 정렬은 flexbox의 기본값(stretch) 때문 */}
-      <ul className="flex flex-col gap-10">
+      <ul className="flex flex-col gap-10 w-full">
         {products.map((product) => (
           <li
             key={product._id}
