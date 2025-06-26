@@ -1,7 +1,7 @@
 import MainNav from "@/components/layout/main-nav";
 import { useContext, useEffect } from "react";
 import UIContext from "@/store/ui-context";
-import PostItemNav from "@/components/layout/postItem-nav";
+import ProductItemNav from "@/components/layout/productItem-nav";
 import { useRouter } from "next/router";
 import Sidebar from "@/components/common/sidebar";
 import SearchPage from "@/components/common/searchPage";
@@ -24,18 +24,18 @@ export default function Layout(props) {
   // const isPostItemNavPage = /^\/market\/[^/]+$/.test(router.pathname);
 
   // ✅ `PostItemNav`가 보여야 할 페이지 배열
-  const postItemNavPages = ["/market/[postId]"];
+  const productItemNavPages = ["/market/[productId]"];
 
   // ✅ `MainNav`와 `PostItemNav` 모두 숨겨야 할 페이지 배열
   const hiddenNavPages = [
-    "/market/[postId]/chat",
+    "/market/[productId]/chat",
     "/community/post/new",
     "/market/product/new",
     "/market/product/new/choose-location",
   ];
 
-  // ✅ 현재 경로가 `PostItemNav`를 표시해야 하는지 확인
-  const isPostItemNavPage = postItemNavPages.some((path) => {
+  // ✅ 현재 경로가 `ProductItemNav`를 표시해야 하는지 확인
+  const isProductItemNavPage = productItemNavPages.some((path) => {
     const regex = new RegExp(`^${path.replace(/\[.*?\]/, "[^/]+")}$`);
     return regex.test(router.pathname);
   });
@@ -56,8 +56,8 @@ export default function Layout(props) {
         isNotificationOpen ||
         isHiddenNavPage
       ) ? (
-        isPostItemNavPage ? (
-          <PostItemNav />
+        isProductItemNavPage ? (
+          <ProductItemNav />
         ) : (
           <MainNav />
         )

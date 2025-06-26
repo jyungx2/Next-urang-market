@@ -1,49 +1,56 @@
+import Layout from "@/components/layout/layout";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import SocketClient from "@/components/market/socket-client";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState([
-    { id: 1, sender: "me", text: "안녕하세요! 이거 아직 판매 중인가요?" },
-    { id: 2, sender: "other", text: "네! 아직 판매 중입니다." },
-  ]);
-
-  const [inputText, setInputText] = useState("");
-  const messagesEndRef = useRef(null);
-
-  // ✅ WebSocket 연결 (예제)
-  useEffect(() => {
-    const socket = new WebSocket("wss://your-websocket-url");
-
-    socket.onmessage = (event) => {
-      const newMessage = JSON.parse(event.data);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    };
-
-    return () => {
-      socket.close();
-    };
-  }, []);
-
-  // ✅ 스크롤 자동 이동 (최신 메시지 보이기)
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  // ✅ 메시지 전송
-  const sendMessage = () => {
-    if (!inputText.trim()) return;
-
-    const newMessage = { id: Date.now(), sender: "me", text: inputText };
-    setMessages((prev) => [...prev, newMessage]);
-    setInputText("");
-
-    // WebSocket으로 서버에 메시지 전송
-    // socket.send(JSON.stringify(newMessage));
-  };
-
   const router = useRouter();
-  const postId = router.query.postId;
+  const { productId } = router.query;
+  const { currentUser } = useCurrentUserStore();
+  const buyerId = currentUser?.id;
+
+  // const [messages, setMessages] = useState([
+  //   { id: 1, sender: "me", text: "안녕하세요! 이거 아직 판매 중인가요?" },
+  //   { id: 2, sender: "other", text: "네! 아직 판매 중입니다." },
+  // ]);
+
+  // const [inputText, setInputText] = useState("");
+  // const messagesEndRef = useRef(null);
+
+  // // ✅ WebSocket 연결 (예제)
+  // useEffect(() => {
+  //   const socket = new WebSocket("wss://your-websocket-url");
+
+  //   socket.onmessage = (event) => {
+  //     const newMessage = JSON.parse(event.data);
+  //     setMessages((prevMessages) => [...prevMessages, newMessage]);
+  //   };
+
+  //   return () => {
+  //     socket.close();
+  //   };
+  // }, []);
+
+  // // ✅ 스크롤 자동 이동 (최신 메시지 보이기)
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
+
+  // // ✅ 메시지 전송
+  // const sendMessage = () => {
+  //   if (!inputText.trim()) return;
+
+  //   const newMessage = { id: Date.now(), sender: "me", text: inputText };
+  //   setMessages((prev) => [...prev, newMessage]);
+  //   setInputText("");
+
+  //   // WebSocket으로 서버에 메시지 전송
+  //   // socket.send(JSON.stringify(newMessage));
+  // };
+
+  // const router = useRouter();
+  // const postId = router.query.postId;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -51,7 +58,7 @@ export default function ChatPage() {
         <div className="flex justify-center items-center relative p-4">
           <button
             className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 p-4"
-            onClick={() => router.push(`/market/${postId}`)}
+            onClick={() => router.push(`/market/${productId}`)}
           >
             <Image
               src="/icons/chevron-left.svg"
@@ -108,56 +115,12 @@ export default function ChatPage() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4 space-y-4 bg-[var(--color-bg)]">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex items-start gap-4 ${
-              msg.sender === "me" ? "justify-end" : ""
-            }`}
-          >
-            {msg.sender !== "me" && (
-              <Image
-                src="/images/example.jpg"
-                alt="상대 프로필"
-                width={40}
-                height={40}
-                className="rounded-full aspect-square object-cover"
-              />
-            )}
-            <div
-              className={`p-3 rounded-lg shadow max-w-xl ${
-                msg.sender === "me"
-                  ? "bg-[var(--color-primary-400)] text-white"
-                  : "bg-white"
-              }`}
-            >
-              <p className="text-xl">{msg.text}</p>
-            </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </main>
-
-      {/* 입력창 */}
-      <footer className="sticky bottom-0 flex items-center gap-4 p-4 bg-[var(--color-bg)]">
-        <input
-          type="text"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          placeholder="메시지를 입력하세요..."
-          className="bg-gray-300 flex-1 p-4 rounded-4xl outline-none"
-        />
-        <button onClick={sendMessage} className="p-2">
-          <Image
-            src="/icons/send.svg"
-            alt="send-icon"
-            width={24}
-            height={24}
-            className="cursor-pointer"
-          />
-        </button>
-      </footer>
+      <SocketClient roomId={productId + "_" + buyerId} buyerId={buyerId} />
     </div>
   );
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+ChatPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>;
+};

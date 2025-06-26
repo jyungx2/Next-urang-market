@@ -2,14 +2,14 @@ import useSelectedProductStore from "@/zustand/selectedProduct";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-export default function PostItemNav() {
+export default function ProductItemNav() {
   const router = useRouter();
-  const postId = router.query.postId;
+  const productId = router.query.productId;
   const { selectedProduct } = useSelectedProductStore();
 
-  const linkToChatPageHandler = (postId) => {
-    console.log(postId);
-    router.push(`/market/${postId}/chat`);
+  const linkToChatPageHandler = (productId) => {
+    console.log(productId);
+    router.push(`/market/${productId}/chat`);
   };
 
   return (
@@ -29,13 +29,13 @@ export default function PostItemNav() {
         <div className="flex gap-4">
           <button
             className="px-6 py-3 bg-[var(--color-secondary-600)] text-white rounded-full font-semibold cursor-pointer hover:bg-[var(--color-secondary-500)] focus:bg-[var(--color-secondary-500)]"
-            onClick={() => linkToChatPageHandler(postId)}
+            onClick={() => linkToChatPageHandler(productId)}
           >
             장바구니
           </button>
           <button
             className="px-6 py-3 bg-[var(--color-primary-400)] text-white rounded-full font-semibold cursor-pointer hover:bg-[var(--color-primary-300)] focus:bg-[var(--color-primary-300)]"
-            onClick={() => linkToChatPageHandler(postId)}
+            onClick={() => linkToChatPageHandler(productId)}
           >
             채팅
           </button>
