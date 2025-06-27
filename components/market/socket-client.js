@@ -1,23 +1,53 @@
+import useSelectedProductStore from "@/zustand/selectedProduct";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
+import { v4 as uuidv4 } from "uuid";
 
 const socket = io(
   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001"
 ); // Socket 서버에 연결
 
 export default function SocketClient({ roomId, buyerId }) {
-  const [messages, setMessages] = useState([]);
+  // useState 지우고, useQuery로 상태 통합관리!
+  // const [messages, setMessages] = useState([]);
+  const queryClient = useQueryClient();
+
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
+
+  const { selectedProduct } = useSelectedProductStore();
+
+  const { data: messages = [] } = useQuery({
+    queryKey: ["messages", roomId],
+    queryFn: async () => {
+      const res = await fetch(`/api/messages?roomId=${roomId}`);
+      const data = await res.json();
+      console.log("기존 메시지 배열 가져오기 성공!: ", data.messages);
+      return data.messages;
+    },
+  });
 
   useEffect(() => {
     // ✅ Room 입장
     socket.emit("joinRoom", roomId);
 
     // ✅ 메시지 수신 핸들러 등록
-    socket.on("receiveMessage", (msg) => {
-      setMessages((prev) => [...prev, msg]);
+    socket.on("receiveMessage", (msgFromServer) => {
+      queryClient.setQueryData(["messages", roomId], (old) => {
+        // 1. "localId" 기반으로 기존 메시지를 찾는다
+        const idx = old.findIndex((m) => m.localId === msgFromServer.localId);
+        if (idx !== -1) {
+          // 2. 있으면 해당 메시지를 서버 버전으로 교체
+          const updated = [...old];
+          updated[idx] = msgFromServer;
+          return updated;
+        }
+
+        // 3. 없으면 그냥 새 메시지로 추가 (중복 위험 없음 => 메시지 한 개 중복됐다고 앱이 멈추거나 에러 띄우는 건 UX적으로 최악 & 🤖두번째 이유 챗지피티 찾아보기🤖)
+        return [...old, msgFromServer];
+      });
     });
 
     // ✅ 컴포넌트 언마운트 시 연결 해제
@@ -25,19 +55,27 @@ export default function SocketClient({ roomId, buyerId }) {
       socket.off("receiveMessage");
       socket.disconnect();
     };
-  }, [roomId]);
+  }, [queryClient, roomId]);
 
   const sendMessage = () => {
+    const localId = uuidv4();
+
     const newMsg = {
+      localId,
       senderId: buyerId, // 실제 로그인 유저 정보로 대체 가능
       text: input,
       createdAt: new Date().toISOString(),
       roomId,
     };
 
-    // ✅ 서버로 메시지 전송
+    // 1. UI에 바로 반영 **ONLY FOR UX**
+    queryClient.setQueryData(["messages", roomId], (old = []) => [
+      ...old,
+      newMsg,
+    ]);
+
+    // 2. 서버로 메시지 전송
     socket.emit("sendMessage", newMsg);
-    setMessages((prev) => [...prev, newMsg]);
     setInput("");
   };
 
@@ -51,14 +89,14 @@ export default function SocketClient({ roomId, buyerId }) {
       <main className="flex-1 overflow-y-auto p-4 space-y-4 bg-[var(--color-bg)]">
         {messages.map((msg) => (
           <div
-            key={msg.id}
+            key={msg._id || msg.localId} // _id는 서버 응답 기준, localId는 낙관적 UI 기준
             className={`flex items-start gap-4 ${
-              msg.sender === "me" ? "justify-end" : ""
+              msg.senderId === buyerId ? "justify-end" : ""
             }`}
           >
-            {msg.sender !== "me" && (
+            {msg.senderId !== buyerId && (
               <Image
-                src="/images/example.jpg"
+                src={selectedProduct.writerImage}
                 alt="상대 프로필"
                 width={40}
                 height={40}
@@ -67,7 +105,7 @@ export default function SocketClient({ roomId, buyerId }) {
             )}
             <div
               className={`p-3 rounded-lg shadow max-w-xl ${
-                msg.sender === "me"
+                msg.senderId === buyerId
                   ? "bg-[var(--color-primary-400)] text-white"
                   : "bg-white"
               }`}
