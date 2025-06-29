@@ -1,6 +1,9 @@
 import { connectDatabase, getAllDocuments } from "@/helpers/db-util";
 
 export default async function handler(req, res) {
+  // ❌ 캐시를 아예 쓰지 말라고 명령
+  res.setHeader("Cache-Control", "no-store");
+
   if (req.method !== "GET") return res.status(405).end();
 
   const { roomId } = req.query;

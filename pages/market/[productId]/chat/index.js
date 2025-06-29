@@ -9,6 +9,7 @@ export default function ChatPage() {
   const { productId } = router.query;
   const { currentUser } = useCurrentUserStore();
   const buyerId = currentUser?.id;
+  console.log("CSR productId: ", productId);
 
   // const [messages, setMessages] = useState([
   //   { id: 1, sender: "me", text: "안녕하세요! 이거 아직 판매 중인가요?" },
@@ -115,7 +116,9 @@ export default function ChatPage() {
         </div>
       </header>
 
-      <SocketClient roomId={productId + "_" + buyerId} buyerId={buyerId} />
+      {router.isReady && productId && buyerId && (
+        <SocketClient roomId={productId + "_" + buyerId} buyerId={buyerId} />
+      )}
     </div>
   );
 }
