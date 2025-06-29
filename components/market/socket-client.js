@@ -7,11 +7,14 @@ import { use, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 
-const socket = io(
-  process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001"
-); // Socket 서버에 연결
+// ❌기존 const socket = io(...)는 컴포넌트가 리렌더링 될 때마다 새 socket 인스턴스를 생성할 위험 O ❌
+// ==> ✅ socket 인스턴스를 useRef로 유지해서 리렌더링에 영향을 받지 않도록 useRef로 Socket을 저장 & useEffect 안에서 한 번만 생성하도록 관리하는 게 안정적!
+// const socket = io(
+//   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001"
+// ); // Socket 서버에 연결
 
 export default function SocketClient({ roomId, buyerId }) {
+  const socketRef = useRef(null); // ✅ socket 인스턴스를 ref로 저장
   // useState 지우고, useQuery로 상태 통합관리!
   // const [messages, setMessages] = useState([]);
   const queryClient = useQueryClient();
@@ -38,19 +41,24 @@ export default function SocketClient({ roomId, buyerId }) {
 
   useEffect(() => {
     if (!router.isReady) return; // hydration 안 끝났으면 undefined
-    console.log(router.query.productId); // CSR에서는 여기서 처음으로 값이 제대로 찍힘
+    console.log("CSR: router.query.productId: ", router.query.productId); // CSR에서는 여기서 처음으로 값이 제대로 찍힘
 
-    // ✅ Room 입장
-    socket.emit("joinRoom", roomId);
+    // 1. 소켓 연결
+    socketRef.current = io(
+      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001"
+    );
+
+    // 2. Room 입장
+    socketRef.current.emit("joinRoom", roomId);
     console.log(`🚪 ${currentUser.id}님, room: ${roomId}에 입장!`);
 
-    // ✅ 메시지 수신 핸들러 등록
-    socket.on("receiveMessage", (msgFromServer) => {
+    // 3. 메시지 수신 핸들러 등록
+    socketRef.current.on("receiveMessage", (msgFromServer) => {
       queryClient.setQueryData(["messages", roomId], (old) => {
-        // 1. "localId" 기반으로 기존 메시지를 찾는다
+        // 1) "localId" 기반으로 기존 메시지를 찾는다
         const idx = old.findIndex((m) => m.localId === msgFromServer.localId);
         if (idx !== -1) {
-          // 2. 있으면 해당 메시지를 서버 버전으로 교체
+          // 2) 있으면 해당 메시지를 서버 버전으로 교체
           const updated = [...old];
           updated[idx] = msgFromServer;
 
@@ -65,17 +73,19 @@ export default function SocketClient({ roomId, buyerId }) {
           return updated;
         }
 
-        // 3. 없으면 그냥 새 메시지로 추가 (중복 위험 없음 => 메시지 한 개 중복됐다고 앱이 멈추거나 에러 띄우는 건 UX적으로 최악 & 🤖두번째 이유 챗지피티 찾아보기🤖)
+        // 3) 없으면 그냥 새 메시지로 추가 (중복 위험 없음 => 메시지 한 개 중복됐다고 앱이 멈추거나 에러 띄우는 건 UX적으로 최악 & 🤖두번째 이유 챗지피티 찾아보기🤖)
         return [...old, msgFromServer];
       });
     });
 
-    // ✅ 컴포넌트 언마운트 시 연결 해제
+    // 4. 언마운트 시 연결 해제
     return () => {
-      socket.off("receiveMessage");
-      socket.disconnect();
+      socketRef.current?.off("receiveMessage");
+      socketRef.current?.disconnect(); // 💥 1️⃣ 마운트 후 0.1초 안에 productId가 바뀌거나, 부모 컴포넌트가 리렌더되면서 <SocketClient />가 unmount → remount 됨
+      // 2️⃣ 이때 이 disconnect 코드가 호출돼버려서, 서버는 클라이언트 연결을 바로 끊음
+      // 3️⃣ 그 다음 새로 마운트된 컴포넌트는 새 socket 객체를 만들어 연결하지만, 이전에 emit했던 sendMessage는 날아가 있음
     };
-  }, [queryClient, roomId]);
+  }, [router.isReady, buyerId, queryClient, roomId]);
 
   const sendMessage = () => {
     const localId = uuidv4();
@@ -95,7 +105,7 @@ export default function SocketClient({ roomId, buyerId }) {
     ]);
 
     // 2. 서버로 메시지 전송
-    socket.emit("sendMessage", newMsg);
+    socketRef.current.emit("sendMessage", newMsg);
     setInput("");
     console.log("✉️ sendMessage 이벤트 수행 완료!");
   };
