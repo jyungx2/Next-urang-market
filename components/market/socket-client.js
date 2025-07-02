@@ -3,7 +3,7 @@ import useSelectedProductStore from "@/zustand/selectedProduct";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 

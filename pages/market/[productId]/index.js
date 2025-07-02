@@ -19,6 +19,7 @@ export default function PostDetailPage({ selectedProduct, relatedListings }) {
 
   useEffect(() => {
     setProduct(selectedProduct); // 페이지 진입 시 전역 상태로 저장
+    console.log("selectedProduct:", selectedProduct);
   }, [setProduct, selectedProduct]);
 
   const linkBackHandler = () => {

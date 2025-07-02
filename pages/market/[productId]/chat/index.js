@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import SocketClient from "@/components/market/socket-client";
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import useSelectedProductStore from "@/zustand/selectedProduct";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -10,48 +11,28 @@ export default function ChatPage() {
   const { currentUser } = useCurrentUserStore();
   const buyerId = currentUser?.id;
   console.log("CSR productId: ", productId);
+  const { selectedProduct } = useSelectedProductStore();
 
-  // const [messages, setMessages] = useState([
-  //   { id: 1, sender: "me", text: "안녕하세요! 이거 아직 판매 중인가요?" },
-  //   { id: 2, sender: "other", text: "네! 아직 판매 중입니다." },
-  // ]);
-
-  // const [inputText, setInputText] = useState("");
-  // const messagesEndRef = useRef(null);
-
-  // // ✅ WebSocket 연결 (예제)
-  // useEffect(() => {
-  //   const socket = new WebSocket("wss://your-websocket-url");
-
-  //   socket.onmessage = (event) => {
-  //     const newMessage = JSON.parse(event.data);
-  //     setMessages((prevMessages) => [...prevMessages, newMessage]);
-  //   };
-
-  //   return () => {
-  //     socket.close();
-  //   };
-  // }, []);
-
-  // // ✅ 스크롤 자동 이동 (최신 메시지 보이기)
-  // useEffect(() => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [messages]);
-
-  // // ✅ 메시지 전송
-  // const sendMessage = () => {
-  //   if (!inputText.trim()) return;
-
-  //   const newMessage = { id: Date.now(), sender: "me", text: inputText };
-  //   setMessages((prev) => [...prev, newMessage]);
-  //   setInputText("");
-
-  //   // WebSocket으로 서버에 메시지 전송
-  //   // socket.send(JSON.stringify(newMessage));
-  // };
-
-  // const router = useRouter();
-  // const postId = router.query.postId;
+  const handleStripePayment = async () => {
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId,
+          buyerId,
+          price: selectedProduct?.price,
+          productName: selectedProduct?.title,
+        }),
+      });
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error("결제 에러:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -68,8 +49,10 @@ export default function ChatPage() {
               height={30}
             />
           </button>
-          <div className="flex flex-col justify-center items-center ">
-            <span className="font-bold text-2xl">테이스트피트니스팀장</span>
+          <div className="flex flex-col justify-center items-center">
+            <span className="font-bold text-2xl">
+              {selectedProduct?.writer}
+            </span>
             <span className="text-sm font-medium">
               Typically replies in 10 mins
             </span>
@@ -80,7 +63,7 @@ export default function ChatPage() {
           <div className="flex gap-4 cursor-pointer">
             <div className="relative w-[48px] aspect-square">
               <Image
-                src="/images/example.jpg"
+                src={selectedProduct?.writerImage}
                 alt="icon"
                 fill
                 className="rounded-xl"
@@ -89,12 +72,12 @@ export default function ChatPage() {
 
             <div className="flex flex-col gap-2">
               <span>Active</span>
-              <span>132만원</span>
+              <span>{selectedProduct?.price}원</span>
             </div>
           </div>
 
           <div className="flex gap-4">
-            <button className="flex gap-2 items-center h-fit p-2 border rounded-lg">
+            {/* <button className="flex gap-2 items-center h-fit p-2 border rounded-lg">
               <Image
                 src="/icons/calendar.svg"
                 alt="set-meetup"
@@ -102,15 +85,27 @@ export default function ChatPage() {
                 width={24}
               />
               <span>Set meetup</span>
-            </button>
-            <button className="flex gap-2 items-center h-fit p-2 border rounded-lg">
+            </button> */}
+            <button
+              className="flex gap-2 items-center h-fit p-2 border rounded-xl cursor-pointer"
+              onClick={handleStripePayment}
+            >
               <Image
                 src="/icons/currency-dollar.svg"
                 alt="purchase"
                 height={24}
                 width={24}
               />
-              <span>Pay in advance</span>
+              <span>카드결제</span>
+            </button>
+            <button className="flex gap-2 items-center h-fit p-2 border rounded-xl cursor-pointer">
+              <Image
+                src="/icons/currency-dollar.svg"
+                alt="purchase"
+                height={24}
+                width={24}
+              />
+              <span>현금결제</span>
             </button>
           </div>
         </div>
