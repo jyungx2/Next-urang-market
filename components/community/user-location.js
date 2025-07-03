@@ -37,7 +37,7 @@ export default function UserLocation({ mainCategory }) {
           alt="icon"
           width={10}
           height={10}
-          style={{ width: "10px", height: "auto" }} // ⬅️ 지금은 너비와 높이 모두 10px씩 고정으로 해줘서 비율이 1:1이지만, 혹시 이후 CSS에서 width 또는 height를 변경할 경우, 1:1의 종횡비가 깨질 위험이 생길 수 있으므로, 똑똑하고 철저한 Next.js이 미리 경고("나중에 스타일 덮어쓸 거면, Height: auto도 같이 해주는 게 안전해)"를 준 것!
+          // style={{ width: "10px", height: "auto" }} // ⬅️ 지금은 너비와 높이 모두 10px씩 고정으로 해줘서 비율이 1:1이지만, 혹시 이후 CSS에서 width 또는 height를 변경할 경우, 1:1의 종횡비가 깨질 위험이 생길 수 있으므로, 똑똑하고 철저한 Next.js이 미리 경고("나중에 스타일 덮어쓸 거면, Height: auto도 같이 해주는 게 안전해)"를 준 것!
           // auto는 **"다른 축의 비율을 자동 계산해서, 원본 비율을 유지하겠다"는 뜻.
         />
       </button>

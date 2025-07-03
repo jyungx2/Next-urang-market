@@ -15,7 +15,7 @@ export default function CommunityLayout({ children, userLocationSlot }) {
         <SubCategory />
       </div>
 
-      <div className="flex flex-col grow justify-center items-center gap-12 translate-y-[-50px]">
+      <div className="flex flex-col grow justify-center items-center gap-12">
         {children}
       </div>
 
