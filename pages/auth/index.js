@@ -13,7 +13,7 @@ export default function AuthPage() {
         <div className="flex flex-col items-center">
           <Image src="/favicon.ico" alt="Logo" width={120} height={120} />
           <h1 className="text-[3rem] font-bold my-4">Welcome to Urang</h1>
-          <p className="text-[2rem] text-gray-400 mt-1">
+          <p className="text-[2.8rem] text-gray-400 mt-1">
             Your friendly neighborhood marketplace
           </p>
         </div>

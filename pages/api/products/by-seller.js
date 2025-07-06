@@ -1,4 +1,4 @@
-import { connectDatabase } from "@/helpers/db-util";
+import { connectDatabase, getAllDocuments } from "@/helpers/db-util";
 import { ObjectId } from "mongodb";
 
 export default async function handler(req, res) {
@@ -21,14 +21,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    const db = client.db();
-    const products = await db
-      .collection("products")
-      .find({
-        sellerId: new ObjectId(sellerId),
-      })
-      .sort({ createdAt: -1 }) // 최신순 정렬
-      .toArray();
+    const products = await getAllDocuments(
+      client,
+      "products",
+      { createdAt: -1 },
+      { sellerId: new ObjectId(sellerId) }
+    );
 
     res.status(200).json({ products });
   } catch (error) {
