@@ -9,18 +9,18 @@ export default function RelatedListings({ items }) {
     <div className="grid grid-cols-2 gap-x-6 gap-y-10">
       {items.map((item) => (
         <div key={item._id} className="flex flex-col gap-2">
-          <div className="relative w-full aspect-[5/3] rounded-md overflow-hidden">
+          <div className="relative w-full aspect-[5/3] rounded-md overflow-hidden bg-[var(--color-grey-100)]">
             <Image
               src={item.productImage || "/images/fallback.jpg"}
               alt={item.title}
               fill
-              className="object-cover"
+              className="object-contain"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="text-xl font-semibold truncate">{item.title}</p>
-            <p className="text-lg text-gray-700">
+            <p className="text-[1.8rem] font-semibold truncate">{item.title}</p>
+            <p className="text-[2rem] text-gray-700">
               {item.price ? `${item.price.toLocaleString()}원` : "Free"}
             </p>
           </div>

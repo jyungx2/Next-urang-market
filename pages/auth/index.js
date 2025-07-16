@@ -12,9 +12,9 @@ export default function AuthPage() {
       <div className="flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center">
           <Image src="/favicon.ico" alt="Logo" width={120} height={120} />
-          <h1 className="text-[3rem] font-bold my-4">Welcome to Urang</h1>
-          <p className="text-[2.8rem] text-gray-400 mt-1">
-            Your friendly neighborhood marketplace
+          <h1 className="text-[3rem] font-bold my-4">유랑마켓</h1>
+          <p className="text-[2rem] text-gray-400 mt-1">
+            전 세계 어디서든 한인 이웃과 연결되는 따뜻한 마켓
           </p>
         </div>
       </div>
@@ -25,15 +25,15 @@ export default function AuthPage() {
           className="w-full bg-[var(--color-primary-400)] text-white text-[2rem] py-6 rounded-lg font-semibold mb-6 cursor-pointer"
           onClick={() => router.push("/auth/signup")}
         >
-          Get started
+          시작하기
         </button>
         <p className="text-[1.6rem] text-gray-400">
-          Have an account already?
+          이미 계정이 있으신가요?
           <Link
             href="/auth/login"
             className="text-[var(--color-primary-400)] font-medium ml-4 cursor-pointer"
           >
-            Log in
+            로그인
           </Link>
         </p>
       </div>

@@ -66,53 +66,55 @@ export default function PostDetailPage({ selectedProduct, relatedListings }) {
   return (
     <div className="min-h-screen bg-[var(--color-grey-50)]">
       {/* 헤더 (배경 이미지 포함) */}
-      <header className="relative flex justify-between top-0 w-full z-50 p-4 aspect-[5/4]">
-        {/* 배경 이미지 */}
-        <Image
-          src={selectedProduct?.productImage}
-          alt="image"
-          fill
-          className="absolute top-0 left-0 -z-10 object-contain"
-        />
-
+      <header className="flex-col w-full">
         {/* 상단 네비게이션 버튼들 */}
-        <div className="flex justify-between items-start w-full">
-          <div className="flex gap-6">
+        <div className="flex justify-between items-center w-full bg-[var(--color-grey-50)] p-4">
+          <div className="flex gap-6 items-center">
             <button className="cursor-pointer" onClick={linkBackHandler}>
               <Image
-                src="/icons/chevron-left-w.svg"
+                src="/icons/chevron-left.svg"
                 alt="icon"
-                width={28}
-                height={28}
+                width={32}
+                height={32}
               />
             </button>
             <button className="cursor-pointer" onClick={linkHomeHandler}>
               <Image
-                src="/icons/home-w.svg"
+                src="/icons/home-b.svg"
                 alt="icon"
-                width={28}
-                height={28}
+                width={30}
+                height={30}
               />
             </button>
           </div>
-          <div className="flex gap-6">
+          <div className="flex gap-6 items-center">
             <button className="cursor-pointer">
               <Image
-                src="/icons/share-w.svg"
+                src="/icons/share-b.svg"
                 alt="icon"
-                width={28}
-                height={28}
+                width={26}
+                height={26}
               />
             </button>
             <button className="cursor-pointer">
               <Image
-                src="/icons/ellipsis-vertical-w.svg"
+                src="/icons/ellipsis-vertical.svg"
                 alt="icon"
-                width={28}
-                height={28}
+                width={32}
+                height={32}
               />
             </button>
           </div>
+        </div>
+
+        {/* 배경 이미지 */}
+        <div className="relative w-full h-[40rem] aspect-square">
+          <Image
+            src={selectedProduct?.productImage}
+            alt="image"
+            fill
+            className="object-cover"
+          />
         </div>
       </header>
 
