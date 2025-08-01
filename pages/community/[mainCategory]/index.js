@@ -102,9 +102,11 @@ export default function CommunityPage() {
       <CommunityLayout
         userLocationSlot={<UserLocation mainCategory={mainSlug} />}
       >
-        <PropagateLoader color={"#009afa"} />
+        <div className="flex flex-col gap-16 justify-center items-center grow">
+          <PropagateLoader color={"#009afa"} />
 
-        <p className="font-medium">{`"${currentUser?.selectedLocation?.keyword[2]}" 주민들의 게시물 리스트를 가져오고 있어요..`}</p>
+          <p className="font-medium">{`"${currentUser?.selectedLocation?.keyword[2]}" 주민들의 게시물 리스트를 가져오고 있어요..`}</p>
+        </div>
       </CommunityLayout>
     );
   }

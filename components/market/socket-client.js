@@ -31,7 +31,7 @@ export default function SocketClient({ roomId, buyerId }) {
   const { data: messages = [] } = useQuery({
     queryKey: ["messages", roomId],
     queryFn: async () => {
-      const res = await fetch(`/api/messages?roomId=${roomId}`);
+      const res = await fetch(`/api/chat/messages?roomId=${roomId}`);
       const data = await res.json();
       console.log("기존 메시지 배열 가져오기 성공!: ", data.messages);
       return data.messages;

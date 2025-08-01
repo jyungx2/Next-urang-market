@@ -8,10 +8,12 @@ import useSelectedProductStore from "@/zustand/selectedProduct";
 export default function ChatPage() {
   const router = useRouter();
   const { productId } = router.query;
-  const { currentUser } = useCurrentUserStore();
-  const buyerId = currentUser?.id;
-  console.log("CSR productId: ", productId);
   const { selectedProduct } = useSelectedProductStore();
+  const { currentUser } = useCurrentUserStore();
+
+  const buyerId = currentUser?.id;
+  const sellerId = selectedProduct?.sellerId;
+  console.log("CSR productId: ", selectedProduct);
 
   const handleStripePayment = async () => {
     try {
@@ -112,7 +114,10 @@ export default function ChatPage() {
       </header>
 
       {router.isReady && productId && buyerId && (
-        <SocketClient roomId={productId + "_" + buyerId} buyerId={buyerId} />
+        <SocketClient
+          roomId={productId + "_" + sellerId + "_" + buyerId}
+          buyerId={buyerId}
+        />
       )}
     </div>
   );
