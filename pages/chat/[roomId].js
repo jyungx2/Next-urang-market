@@ -1,40 +1,24 @@
-import Layout from "@/components/layout/layout";
-import Image from "next/image";
-import { useRouter } from "next/router";
 import SocketClient from "@/components/market/socket-client";
 import useCurrentUserStore from "@/zustand/currentUserStore";
-import useSelectedProductStore from "@/zustand/selectedProduct";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
-export default function ChatPage() {
+export default function ChatDetail() {
   const router = useRouter();
-  const { productId } = router.query;
-  const { selectedProduct } = useSelectedProductStore();
+  const { roomId } = router.query;
   const { currentUser } = useCurrentUserStore();
 
-  const buyerId = currentUser?.id;
-  const sellerId = selectedProduct?.sellerId;
-  console.log("CSR productId: ", selectedProduct);
-
-  const handleStripePayment = async () => {
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId,
-          buyerId,
-          price: selectedProduct?.price,
-          productName: selectedProduct?.title,
-        }),
-      });
+  const { data: chatRoom } = useQuery({
+    queryKey: ["chatDetail", roomId],
+    queryFn: async () => {
+      const res = await fetch(`/api/chat/${roomId}`);
       const data = await res.json();
-      if (data?.url) {
-        window.location.href = data.url;
-      }
-    } catch (err) {
-      console.error("결제 에러:", err);
-    }
-  };
+      console.log("채팅방 상세 정보: ", data.chatDetail);
+      return data.chatDetail;
+    },
+    enabled: !!roomId, // roomId가 있을 때만 요청
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -53,7 +37,7 @@ export default function ChatPage() {
           </button>
           <div className="flex flex-col justify-center items-center py-3">
             <span className="font-bold text-2xl">
-              {selectedProduct?.writer}
+              {/* {selectedProduct?.writer} */}
             </span>
           </div>
         </div>
@@ -62,7 +46,7 @@ export default function ChatPage() {
           <div className="flex gap-4 cursor-pointer">
             <div className="relative w-[48px] aspect-square">
               <Image
-                src={selectedProduct?.productImage}
+                src={selectedProduct?.writerImage}
                 alt="icon"
                 fill
                 className="rounded-xl"
@@ -110,8 +94,3 @@ export default function ChatPage() {
     </div>
   );
 }
-
-// ✅ Layout 적용되도록 getLayout 설정
-ChatPage.getLayout = function haveLayout(page) {
-  return <Layout>{page}</Layout>;
-};

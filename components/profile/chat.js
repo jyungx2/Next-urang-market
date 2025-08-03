@@ -52,6 +52,7 @@ export default function Chat({ chats }) {
         {chats.map((room) => (
           <ChatItem
             key={room.roomId}
+            roomId={room.roomId}
             opponent={
               room.buyerId === currentUser.id
                 ? room.sellerNickname

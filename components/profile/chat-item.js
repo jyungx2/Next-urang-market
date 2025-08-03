@@ -1,14 +1,21 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function ChatItem({
+  roomId,
   opponent,
   opponentImage,
   location,
   since,
   lastMessage,
 }) {
+  const router = useRouter();
   return (
-    <div role="listitem" className="flex items-center gap-6 cursor-pointer">
+    <div
+      role="listitem"
+      className="flex items-center gap-6 cursor-pointer"
+      onClick={() => router.push(`/chat/${roomId}`)}
+    >
       <Image
         src={opponentImage}
         alt="profile-image"
