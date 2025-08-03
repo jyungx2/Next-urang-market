@@ -17,7 +17,9 @@ export default async function handler(req, res) {
     // ** POST, PATCH, PUT 요청 시에 필요한 데이터는 req.body로 받는다.**
 
     try {
-      const document = await getDocumentById(client, "chatRooms", roomId);
+      const db = client.db(process.env.MONGODB_NAME);
+      const document = await db.collection("chatRooms").findOne({ roomId }); // 문자열 그대로 사용
+      console.log(`채팅방 상세 정보: `, document);
 
       if (!document) {
         res.status(404).json({ message: "chatRoom not found." });

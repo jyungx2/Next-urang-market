@@ -1,10 +1,11 @@
+import Layout from "@/components/layout/layout";
 import SocketClient from "@/components/market/socket-client";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-export default function ChatDetail() {
+export default function ChatDetailPage() {
   const router = useRouter();
   const { roomId } = router.query;
   const { currentUser } = useCurrentUserStore();
@@ -20,13 +21,34 @@ export default function ChatDetail() {
     enabled: !!roomId, // roomId가 있을 때만 요청
   });
 
+  const handleStripePayment = async () => {
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId,
+          buyerId,
+          price: chatRoom?.price,
+          productName: chatRoom?.productTitle,
+        }),
+      });
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error("결제 에러:", err);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="flex flex-col">
         <div className="flex justify-center items-center relative p-4">
           <button
             className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 p-4"
-            onClick={() => router.push(`/market/${productId}`)}
+            onClick={() => router.back()}
           >
             <Image
               src="/icons/chevron-left.svg"
@@ -37,7 +59,9 @@ export default function ChatDetail() {
           </button>
           <div className="flex flex-col justify-center items-center py-3">
             <span className="font-bold text-2xl">
-              {/* {selectedProduct?.writer} */}
+              {currentUser?.id === chatRoom?.buyerId
+                ? chatRoom?.sellerNickname
+                : chatRoom?.buyerNickname}
             </span>
           </div>
         </div>
@@ -46,7 +70,7 @@ export default function ChatDetail() {
           <div className="flex gap-4 cursor-pointer">
             <div className="relative w-[48px] aspect-square">
               <Image
-                src={selectedProduct?.writerImage}
+                src={chatRoom?.productThumbnail}
                 alt="icon"
                 fill
                 className="rounded-xl"
@@ -55,7 +79,7 @@ export default function ChatDetail() {
 
             <div className="flex flex-col gap-2">
               <span>Active</span>
-              <span>{selectedProduct?.price}원</span>
+              <span>{chatRoom?.price}원</span>
             </div>
           </div>
 
@@ -85,12 +109,14 @@ export default function ChatDetail() {
         </div>
       </header>
 
-      {router.isReady && productId && buyerId && (
-        <SocketClient
-          roomId={productId + "_" + sellerId + "_" + buyerId}
-          buyerId={buyerId}
-        />
+      {router.isReady && chatRoom?.productId && chatRoom?.buyerId && (
+        <SocketClient roomId={roomId} buyerId={chatRoom?.buyerId} />
       )}
     </div>
   );
 }
+
+// ✅ Layout 적용되도록 getLayout 설정
+ChatDetailPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>; // Layout 안 씌움
+};
