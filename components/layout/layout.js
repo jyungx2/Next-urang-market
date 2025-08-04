@@ -32,6 +32,7 @@ export default function Layout(props) {
     "/community/post/new",
     "/market/product/new",
     "/market/product/new/choose-location",
+    "/chat/[roomId]",
   ];
 
   // ✅ 현재 경로가 `ProductItemNav`를 표시해야 하는지 확인

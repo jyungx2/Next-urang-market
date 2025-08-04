@@ -13,7 +13,7 @@ export default function ChatItem({
   return (
     <div
       role="listitem"
-      className="flex items-center gap-6 cursor-pointer"
+      className="flex items-center gap-6 cursor-pointer bg-[var(--color-primary-50)] p-5 rounded-2xl"
       onClick={() => router.push(`/chat/${roomId}`)}
     >
       <Image

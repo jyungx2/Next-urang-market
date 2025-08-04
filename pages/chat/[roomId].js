@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 
 export default function ChatDetailPage() {
   const router = useRouter();
+  console.log("CSR: router: ", router);
   const { roomId } = router.query;
   const { currentUser } = useCurrentUserStore();
 
@@ -69,12 +70,14 @@ export default function ChatDetailPage() {
         <div className="flex flex-col gap-4 border-b border-gray-300 p-4 bg-gray-200">
           <div className="flex gap-4 cursor-pointer">
             <div className="relative w-[48px] aspect-square">
-              <Image
-                src={chatRoom?.productThumbnail}
-                alt="icon"
-                fill
-                className="rounded-xl"
-              />
+              {chatRoom?.productThumbnail && (
+                <Image
+                  src={chatRoom?.productThumbnail}
+                  alt="icon"
+                  fill
+                  className="rounded-xl"
+                />
+              )}
             </div>
 
             <div className="flex flex-col gap-2">

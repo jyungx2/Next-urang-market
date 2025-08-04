@@ -5,6 +5,7 @@ import UIContext from "@/store/ui-context";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
+import { PuffLoader } from "react-spinners";
 
 export default function ChatPage() {
   const { isNotificationOpen } = useContext(UIContext);
@@ -24,7 +25,11 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col min-h-screen p-6 bg-[var(--color-bg)]">
-      {isNotificationOpen ? <Notification /> : <Chat chats={chatRooms} />}
+      {isNotificationOpen ? (
+        <Notification />
+      ) : (
+        <Chat chats={chatRooms} isLoading={isLoading} />
+      )}
     </div>
   );
 }
