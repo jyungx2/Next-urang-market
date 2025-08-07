@@ -29,6 +29,7 @@ export default function LocationPage() {
         `/api/auth/kakao-addToGeo?address=${encodeURIComponent(fullAddress)}`
       );
       const data = await res.json();
+      console.log("주소 -> 좌표 변환 결과: ", data);
 
       if (!res.ok || !data.documents?.length) {
         throw new Error("주소를 좌표로 변환할 수 없습니다.");

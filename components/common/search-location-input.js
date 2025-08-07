@@ -26,10 +26,17 @@ export default function SearchLocationInput({
   const fetchSearchResults = async () => {
     const value = addressRef.current.value.trim();
     if (value.length < 2) return;
-    setIsLoading(true);
-    const results = await fetchParsedLocationList(value);
-    setSearchResults(results);
-    setIsLoading(false);
+
+    try {
+      setIsLoading(true);
+      const results = await fetchParsedLocationList(value);
+      setSearchResults(results);
+    } catch (err) {
+      console.error("검색 결과 가져오기 실패:", err);
+      setSearchResults([]); // 에러 발생 시 검색 결과 초기화
+    } finally {
+      setIsLoading(false); // 성공/실패와 관계없이 로딩 종료
+    }
   };
 
   return (

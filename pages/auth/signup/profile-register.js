@@ -120,6 +120,10 @@ export default function ProfileRegisterPage() {
       });
 
       // ✅ getUser로 userStore에 저장된 유저정보들을 하나의 객체로 한꺼번에 가져오기
+      // * .getState(): store의 현재 상태를 가져오는 함수
+      // ❌ 단, useUserStore.getState().getUser() ≠ useUserStore().getUser()
+      // useUserStore.getState()는 store의 상태를 즉시 가져오기만 하는, 실제 상태를 직접 꺼내오는 정적 메서드이고, useUserStore()는 React 컴포넌트에서 store의 상태를 구독하여 리렌더링을 유발하는 훅이기 때문..
+      // -> 리액트 생명주기와 무관하게 단순히 값을 "한 번" 가져오고 싶을 때는 getState으로 상태값을 가져오는 것이 가장 적절
       const finalUser = useUserStore.getState().getUser();
       console.log("💿서버로 보낼 user: ", finalUser);
 

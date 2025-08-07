@@ -81,14 +81,23 @@ export default function SignupForm() {
 
   const verifyCodeMutation = useMutation({
     mutationFn: async ({ phoneNumber, code }) => {
-      return fetch("/api/auth/verify-code", {
+      // return fetch("/api/auth/verify-code", {
+      //   method: "POST",
+      //   body: JSON.stringify({ phoneNumber, code }),
+      //   headers: { "Content-Type": "application/json" },
+      // }).then((res) => {
+      //   if (!res.ok) throw new Error("인증 실패ㅇ");
+      //   return res.json();
+      // });
+      const res = await fetch("/api/auth/verify-code", {
         method: "POST",
         body: JSON.stringify({ phoneNumber, code }),
         headers: { "Content-Type": "application/json" },
-      }).then((res) => {
-        if (!res.ok) throw new Error("인증 실패");
-        return res.json();
       });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "인증번호 검증 실패");
+      console.log("인증 성공: ", data.message);
     },
     onSuccess: () => {
       alert("인증 성공! 🎉");
