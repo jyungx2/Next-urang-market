@@ -1,10 +1,12 @@
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import useSelectedProductStore from "@/zustand/selectedProduct";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 
 export default function Settings() {
   const logout = () => {
     useCurrentUserStore.getState().resetCurrentUser();
+    useSelectedProductStore.getState().resetProduct(); // 선택된 상품 초기화
     // 서버에 /api/auth/signout 요청을 보냄 & 브라우저의 세션 쿠키(JWT 포함)를 제거 & 기본적으로 홈페이지("/")로 리디렉트됨
     signOut({ callbackUrl: "/" });
   };

@@ -66,7 +66,10 @@ export default NextAuth({
             username: credentials.username,
             birthdate: credentials.birthdate,
           });
-          if (!user) throw new Error("No user found");
+          if (!user)
+            throw new Error(
+              "입력하신 정보로 가입된 사용자를 찾을 수 없습니다."
+            );
 
           // await redis.del(credentials.phoneNumber); // 인증번호 제거
 

@@ -60,7 +60,7 @@ export default function SignupForm() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "인증번호 전송 실패");
+      if (!res.ok) throw new Error(data.message || "인증번호 전송 실패");
 
       if (data.mockCode) {
         console.log("🔐 개발용 인증번호:", data.mockCode); // 테스트 편의용

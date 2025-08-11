@@ -28,9 +28,9 @@ export default async function handler(req, res) {
 
   // 💚 테스트용 번호 (CoolSMS 개발자 문서 기준)
   if (phoneNumber !== "01000000000") {
-    return res
-      .status(400)
-      .json({ message: "테스트는 01000000000만 가능합니다." });
+    return res.status(400).json({
+      message: "휴대폰 인증 테스트는 전화번호 '010-0000-0000'로만 가능합니다.",
+    });
   }
 
   // 🔥
@@ -71,10 +71,10 @@ export default async function handler(req, res) {
       });
 
       // ❌ 2. 인증번호 임시 저장 (3분 후 만료) ❌
-      codeStore.set(phoneNumber, {
-        code: verificationCode,
-        expiresAt: Date.now() + 3 * 60 * 1000,
-      });
+      // codeStore.set(phoneNumber, {
+      //   code: verificationCode,
+      //   expiresAt: Date.now() + 3 * 60 * 1000,
+      // });
 
       // 2. Redis에 인증번호 저장 (⏰ 만료 시간 180초)
       //  Redis는 "만료된 키"를 자동으로 삭제하니까 Redis는 TTL 내장 기능 덕분에 아주 깔끔하게 처리 가능.

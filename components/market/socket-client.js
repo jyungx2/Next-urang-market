@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 //   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001"
 // ); // Socket 서버에 연결
 
-export default function SocketClient({ roomId, buyerId }) {
+export default function SocketClient({ roomId, senderId }) {
   const socketRef = useRef(null); // ✅ socket 인스턴스를 ref로 저장
   // useState 지우고, useQuery로 상태 통합관리!
   // const [messages, setMessages] = useState([]);
@@ -85,14 +85,14 @@ export default function SocketClient({ roomId, buyerId }) {
       // 2️⃣ 이때 이 disconnect 코드가 호출돼버려서, 서버는 클라이언트 연결을 바로 끊음
       // 3️⃣ 그 다음 새로 마운트된 컴포넌트는 새 socket 객체를 만들어 연결하지만, 이전에 emit했던 sendMessage는 날아가 있음
     };
-  }, [router.isReady, buyerId, queryClient, roomId]);
+  }, [router.isReady, senderId, queryClient, roomId]);
 
   const sendMessage = () => {
     const localId = uuidv4();
 
     const newMsg = {
       localId,
-      senderId: buyerId, // 실제 로그인 유저 정보로 대체 가능
+      senderId, // 실제 로그인 유저 정보로 대체 가능
       text: input,
       createdAt: new Date().toISOString(),
       roomId,
@@ -122,10 +122,10 @@ export default function SocketClient({ roomId, buyerId }) {
           <div
             key={msg._id || msg.localId} // _id는 서버 응답 기준, localId는 낙관적 UI 기준
             className={`flex items-start gap-4 ${
-              msg.senderId === buyerId ? "justify-end" : ""
+              msg.senderId === senderId ? "justify-end" : ""
             }`}
           >
-            {msg.senderId !== buyerId && (
+            {msg.senderId !== senderId && (
               <Image
                 src={selectedProduct.writerImage}
                 alt="상대 프로필"
@@ -136,7 +136,7 @@ export default function SocketClient({ roomId, buyerId }) {
             )}
             <div
               className={`p-3 rounded-lg shadow max-w-xl ${
-                msg.senderId === buyerId
+                msg.senderId === senderId
                   ? "bg-[var(--color-primary-400)] text-white"
                   : "bg-white"
               }`}

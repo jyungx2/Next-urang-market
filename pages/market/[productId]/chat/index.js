@@ -11,7 +11,7 @@ export default function ChatPage() {
   const { selectedProduct } = useSelectedProductStore();
   const { currentUser } = useCurrentUserStore();
 
-  const buyerId = currentUser?.id;
+  const buyerId = currentUser?.id; // 이 페이지에서 채팅을 시작하는 사람은 무조건 구매자이므로, currentUser의 id를 buyerId로 사용
   const sellerId = selectedProduct?.sellerId;
   console.log("CSR productId: ", selectedProduct);
 
@@ -104,7 +104,7 @@ export default function ChatPage() {
       {router.isReady && productId && buyerId && (
         <SocketClient
           roomId={productId + "_" + sellerId + "_" + buyerId}
-          buyerId={buyerId}
+          senderId={buyerId}
         />
       )}
     </div>

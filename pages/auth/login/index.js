@@ -20,13 +20,10 @@ export default function LoginPage() {
         birthdate: registeredUser.birthdate,
       });
 
-      if (!res.ok) {
-        console.error("로그인 실패", resLogin);
-        alert("로그인에 실패했습니다.");
-        return;
-      }
+      // res.error: 로그인 실패 시 서버에서 보내는 에러 메시지
+      if (!res.ok) throw new Error(res.error || "로그인에 실패했습니다.");
 
-      console.log("로그인 성공 😊", res);
+      console.log("성공적으로 로그인 되었습니다. 😊", res);
 
       let session = await getSession();
       if (!session) {
@@ -42,7 +39,7 @@ export default function LoginPage() {
     },
     onSuccess: async () => {},
     onError: (err) => {
-      console.error(err);
+      alert(err.message);
     },
   });
 

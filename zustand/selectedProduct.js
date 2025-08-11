@@ -4,7 +4,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 const SelectedProductStore = (set) => ({
   product: null,
-  setProduct: (product) => set({ selectedProduct: product }),
+  setProduct: (product) => set({ product }),
+  resetProduct: () => set({ product: null }),
 });
 
 const useSelectedProductStore = create(
