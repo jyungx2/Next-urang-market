@@ -1,3 +1,4 @@
+import useCurrentUserStore from "@/zustand/currentUserStore";
 import useSelectedProductStore from "@/zustand/selectedProduct";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -6,9 +7,13 @@ export default function ProductItemNav() {
   const router = useRouter();
   const productId = router.query.productId;
   const { selectedProduct } = useSelectedProductStore();
+  const { currentUser } = useCurrentUserStore();
 
   const linkToChatPageHandler = (productId) => {
-    console.log(productId);
+    if (selectedProduct?.sellerId === currentUser?.id) {
+      alert("내가 올린 게시글의 채팅은 시작할 수 없습니다.");
+      return;
+    }
     router.push(`/market/${productId}/chat`);
   };
 
