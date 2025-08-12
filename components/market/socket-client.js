@@ -29,7 +29,11 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // 줄바꿈 방지
+      // ✅ 한글(IME: 한글/일본어/중국어 입력처럼 글자를 합성하는 상태) 조합 중이면 무시
+      if (e.nativeEvent.isComposing || e.isComposing || e.keyCode === 229)
+        return; // 이 3가지 조합이 크로스브라우저에서 제일 안전.
+
+      e.preventDefault(); // Enter 누르면: <input>에서는 form submit이 기본 동작 & <textarea>에서는 줄바꿈(\n)이 입력 => 이걸 막기 위해 쓰이는 코드
       sendBtnRef.current?.click(); // ✅ 버튼 클릭 이벤트 실행
     }
   };
@@ -199,7 +203,12 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
           placeholder="메시지를 입력하세요..."
           className="bg-gray-300 flex-1 p-4 rounded-4xl outline-none"
         />
-        <button ref={sendBtnRef} onClick={sendMessage} className="p-2">
+        <button
+          ref={sendBtnRef}
+          onClick={sendMessage}
+          className="p-2"
+          type="button"
+        >
           <Image
             src="/icons/send.svg"
             alt="send-icon"
