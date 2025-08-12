@@ -82,7 +82,9 @@ export default function ChatDetailPage() {
 
             <div className="flex flex-col gap-2">
               <span>Active</span>
-              <span>{chatRoom?.price}원</span>
+              <span>
+                {chatRoom?.price === "free" ? "무료나눔" : chatRoom?.price}
+              </span>
             </div>
           </div>
 

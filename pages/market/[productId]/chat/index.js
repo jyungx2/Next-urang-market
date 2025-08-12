@@ -71,7 +71,11 @@ export default function ChatPage() {
 
             <div className="flex flex-col gap-2">
               <span>Active</span>
-              <span>{selectedProduct?.price}원</span>
+              <span>
+                {selectedProduct?.price
+                  ? `${selectedProduct?.price}원`
+                  : "무료나눔"}
+              </span>
             </div>
           </div>
 
