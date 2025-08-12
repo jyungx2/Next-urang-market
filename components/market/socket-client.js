@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 //   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001"
 // ); // Socket 서버에 연결
 
-export default function SocketClient({ roomId, senderId }) {
+export default function SocketClient({ roomId, senderId, chatRoom }) {
   const socketRef = useRef(null); // ✅ socket 인스턴스를 ref로 저장
   // useState 지우고, useQuery로 상태 통합관리!
   // const [messages, setMessages] = useState([]);
@@ -122,12 +122,19 @@ export default function SocketClient({ roomId, senderId }) {
           <div
             key={msg._id || msg.localId} // _id는 서버 응답 기준, localId는 낙관적 UI 기준
             className={`flex items-start gap-4 ${
+              // ☑️ 메시지 정렬: 보낸 사람이 현재 로그인 유저와 같다면 오른쪽 정렬
               msg.senderId === senderId ? "justify-end" : ""
             }`}
           >
+            {/* 메시지 보낸 사람이 로그인한 유저가 아닐 때, 상대방 프로필 이미지 표시 */}
             {msg.senderId !== senderId && (
               <Image
-                src={selectedProduct.writerImage}
+                // 이때 상대방이 구매자라면 구매자 이미지, 판매자라면 판매자 이미지 표시
+                src={
+                  msg.senderId === chatRoom?.buyerId
+                    ? chatRoom?.buyerImage
+                    : chatRoom?.sellerImage
+                }
                 alt="상대 프로필"
                 width={40}
                 height={40}

@@ -113,7 +113,11 @@ export default function ChatDetailPage() {
       </header>
 
       {router.isReady && chatRoom?.productId && chatRoom?.buyerId && (
-        <SocketClient roomId={roomId} senderId={currentUser?.id} />
+        <SocketClient
+          roomId={roomId}
+          senderId={currentUser?.id}
+          chatRoom={chatRoom}
+        />
       )}
     </div>
   );

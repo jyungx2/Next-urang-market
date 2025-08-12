@@ -1,6 +1,7 @@
 import ChatItem from "@/components/profile/chat-item";
 import UIContext from "@/store/ui-context";
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import useSelectedProductStore from "@/zustand/selectedProduct";
 import Image from "next/image";
 import { useContext } from "react";
 import { PropagateLoader } from "react-spinners";
@@ -8,6 +9,7 @@ import { PropagateLoader } from "react-spinners";
 export default function Chat({ chats, isLoading }) {
   const { toggleNotificationPage } = useContext(UIContext);
   const { currentUser } = useCurrentUserStore();
+  const { setProduct } = useSelectedProductStore();
 
   // ✅ 최근 메시지가 언제 왔는지 "10h", "2w" 형태로 변환
   function formatTimeSince(dateString) {
@@ -71,6 +73,10 @@ export default function Chat({ chats, isLoading }) {
               location={room.location}
               since={formatTimeSince(room.lastMessageAt)}
               lastMessage={room.lastMessage}
+              onClick={() => {
+                setProduct(room);
+                console.log("채팅방 클릭:", room);
+              }}
             />
           ))}
         </div>
