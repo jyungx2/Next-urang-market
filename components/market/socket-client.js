@@ -1,4 +1,5 @@
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import useSelectedProductStore from "@/zustand/selectedProduct";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -24,6 +25,7 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
   const isQueryValid = !!roomId && !roomId.includes("undefined");
   const router = useRouter();
   const sendBtnRef = useRef(null); // ✅ 버튼 ref
+  const { selectedProduct } = useSelectedProductStore();
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -159,7 +161,11 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
               {showAvatar ? (
                 <Image
                   // 이때 상대방이 구매자라면 구매자 이미지, 판매자라면 판매자 이미지 표시
-                  src={opponentImage}
+                  src={
+                    selectedProduct
+                      ? selectedProduct?.writerImage
+                      : opponentImage
+                  }
                   alt="상대 프로필"
                   width={40}
                   height={40}
