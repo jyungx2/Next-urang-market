@@ -1,5 +1,4 @@
 import useCurrentUserStore from "@/zustand/currentUserStore";
-import useSelectedProductStore from "@/zustand/selectedProduct";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -22,11 +21,16 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
 
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
-
-  const { selectedProduct } = useSelectedProductStore();
-
   const isQueryValid = !!roomId && !roomId.includes("undefined");
   const router = useRouter();
+  const sendBtnRef = useRef(null); // ✅ 버튼 ref
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // 줄바꿈 방지
+      sendBtnRef.current?.click(); // ✅ 버튼 클릭 이벤트 실행
+    }
+  };
 
   const { data: messages = [] } = useQuery({
     queryKey: ["messages", roomId],
@@ -89,6 +93,11 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
 
   const sendMessage = () => {
     const localId = uuidv4();
+
+    if (!input.trim()) {
+      alert("메시지를 입력해주세요!");
+      return;
+    }
 
     const newMsg = {
       localId,
@@ -180,10 +189,11 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown} // ✅ 엔터키 이벤트 등록
           placeholder="메시지를 입력하세요..."
           className="bg-gray-300 flex-1 p-4 rounded-4xl outline-none"
         />
-        <button onClick={sendMessage} className="p-2">
+        <button ref={sendBtnRef} onClick={sendMessage} className="p-2">
           <Image
             src="/icons/send.svg"
             alt="send-icon"
