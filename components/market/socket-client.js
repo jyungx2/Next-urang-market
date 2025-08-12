@@ -117,41 +117,60 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
 
   return (
     <>
-      <main className="flex-1 overflow-y-auto p-4 space-y-4 bg-[var(--color-bg)]">
-        {messages.map((msg) => (
-          <div
-            key={msg._id || msg.localId} // _id는 서버 응답 기준, localId는 낙관적 UI 기준
-            className={`flex items-start gap-4 ${
-              // ☑️ 메시지 정렬: 보낸 사람이 현재 로그인 유저와 같다면 오른쪽 정렬
-              msg.senderId === senderId ? "justify-end" : ""
-            }`}
-          >
-            {/* 메시지 보낸 사람이 로그인한 유저가 아닐 때, 상대방 프로필 이미지 표시 */}
-            {msg.senderId !== senderId && (
-              <Image
-                // 이때 상대방이 구매자라면 구매자 이미지, 판매자라면 판매자 이미지 표시
-                src={
-                  msg.senderId === chatRoom?.buyerId
-                    ? chatRoom?.buyerImage
-                    : chatRoom?.sellerImage
-                }
-                alt="상대 프로필"
-                width={40}
-                height={40}
-                className="rounded-full aspect-square object-cover"
-              />
-            )}
+      <main className="flex-1 overflow-y-auto p-4 bg-[var(--color-bg)]">
+        {messages.map((msg, i) => {
+          const isMe = msg.senderId === senderId;
+
+          // ✅ 상대방 메시지에서만, 이전 메시지의 sender와 다를 때 아바타 노출
+          const showAvatar =
+            !isMe && (i === 0 || messages[i - 1].senderId !== msg.senderId);
+
+          // 새 화자 블록이면 위쪽 여백을 조금 더
+          const isNewBlock =
+            i === 0 || messages[i - 1].senderId !== msg.senderId;
+
+          // 상대방 프로필 이미지 선택
+          const opponentImage =
+            msg.senderId === chatRoom?.buyerId
+              ? chatRoom?.buyerImage
+              : chatRoom?.sellerImage;
+
+          return (
             <div
-              className={`p-3 rounded-lg shadow max-w-xl ${
-                msg.senderId === senderId
-                  ? "bg-[var(--color-primary-400)] text-white"
-                  : "bg-white"
+              key={msg._id || msg.localId} // _id는 서버 응답 기준, localId는 낙관적 UI 기준
+              className={`flex items-start gap-4 ${
+                // ☑️ 메시지 정렬: 보낸 사람이 현재 로그인 유저와 같다면 오른쪽 정렬
+                isMe ? "justify-end" : ""
+              } ${
+                // ☑️ 새 화자 블록이면 위쪽 여백을 조금 더
+                isNewBlock ? "mt-6" : ""
               }`}
             >
-              <p className="text-xl">{msg.text}</p>
+              {/* 메시지 보낸 사람이 로그인한 유저가 아닐 때, 상대방 프로필 이미지 표시 */}
+              {showAvatar ? (
+                <Image
+                  // 이때 상대방이 구매자라면 구매자 이미지, 판매자라면 판매자 이미지 표시
+                  src={opponentImage}
+                  alt="상대 프로필"
+                  width={40}
+                  height={40}
+                  className="rounded-full aspect-square object-cover"
+                />
+              ) : (
+                <div className="w-[40px] h-[40px]" /> // 빈 공간 유지
+              )}
+              <div
+                className={`p-3 rounded-lg shadow max-w-xl ${
+                  msg.senderId === senderId
+                    ? "bg-[var(--color-primary-400)] text-white"
+                    : "bg-white"
+                }`}
+              >
+                <p className="text-xl">{msg.text}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={messagesEndRef} />
       </main>
 
