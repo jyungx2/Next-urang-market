@@ -39,7 +39,7 @@ export default function ChatPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="flex flex-col sticky top-0 left-0 right-0 z-50">
-        <div className="flex justify-center items-center relative p-4 bg-gray-200 border-b border-gray-100">
+        <div className="flex justify-center items-center relative p-4 bg-gray-100 border-b border-gray-200">
           <button
             className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 p-4"
             onClick={() => router.push(`/market/${productId}`)}
@@ -58,7 +58,7 @@ export default function ChatPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 border-b border-gray-200 p-4 bg-gray-100">
+        <div className="flex flex-col gap-4 border-b border-gray-200 p-4 bg-gray-200">
           <div className="flex gap-4 cursor-pointer">
             <div className="relative w-[48px] aspect-square">
               <Image

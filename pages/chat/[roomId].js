@@ -45,8 +45,8 @@ export default function ChatDetailPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="flex flex-col">
-        <div className="flex justify-center items-center relative p-4">
+      <header className="flex flex-col sticky top-0 left-0 right-0 z-50">
+        <div className="flex justify-center items-center relative p-4 bg-gray-100 border-b border-gray-200">
           <button
             className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 p-4"
             onClick={() => router.back()}
@@ -83,7 +83,9 @@ export default function ChatDetailPage() {
             <div className="flex flex-col gap-2">
               <span>Active</span>
               <span>
-                {chatRoom?.price === "free" ? "무료나눔" : chatRoom?.price}
+                {chatRoom?.price === "free"
+                  ? "무료나눔"
+                  : `${chatRoom?.price}원`}
               </span>
             </div>
           </div>
