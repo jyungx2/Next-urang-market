@@ -44,7 +44,7 @@ export default function EvenpostItem({
 
       const res = await fetch(`/api/posts/likes`, {
         method: "POST",
-        body: JSON.stringify({ userId: currentUser?.id, postId }),
+        body: JSON.stringify({ postId }),
         headers: { "Content-Type": "application/json" },
       });
 
@@ -86,7 +86,7 @@ export default function EvenpostItem({
 
       const res = await fetch(`/api/posts/dislikes`, {
         method: "POST",
-        body: JSON.stringify({ userId: currentUser?.id, postId }),
+        body: JSON.stringify({ postId }),
         headers: { "Content-Type": "application/json" },
       });
 

@@ -24,11 +24,11 @@ export async function getAllDocuments(client, collection, sort, filter = {}) {
   return documents;
 }
 
-export async function getDocumentById(client, collection, id) {
+export async function getDocumentById(client, collection, id, projection = {}) {
   const db = client.db(process.env.MONGODB_NAME);
   const document = await db
     .collection(collection)
-    .findOne({ _id: new ObjectId(id) });
+    .findOne({ _id: new ObjectId(id) }, { projection });
   return document;
 }
 

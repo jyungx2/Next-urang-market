@@ -54,7 +54,7 @@ export default async function handler(req, res) {
 
         const updatedUser = await getDocumentById(client, "users", userId);
 
-        res.status(200).json({
+        return res.status(200).json({
           message: "I cancel dislike!",
           disliked: false,
           dislikesCount: postResult.dislikesCount,
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
 
         const updatedUser = await getDocumentById(client, "users", userId);
 
-        res.status(200).json({
+        return res.status(200).json({
           message: "I dislike it :(",
           disliked: true,
           dislikesCount: postResult.dislikesCount,
@@ -91,4 +91,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ message: "Dislike handling failed!" });
     }
   }
+
+  client.close();
 }

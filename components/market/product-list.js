@@ -23,6 +23,7 @@ export default function ProductList({ products }) {
           >
             <ProductItem
               key={product._id}
+              productId={product._id}
               productImage={product.productImage}
               title={product.title}
               price={product.price}
@@ -32,6 +33,8 @@ export default function ProductList({ products }) {
               location={product.location}
               // chatNum={product.chatNum}
               // likeNum={product.likeNum}
+              userHasWished={product.userHasWished}
+              initialWishCount={product.wishCount}
             />
           </li>
         ))}

@@ -2,8 +2,11 @@ import { ObjectId } from "mongodb";
 import {
   connectDatabase,
   getAllDocuments,
+  getDocumentById,
   insertDocument,
 } from "../../../helpers/db-util";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(req, res) {
   let client;
@@ -94,7 +97,15 @@ export default async function handler(req, res) {
   }
 
   // GET HTTP
+  // GET (상품 목록 + userHasWished)
   if (req.method === "GET") {
+    // ✅ 세션에서 userId 획득
+    const session = await getServerSession(req, res, authOptions);
+    if (!session) {
+      return res.status(401).json({ message: "Unauthenticated" });
+    }
+    const userId = session.user.id; // ✅ 세션에서 userId 가져오기
+
     const { rcode, keyword } = req.query;
 
     // if (!rcode) {
@@ -110,13 +121,36 @@ export default async function handler(req, res) {
     };
 
     try {
+      let wishlistSet = new Set();
+
+      // 2) 로그인한 유저의 wishlist 가져오기
+      if (userId) {
+        const user = await getDocumentById(client, "users", userId, {
+          wishlist: 1, // 여기서 1은 wishlist 필드를 포함한다는 뜻
+        });
+
+        if (user?.wishlist?.length > 0) {
+          // 💡 new Set()의 인자는 반복 가능한(iterable) 자료형이어야 함
+          // 배열/문자열/Set/Map 등은 모두 iterable but, 객체/숫자는 iterable이 아님
+          wishlistSet = new Set(user.wishlist.map((id) => String(id)));
+        }
+      }
+
       const documents = await getAllDocuments(
         client,
         "products",
         { _id: -1 },
         filter
       );
-      res.status(200).json({ products: documents });
+
+      // 3) userHasWished 필드 추가
+      const productsWithWish = documents.map((product) => ({
+        ...product,
+        wishCount: product.wishCount || 0, // wishCount가 없을 경우 0으로 초기화
+        userHasWished: wishlistSet.has(String(product._id)),
+      }));
+
+      res.status(200).json({ products: productsWithWish });
     } catch (err) {
       res.status(500).json({ message: "Getting posts failed!" });
     }

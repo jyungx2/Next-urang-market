@@ -76,6 +76,7 @@ export default async function handler(req, res) {
   // GET HTTP
   // GET: 목록 + userHasLiked / userHasDisliked 계산
   if (req.method === "GET") {
+    // ✅ 세션에서 userId 획득
     const session = await getServerSession(req, res, authOptions);
     if (!session) {
       return res.status(401).json({ message: "Unauthenticated" });
@@ -86,6 +87,8 @@ export default async function handler(req, res) {
     const user = await getDocumentById(client, "users", userId);
 
     // 2) 좋아요/싫어요 Set 생성 (문자열 변환해서 ObjectId 비교 문제 방지)
+    // 💡 좋아요/싫어요 GET 요청에서는 user.likes와 user.dislikes 둘 다 필요하니까, projection 없이 가져온 후 두 필드를 동시에 처리하는 게 편함.
+    // 💥 반면, products GET 요청에서는 wishlist만 필요하니까 projection으로 wishlist만 가져옴
     const likeSet = new Set((user.likes ?? []).map(String));
     const dislikeSet = new Set((user.dislikes ?? []).map(String));
 

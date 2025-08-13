@@ -55,7 +55,7 @@ export default async function handler(req, res) {
 
         const updatedUser = await getDocumentById(client, "users", userId);
 
-        res.status(200).json({
+        return res.status(200).json({
           message: "I cancel like!",
           liked: false,
           likesCount: postResult.likesCount,
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
 
         const updatedUser = await getDocumentById(client, "users", userId);
 
-        res.status(200).json({
+        return res.status(200).json({
           message: "I like it :)",
           liked: true,
           likesCount: postResult.likesCount,
@@ -91,4 +91,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ message: "Like handling failed!" });
     }
   }
+
+  client.close();
 }
