@@ -35,6 +35,7 @@ export default function ProductList({ products }) {
               // likeNum={product.likeNum}
               userHasWished={product.userHasWished}
               initialWishCount={product.wishCount}
+              chatRoomsCount={product.chatRoomsCount}
             />
           </li>
         ))}

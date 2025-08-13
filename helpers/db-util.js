@@ -12,7 +12,12 @@ export async function insertDocument(client, collection, document) {
   return result;
 }
 
-export async function getAllDocuments(client, collection, sort, filter = {}) {
+export async function getAllDocuments(
+  client,
+  collection,
+  sort = {},
+  filter = {}
+) {
   const db = client.db(process.env.MONGODB_NAME);
 
   const documents = await db

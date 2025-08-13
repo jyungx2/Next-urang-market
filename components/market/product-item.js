@@ -14,6 +14,7 @@ export default function ProductItem({
   userHasWished,
   chatNum = 0,
   initialWishCount,
+  chatRoomsCount = 0, // 채팅방 개수
 }) {
   const queryClient = useQueryClient();
 
@@ -89,7 +90,7 @@ export default function ProductItem({
           <div className="flex gap-4 ml-auto mt-auto">
             <button className="flex items-center gap-1 cursor-pointer">
               <Image src="/icons/chat.svg" alt="icons" width={28} height={28} />
-              <span>{chatNum}</span>
+              <span>{chatRoomsCount}</span>
             </button>
             <button
               className="flex items-center cursor-pointer"

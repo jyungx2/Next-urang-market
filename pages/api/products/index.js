@@ -7,6 +7,7 @@ import {
 } from "../../../helpers/db-util";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { get } from "react-hook-form";
 
 export default async function handler(req, res) {
   let client;
@@ -143,11 +144,17 @@ export default async function handler(req, res) {
         filter
       );
 
+      // 채팅방 중에서 해당 물건에 대한 채팅방만 필터링
+      const chatRooms = await getAllDocuments(client, "chatRooms");
+
       // 3) userHasWished 필드 추가
       const productsWithWish = documents.map((product) => ({
         ...product,
         wishCount: product.wishCount || 0, // wishCount가 없을 경우 0으로 초기화
         userHasWished: wishlistSet.has(String(product._id)),
+        chatRoomsCount: chatRooms.filter(
+          (room) => String(room.productId) === String(product._id)
+        ).length, // 해당 상품에 대한 채팅방 개수
       }));
 
       res.status(200).json({ products: productsWithWish });
