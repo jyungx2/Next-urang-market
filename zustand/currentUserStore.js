@@ -39,27 +39,27 @@ const CurrentUserStore = (set, get) => ({
     });
   },
 
-  setLikePost: (postArray) => {
-    const user = get().currentUser;
-    if (!user) return;
-    set({
-      currentUser: {
-        ...user,
-        likes: postArray,
-      },
-    });
-  },
+  // setLikePost: (postArray) => {
+  //   const user = get().currentUser;
+  //   if (!user) return;
+  //   set({
+  //     currentUser: {
+  //       ...user,
+  //       likes: postArray,
+  //     },
+  //   });
+  // },
 
-  setDislikePost: (postArray) => {
-    const user = get().currentUser;
-    if (!user) return;
-    set({
-      currentUser: {
-        ...user,
-        dislikes: postArray,
-      },
-    });
-  },
+  // setDislikePost: (postArray) => {
+  //   const user = get().currentUser;
+  //   if (!user) return;
+  //   set({
+  //     currentUser: {
+  //       ...user,
+  //       dislikes: postArray,
+  //     },
+  //   });
+  // },
 });
 
 const useCurrentUserStore = create(

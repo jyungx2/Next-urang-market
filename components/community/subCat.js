@@ -55,7 +55,7 @@ export default function SubCategory() {
   }, [tab]);
 
   return (
-    <div id="category-2" className="flex gap-6 mb-8">
+    <div id="category-2" className="flex gap-6 mb-4 px-4">
       {/* 상단 버튼에 의해 필터링되는 2차 카테고리
           워홀: 필독공지/비자승인/경험공유
           해외취업: 성공후기/조언구해요 */}

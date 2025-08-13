@@ -15,7 +15,7 @@ export default function CommunityLayout({ children, userLocationSlot }) {
         <SubCategory />
       </div>
 
-      <div className="flex flex-col grow p-[2rem] gap-12">{children}</div>
+      <div className="flex flex-col grow p-[2rem] pt-0 gap-10">{children}</div>
 
       <CommunityAddPost className="bg-amber-400" />
     </div>

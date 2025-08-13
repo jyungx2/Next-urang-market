@@ -24,8 +24,10 @@ export default function EvenPostList({ items }) {
             })
           }
           // likesCount, dislikesCount는 게시글 자체의 속성이므로 prop으로 넘겨주기
-          likesCount={item.likesCount}
-          dislikesCount={item.dislikesCount}
+          initialLikesCount={item.likesCount}
+          initialDislikesCount={item.dislikesCount}
+          userHasLiked={item.userHasLiked}
+          userHasDisliked={item.userHasDisliked}
         />
       ))}
     </ul>

@@ -2,7 +2,8 @@ import { connectDatabase } from "@/helpers/db-util";
 import NextAuth from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
 
-export default NextAuth({
+export const authOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
@@ -132,7 +133,9 @@ export default NextAuth({
       return session;
     },
   },
-});
+};
+
+export default NextAuth(authOptions); // authOptions를 인자로 넘겨서 NextAuth 초기화
 
 // 위치	역할	비고
 // 1. jwt(): DB에서 가져온 user 데이터를 token에 저장/이때 빠지면 session()에서도 사라짐

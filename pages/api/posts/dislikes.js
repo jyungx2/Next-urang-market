@@ -1,8 +1,17 @@
+import { getServerSession } from "next-auth";
 import { connectDatabase, getDocumentById } from "../../../helpers/db-util";
 import { ObjectId } from "mongodb";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(req, res) {
   let client;
+
+  // ✅ req.body가 아니라, 세션에서 "userId" 획득
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) {
+    return res.status(401).json({ message: "Unauthenticated" });
+  }
+  const userId = session.user.id; // ✅ 세션에서만 가져오기
 
   // CONNECT TO DB
   try {
@@ -14,10 +23,14 @@ export default async function handler(req, res) {
 
   // POST HTTP
   if (req.method === "POST") {
-    const { userId, postId } = req.body;
-    const db = client.db(process.env.MONGODB_NAME); // ✅ DB 인스턴스 생성
+    const { postId } = req.body; // 더 이상 userId를 받지 않음
+    const db = client.db(process.env.MONGODB_NAME); // DB 인스턴스 생성
 
-    const user = await getDocumentById(client, "users", userId);
+    const user = await getDocumentById(client, "users", userId); // 세션에서 받아온 userId로 DB에서 유저 정보 획득
+    if (!user) {
+      res.status(404).json({ message: "User not found!" });
+      return;
+    }
 
     const alreadyDisliked = user.dislikes?.includes(postId);
 
