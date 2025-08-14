@@ -1,6 +1,7 @@
 import Layout from "@/components/layout/layout";
 import RelatedListings from "@/components/market/related-listings";
 import WhereToMeet from "@/components/user/where-to-meet";
+import { connectDatabase } from "@/helpers/db-util";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import useSelectedProductStore from "@/zustand/selectedProduct";
 import { ObjectId } from "mongodb";
@@ -248,10 +249,15 @@ export async function getStaticProps(context) {
 
 // ✅ 어떤 URL을 빌드할지 결정 -> 모든 post의 productId 명시
 export async function getStaticPaths() {
-  const res = await fetch(`http://localhost:3000/api/products`);
-  const data = await res.json();
+  // const res = await fetch(`http://localhost:3000/api/products`);
+  // const data = await res.json();
 
-  const paths = data.products.map((product) => ({
+  const client = await connectDatabase();
+  const db = client.db(process.env.MONGODB_NAME);
+  const products = await db.collection("products").find().toArray();
+
+  console.log("📦 products:", products);
+  const paths = products.map((product) => ({
     params: {
       productId: product._id.toString(),
     },
@@ -259,7 +265,7 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: "blocking", // ✅나중에 fallback: true로 바꾸고, loading 표시 렌더링 구현하기..
+    fallback: "blocking", // ✅ 나중에 fallback: true로 바꾸고, loading 표시 렌더링 구현하기..
   };
 }
 
