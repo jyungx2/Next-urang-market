@@ -1,6 +1,7 @@
 import CommentList from "@/components/community/comment-list";
 import CommentNew from "@/components/community/comment-new";
 import Layout from "@/components/layout/layout";
+import { connectDatabase } from "@/helpers/db-util";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -163,10 +164,15 @@ export async function getStaticProps(context) {
 
 // ✅ 어떤 URL을 빌드할지 결정 -> 모든 post의 mainCategory, postId 명시
 export async function getStaticPaths() {
-  const res = await fetch("http://localhost:3000/api/posts");
-  const data = await res.json();
+  // const res = await fetch("http://localhost:3000/api/posts");
+  // const data = await res.json();
 
-  const paths = data.posts.map((post) => ({
+  const client = await connectDatabase();
+  const db = client.db(process.env.MONGODB_NAME);
+  const posts = await db.collection("posts").find().toArray();
+  console.log("✉️ 모든 게시물 요청: ", posts);
+
+  const paths = posts.map((post) => ({
     params: {
       mainCategory: post.mainCategory,
       postId: post._id.toString(),

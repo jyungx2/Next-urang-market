@@ -58,9 +58,9 @@ export default function CommentItem({ item, postId }) {
         </div>
 
         <div className="flex items-center text-[1.2rem] text-gray-600">
-          <button className="mr-4 border border-[var(--color-primary-200)] rounded-2xl p-2 text-[var(--color-primary-700)] font-medium cursor-pointer">
+          {/* <button className="mr-4 border border-[var(--color-primary-200)] rounded-2xl p-2 text-[var(--color-primary-700)] font-medium cursor-pointer">
             답글쓰기
-          </button>
+          </button> */}
 
           <div className="ml-auto flex gap-3">
             <button className="flex items-center gap-2 p-2 rounded-3xl cursor-pointer hover:bg-[var(--color-primary-50)]">
