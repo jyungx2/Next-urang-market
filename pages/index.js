@@ -63,8 +63,6 @@ export default function Home() {
           <PostsSection title="해외취업후기" category="working-abroad" />
         </div>
       </div>
-
-      {isSidebarOpen && <Sidebar />}
     </>
   );
 }
