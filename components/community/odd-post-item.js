@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function NoticePostItem({
+export default function OddPostItem({
   writer,
   createdAt,
   views,
   title,
   onDetail,
+  comments,
 }) {
   return (
     <li
@@ -36,7 +37,9 @@ export default function NoticePostItem({
               href="/"
               className="bg-[var(--color-secondary-800)] rounded-4xl flex flex-col gap-2 p-6 justify-center items-center"
             >
-              <span className="font-bold text-[var(--color-grey-bg)]">362</span>
+              <span className="font-bold text-[var(--color-grey-bg)]">
+                {comments.length || 0}
+              </span>
               <span className="text-[1.4rem] text-white">댓글</span>
             </Link>
           </div>
