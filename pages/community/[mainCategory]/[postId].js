@@ -145,21 +145,51 @@ export default function PostDetailPage({ selectedPost }) {
 export async function getStaticProps(context) {
   const postId = context.params.postId;
 
-  const res = await fetch(`http://localhost:3000/api/posts/${postId}`);
+  // const res = await fetch(`http://localhost:3000/api/posts/${postId}`);
+  // const data = await res.json();
+  // console.log(postId, res, data);
 
-  const data = await res.json();
-  console.log(postId, res, data);
+  try {
+    const client = await connectDatabase();
+    const db = client.db(process.env.MONGODB_NAME);
+    const post = await db
+      .collection("posts")
+      .findOne({ _id: new ObjectId(postId) });
 
-  if (!data.post) {
-    return {
-      notFound: true, // 404 페이지로 이동
+    if (!post) {
+      return { notFound: true };
+    }
+
+    // ✅ 직렬화 가능한 값으로 변환
+    // ⚠️ Next.js는 getStaticProps 결과(리턴값, props)를 JSON으로 직렬화해서 클라이언트로 전달해줘야 함.
+    // MongoDB ObjectId, JS Date는 JSON으로 바로 변환 불가 → 문자열 변환 필요!
+    const selectedPost = {
+      ...post,
+      _id: post._id.toString(),
+      createdAt: post.createdAt ? post.createdAt.toISOString() : null,
     };
+
+    return {
+      props: { selectedPost },
+      // ISR 원하면 주석 해제
+      // revalidate: 60,
+    };
+  } catch (err) {
+    console.error("getStaticProps error:", err);
+    // 빌드 실패 방지: 에러 시 404 또는 다른 대응
+    return { notFound: true };
   }
 
-  return {
-    props: { selectedPost: data.post },
-    // revalidate: 60,
-  };
+  // if (!data.post) {
+  //   return {
+  //     notFound: true, // 404 페이지로 이동
+  //   };
+  // }
+
+  // return {
+  //   props: { selectedPost: data.post },
+  //   // revalidate: 60,
+  // };
 }
 
 // ✅ 어떤 URL을 빌드할지 결정 -> 모든 post의 mainCategory, postId 명시

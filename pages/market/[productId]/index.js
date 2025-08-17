@@ -215,36 +215,73 @@ export default function PostDetailPage({ selectedProduct, relatedListings }) {
 export async function getStaticProps(context) {
   const productId = context.params.productId;
 
-  const productRes = await fetch(
-    `http://localhost:3000/api/products/${productId}`
-  );
-  const { product } = await productRes.json();
+  try {
+    const client = await connectDatabase();
+    const db = client.db(process.env.MONGODB_NAME);
+    const product = await db.collection("products").findOne({
+      _id: new ObjectId(productId),
+    });
 
-  const relatedRes = await fetch(
-    `http://localhost:3000/api/products/by-seller?sellerId=${product.sellerId}`
-  );
-  console.log("해당 작성자의 다른 게시물 요청: ", relatedRes);
+    if (!product) {
+      return { notFound: true }; // 404 페이지로 이동
+    }
 
-  const { products } = await relatedRes.json();
-  console.log("해당 작성자가 게시한 다른 물건들: ", products);
+    // 관련 상품 조회
+    const relatedListings = await db
+      .collection("products")
+      .find({
+        sellerId: product.sellerId,
+        _id: { $ne: new ObjectId(productId) },
+      })
+      .toArray();
 
-  console.log("📦 요청된 sellerId:", product.sellerId);
-  console.log("🧱 변환된 ObjectId:", new ObjectId(product.sellerId));
-  console.log("🔎 product.sellerId 타입:", typeof product.sellerId); // string or object
-
-  const relatedListings = products.filter((p) => p._id !== product._id);
-  console.log("💄 related listings: ", relatedListings);
-
-  if (!product) {
     return {
-      notFound: true, // 404 페이지로 이동
+      props: {
+        selectedProduct: {
+          ...product,
+          // 3) 직렬화 (⚠️ ObjectId/Date는 JSON 직렬화 불가 → 문자열 변환 필요)
+          _id: product._id.toString(),
+          createdAt: product.createdAt ? product.createdAt.toISOString() : null,
+        },
+        relatedListings: relatedListings.map((item) => ({
+          ...item,
+          _id: item._id.toString(),
+          sellerId:
+            d.sellerId && d.sellerId.toString
+              ? d.sellerId.toString()
+              : undefined,
+        })),
+      },
+      revalidate: 60, // ISR 설정
     };
+  } catch (err) {
+    console.error("getStaticProps error (product):", err);
+    return { notFound: true };
   }
 
-  return {
-    props: { selectedProduct: product, relatedListings },
-    // revalidate: 60,
-  };
+  // const productRes = await fetch(
+  //   `http://localhost:3000/api/products/${productId}`
+  // );
+  // const { product } = await productRes.json();
+
+  // const relatedRes = await fetch(
+  //   `http://localhost:3000/api/products/by-seller?sellerId=${product.sellerId}`
+  // );
+
+  // const { products } = await relatedRes.json();
+
+  // const relatedListings = products.filter((p) => p._id !== product._id);
+
+  // if (!product) {
+  //   return {
+  //     notFound: true, // 404 페이지로 이동
+  //   };
+  // }
+
+  // return {
+  //   props: { selectedProduct: product, relatedListings },
+  //   // revalidate: 60,
+  // };
 }
 
 // ✅ 어떤 URL을 빌드할지 결정 -> 모든 post의 productId 명시
