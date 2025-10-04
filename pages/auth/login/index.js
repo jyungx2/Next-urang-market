@@ -6,7 +6,12 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onSubmit", // 제출 시 검증(기본값이지만 명시 권장)
     defaultValues: { username: "", birthdate: "" },
   });
   const { currentUser } = useCurrentUserStore();
@@ -68,29 +73,37 @@ export default function LoginPage() {
       </h1>
 
       <div className="flex gap-4 items-center">
-        <label className="font-bold min-w-[80px]">Name</label>
+        <label className="font-bold min-w-[80px]">이름</label>
         <input
           type="text"
           placeholder="Type in your name"
           className="px-4 py-4 border-2 border-[var(--color-grey-500)] focus-within:border-[var(--color-grey-300)] rounded-md flex-1 focus:outline-none"
           {...register("username", { required: "이름은 필수입니다." })}
         />
+        {errors.username && (
+          <p className="text-red-400 text-sm">{errors.username.message}</p>
+        )}
       </div>
 
       <div className="flex gap-4 items-center">
-        <label className="font-bold min-w-[80px]">Birthdate</label>
+        <label className="font-bold min-w-[80px]">생년월일</label>
         <input
           type="text"
+          maxLength={6} // HTML 차원에서도 6자 제한
           placeholder="Type in your birthdate"
           className="px-4 py-4 border-2 border-[var(--color-grey-500)] focus-within:border-[var(--color-grey-300)] rounded-md flex-1 focus:outline-none"
           {...register("birthdate", {
             required: "생년월일은 필수입니다.",
-            minLength: {
-              value: 6,
-              message: "6자리 이상 입력하세요.",
+            setValueAs: (v) => (v ?? "").toString().replace(/\D/g, ""), // 숫자만 남김
+            validate: {
+              sixDigits: (v) =>
+                /^\d{6}$/.test(v) || "숫자 6자리(YYMMDD)로 입력하세요.",
             },
           })}
         />
+        {errors.birthdate && (
+          <p className="text-red-400 text-sm">{errors.birthdate.message}</p>
+        )}
       </div>
 
       <div className="mt-auto">

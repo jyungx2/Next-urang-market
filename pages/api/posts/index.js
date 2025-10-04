@@ -84,10 +84,23 @@ export default async function handler(req, res) {
     const userId = session.user.id; // ✅ 세션에서 userId 가져오기
 
     // 1) 현재 로그인 유저 정보 가져오기
-    const user = await getDocumentById(client, "users", userId);
+    const user = await getDocumentById(client, "users", userId); // 🌟projection 지정 안 함 → user document 전체 가져옴
 
     // 2) 좋아요/싫어요 Set 생성 (문자열 변환해서 ObjectId 비교 문제 방지)
-    // 💡 좋아요/싫어요 GET 요청에서는 user.likes와 user.dislikes 둘 다 필요하니까, projection 없이 가져온 후 두 필드를 동시에 처리하는 게 편함.
+    // 💡 좋아요/싫어요 GET 요청에서는 likes와 dislikes 두 필드가 모두 필요하다. projection으로 이 두가지 프라퍼티만 뽑아 가져오는 것도 가능하지만, 문서 크기가 작아 성능상 차이가 거의 없기 때문에, projection을 생략하고 전체 도큐먼트를 가져오는 쪽을 선택했다.
+
+    // projection으로도 likes와 dislikes를 동시에 가져올 수 있다.
+    // { projection: { likes: 1, dislikes: 1 } }
+    // ❓ 그럼 왜 projection을 안 썼을까?
+    // 사실 이건 성능 최적화 vs 코드 단순성 트레이드오프
+    //  ✅ projection을 쓰는 경우
+    // 장점: 불필요한 필드를 안 가져오므로 네트워크 비용, 메모리 사용을 조금이라도 줄임. -> 하지만, 유저 도큐먼트는 보통 가볍기 때문에 성능 차이가 체감될만큼 크지 않아서 코드 단순성을 택한 것!
+    // 단점: 호출할 때마다 { likes: 1, dislikes: 1 }를 일일이 적어줘야 함 → 코드가 장황해짐.
+
+    // ✅ projection을 생략하는 경우
+    // 장점: getDocumentById(client, "users", userId)처럼 간단.
+    // 단점: nickname, email, createdAt 같은 필요 없는 필드도 함께 가져옴.
+
     // 💥 반면, products GET 요청에서는 wishlist만 필요하니까 projection으로 wishlist만 가져옴
     const likeSet = new Set((user.likes ?? []).map(String));
     const dislikeSet = new Set((user.dislikes ?? []).map(String));

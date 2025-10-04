@@ -7,7 +7,7 @@ export default function PhoneVerifyPage() {
 
   return (
     <div className="max-w-[640px] mx-auto min-h-screen bg-[var(--color-bg)] flex flex-col gap-8 p-4">
-      <header className="grid grid-cols-3 items-center justify-center mb-4 border-b border-[var(--color-grey-100)] pb-4">
+      <header className="grid grid-cols-3 items-center mb-4 border-b border-[var(--color-grey-100)] pb-4">
         <button
           onClick={() => router.back()}
           type="button"
@@ -20,9 +20,7 @@ export default function PhoneVerifyPage() {
             className="cursor-pointer"
           />
         </button>
-        <h1 className="font-bold text-[2.4rem] col-span-2">
-          Identify verification
-        </h1>
+        <h1 className="flex font-bold text-[2.4rem] mx-auto">본인인증</h1>
       </header>
 
       <SignupForm />

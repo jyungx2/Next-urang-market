@@ -127,7 +127,9 @@ export default async function handler(req, res) {
       // 2) 로그인한 유저의 wishlist 가져오기
       if (userId) {
         const user = await getDocumentById(client, "users", userId, {
-          wishlist: 1, // 여기서 1은 wishlist 필드를 포함한다는 뜻
+          wishlist: 1, // 🌟projection: 여기서 1은 wishlist 필드를 포함한다는 뜻
+          // 여기서는 user.wishlist만 필요하므로, projection으로 wishlist만 가져옴
+          // 굳이 likes, dislikes, profileImage, nickname 같은 걸 가져올 필요가 없음 → 낭비.
         });
 
         if (user?.wishlist?.length > 0) {

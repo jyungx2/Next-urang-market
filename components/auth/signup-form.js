@@ -1,3 +1,4 @@
+import ErrorMsg from "@/components/common/error-msg";
 import CarrierModal from "@/components/user/carrier-modal";
 import Timer from "@/components/user/timer";
 import useUserStore from "@/zustand/userStore";
@@ -25,7 +26,8 @@ export default function SignupForm() {
   // 모달에서 통신사 선택 시 호출되는 핸들러
   const handleSelectCarrier = (carrier) => {
     setSelectedCarrier(carrier); // 선택한 통신사 상태 업데이트
-    closeModal();
+    setValue("carrier", carrier, { shouldValidate: true }); // ✅ RHF 값도 갱신 + 즉시 검증
+    // shouldValidate(true): 값 세팅과 동시에 해당 필드의 유효성 검사를 즉시 실행
   };
 
   // 2️⃣ 인증코드 요청 후, 버튼 스타일링 변경
@@ -39,14 +41,24 @@ export default function SignupForm() {
   const {
     register,
     handleSubmit, // 여기서 회원가입 최종 요청 안 보낼거라 필요x
+    trigger, // 제출 로직 없이, 특정 필드만 "검증"하고 싶을 때 사용
     getValues,
     watch,
+    setValue, // 특정 필드 값을 프로그래밍적으로 설정하고 싶을 때 사용
+    formState: { errors, isValid },
   } = useForm({
+    mode: "onSubmit", // 처음엔 submit할 때만 에러 보여줌
+    // * onChange: submit 버튼 제출이 아닌, 입력값 변경 시마다 검증
+    // reValidateMode: "onChange", // 입력값 변경 시마다 재검증
+    // criteriaMode: "all", // 모든 에러 메시지 수집
+    shouldFocusError: true, // 에러 발생 시 해당 입력란에 포커스
+    reValidateMode: "onChange", // 일단 한번 submit 후엔 값 바꿀 때마다 재검증
     defaultValues: {
       username: "",
       birthdate: "",
       phoneNumber: "",
       code: "",
+      carrier: "", // ✅ 통신사도 RHF로 관리(숨은 필드)
     },
   });
 
@@ -97,6 +109,10 @@ export default function SignupForm() {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "인증번호 검증 실패");
+      //  throw 대신 return Promise.reject(new Error(...))도 동일하게 작동
+      // fetch는 axios와 다르게, HTTP 4xx/5xx여도 예외를 던지지 않기 때문에,
+      // 즉, 서버에서 400, 401, 500 같은 에러 응답을 줘도 resolve(settled상태가 결정) → res.ok === false 상태로 들어옴.
+      // 그래서 클라이언트에서 !res.ok 체크 후 직접 throw new Error(...) 해줘야 React Query onError로 넘어감.
       console.log("인증 성공: ", data.message);
     },
     onSuccess: () => {
@@ -122,7 +138,7 @@ export default function SignupForm() {
   return (
     <form className="flex flex-col gap-8 flex-grow">
       <div className="flex flex-col gap-4">
-        <label className="text-[2rem] font-bold">Enter your full name</label>
+        <label className="text-[2rem] font-bold">이름을 입력하세요.</label>
         <div
           className={`border-2 border-[var(--color-grey-300)] focus-within:border-[var(--color-grey-500)] rounded-2xl px-2`}
         >
@@ -143,61 +159,78 @@ export default function SignupForm() {
             })}
           />
         </div>
+        <ErrorMsg target={errors.username} />
       </div>
       <div className="flex flex-col gap-4">
-        <label className="text-[2rem] font-bold">
-          Enter your date of birth
-        </label>
+        <label className="text-[2rem] font-bold">생년월일을 입력하세요.</label>
         <div
           className={`border-2 border-[var(--color-grey-300)] focus-within:border-[var(--color-grey-500)] rounded-2xl px-2`}
         >
           <input
             type="text"
+            maxLength={6} // HTML 차원에서도 6자 제한
             placeholder="yy/mm/dd"
             className="inputUnset inputCustom"
             {...register("birthdate", {
               required: "생년월일은 필수입니다.",
-              minLength: {
-                value: 6,
-                message: "6자리 이상 입력하세요.",
+              setValueAs: (v) => (v ?? "").toString().replace(/\D/g, ""), // 사용자가 -, 공백 등 을 입력해도 즉시 숫자만 남도록 정규화
+              validate: {
+                sixDigits: (v) =>
+                  /^\d{6}$/.test(v) || "숫자 6자리(YYMMDD)로 입력하세요.", // 정확히 6자리 숫자만 통과.
               },
             })}
           />
         </div>
+        <ErrorMsg target={errors.birthdate} />
       </div>
       <div className="flex flex-col gap-4">
         {/* 폼 컨테이너: 통신사 선택 버튼과 전화번호 입력 필드를 한 줄에 배치 */}
-        <label className="text-[2rem] font-bold">
-          Please enter your phone information
-        </label>
-        <div className="flex space-x-2">
+        <label className="text-[2rem] font-bold">전화번호를 입력하세요.</label>
+        <div className="flex space-x-2 items-stretch">
           {/* 통신사 선택 버튼 (디자인상 select 역할을 하는 버튼) */}
-          <button
-            type="button"
-            onClick={openModal}
-            className="px-4 py-2 border-2 border-[var(--color-grey-300)] focus-within:border-[var(--color-grey-500)] rounded-md bg-white text-gray-500 shadow-sm"
-          >
-            {selectedCarrier}
-            {/* ▲ 버튼 라벨: 현재 선택된 통신사 표시 (기본값은 '통신사') */}
-          </button>
+          <div className="flex flex-col gap-2 w-[8rem]">
+            <button
+              type="button"
+              onClick={openModal}
+              className="h-[5rem] px-4 border-2 border-[var(--color-grey-300)] focus-within:border-[var(--color-grey-500)] rounded-md bg-white text-gray-500 shadow-sm"
+            >
+              {selectedCarrier}
+              {/* ▲ 버튼 라벨: 현재 선택된 통신사 표시 (기본값은 '통신사') */}
+            </button>
+            <ErrorMsg target={errors.carrier} className="whitespace-pre-line" />
+          </div>
 
           {/* 전화번호 입력 필드 */}
-          <input
-            type="tel"
-            placeholder="전화번호 입력"
-            {...register("phoneNumber", {
-              required: "전화번호는 필수입니다.",
-              pattern: {
-                value: phoneExp,
-                message: "전화번호 양식에 맞지 않습니다.",
-              },
-            })}
-            className="px-4 py-4 border-2 border-[var(--color-grey-300)] focus-within:border-[var(--color-grey-500)] rounded-md flex-1 focus:outline-none"
-          />
+          <div className="flex flex-col gap-2 flex-grow ">
+            <input
+              type="tel"
+              placeholder="전화번호 입력"
+              {...register("phoneNumber", {
+                required: "전화번호는 필수입니다.",
+                pattern: {
+                  value: phoneExp,
+                  message: "전화번호 양식에 맞지 않습니다.",
+                },
+              })}
+              className={`h-[5rem] px-4 border-2 border-[var(--color-grey-300)] focus-within:border-[var(--color-grey-500)] rounded-md focus:outline-none ${
+                errors.phoneNumber ? "border-[var(--color-error-500)]" : ""
+              }`}
+            />
+            <ErrorMsg target={errors.phoneNumber} />
+          </div>
 
           <button
-            className="bg-[var(--color-grey-500)] hover:bg-[var(--color-grey-700)] rounded-xl text-white py-2 px-4 cursor-pointer"
-            onClick={() => sendCodeMutation.mutate(getValues("phoneNumber"))}
+            className={`h-[5rem] bg-[var(--color-grey-500)] hover:bg-[var(--color-grey-700)] rounded-xl text-white px-4 cursor-pointer`}
+            onClick={async () => {
+              const ok = await trigger([
+                "username",
+                "birthdate",
+                "carrier",
+                "phoneNumber",
+              ]);
+              if (!ok) return;
+              sendCodeMutation.mutate(getValues("phoneNumber"));
+            }}
             type="button"
           >
             인증번호 요청
@@ -214,12 +247,17 @@ export default function SignupForm() {
             />
           )}
         </AnimatePresence>
+        {/* 통신사도 RHF에 연결(검증 가능)하기 위해 input 숨김 */}
+        <input
+          type="hidden"
+          {...register("carrier", {
+            validate: (v) => !!v || "통신사를\n선택하세요.",
+          })}
+        />
       </div>
 
       <div className="flex flex-col gap-4">
-        <label className="text-[2rem] font-bold">
-          Please enter your verification code
-        </label>
+        <label className="text-[2rem] font-bold">인증코드를 입력하세요.</label>
         <div className="flex space-x-2 items-center border-2 rounded-md border-[var(--color-grey-300)] focus-within:border-[var(--color-grey-500)]">
           <input
             placeholder="인증번호 입력"
