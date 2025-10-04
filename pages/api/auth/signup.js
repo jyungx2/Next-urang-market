@@ -17,17 +17,33 @@ async function handler(req, res) {
       selectedLocation,
     } = data;
 
-    if (
-      !location ||
-      !username ||
-      !birthdate ||
-      !phoneNumber ||
-      !profileImage ||
-      !nickname
-    ) {
-      res.status(422).json({
-        message: "Invalid input - please type in your name and date of birth.",
-      });
+    if (!location) {
+      res.status(422).json({ message: "거주 지역을 입력해주세요." });
+      return;
+    }
+
+    if (!username) {
+      res.status(422).json({ message: "이름을 입력해주세요." });
+      return;
+    }
+
+    if (!birthdate) {
+      res.status(422).json({ message: "생년월일을 입력해주세요." });
+      return;
+    }
+
+    if (!phoneNumber) {
+      res.status(422).json({ message: "전화번호를 입력해주세요." });
+      return;
+    }
+
+    if (!profileImage) {
+      res.status(422).json({ message: "프로필 이미지를 등록해주세요." });
+      return;
+    }
+
+    if (!nickname) {
+      res.status(422).json({ message: "닉네임을 입력해주세요." });
       return;
     }
 

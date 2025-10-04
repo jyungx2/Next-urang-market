@@ -10,6 +10,8 @@ import useUserStore from "@/zustand/userStore";
 import { useForm } from "react-hook-form";
 import { getSession, signIn } from "next-auth/react";
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import { RingLoader } from "react-spinners";
+import Modal from "@/components/layout/modal";
 
 export default function ProfileRegisterPage() {
   const { currentUser } = useCurrentUserStore();
@@ -20,6 +22,7 @@ export default function ProfileRegisterPage() {
 
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (previewUrl) {
@@ -63,86 +66,93 @@ export default function ProfileRegisterPage() {
   // 3️⃣ Final API request
   const finallyRegister = useMutation({
     mutationFn: async (userInfo) => {
-      const { nickname } = userInfo;
+      // 로딩 ON
+      setIsLoading(true);
 
-      // 1. 이미지 업로드
-      // let imageUrl = null;
-      // if (profileImage) {
-      //   try {
-      //     imageUrl = await uploadImage(profileImage);
-      //   } catch (error) {
-      //     throw new Error(
-      //       "Image upload failed, signup was not completed. Please try again later."
-      //     );
-      //   }
-      // }
-      // 🌟🌟 클라이언트 컴포넌트에서는 직접 cloudinary를 쓰지 않고,
-      // API Route에 POST 요청을 보낸다. 🌟🌟
+      try {
+        const { nickname } = userInfo;
+        // 1. 이미지 업로드
+        // let imageUrl = null;
+        // if (profileImage) {
+        //   try {
+        //     imageUrl = await uploadImage(profileImage);
+        //   } catch (error) {
+        //     throw new Error(
+        //       "Image upload failed, signup was not completed. Please try again later."
+        //     );
+        //   }
+        // }
+        // 🌟🌟 클라이언트 컴포넌트에서는 직접 cloudinary를 쓰지 않고,
+        // API Route에 POST 요청을 보낸다. 🌟🌟
 
-      // 1. 이미지 업로드 로직에선 profileFile을 사용해서 Cloudinary에 업로드:
-      let imageUrl = null;
-      if (profileFile) {
-        const imageData = await profileFile.arrayBuffer();
-        const base64Image = Buffer.from(imageData).toString("base64");
-        const fileUri = `data:${profileFile.type};base64,${base64Image}`;
+        // 1. 이미지 업로드 로직에선 profileFile을 사용해서 Cloudinary에 업로드:
+        let imageUrl = null;
+        if (profileFile) {
+          const imageData = await profileFile.arrayBuffer();
+          const base64Image = Buffer.from(imageData).toString("base64");
+          const fileUri = `data:${profileFile.type};base64,${base64Image}`;
 
-        const res = await fetch("/api/auth/cloudinary", {
+          const res = await fetch("/api/auth/cloudinary", {
+            method: "POST",
+            body: JSON.stringify({ image: fileUri }),
+            headers: { "Content-Type": "application/json" },
+          });
+
+          const data = await res.json();
+          imageUrl = data.url;
+        }
+
+        console.log("✅ nickname:", nickname);
+        console.log("✅ imageUrl:", imageUrl);
+
+        // 2. 최종 user 객체 완성 (유지보수성⬆️)
+        // 🚫
+        // setUser((prev) => ({
+        //   ...prev,
+        //   nickname,
+        //   profileImage: imageUrl,
+        // }));
+
+        // ✅ 위처럼 함수형 업데이트 말고 직접 객체로 업데이트하기
+        setUser({
+          location,
+          username,
+          birthdate,
+          phoneNumber,
+          nickname,
+          profileImage: imageUrl,
+          recentLocations: [],
+          selectedLocation: location,
+        });
+
+        // ✅ getUser로 userStore에 저장된 유저정보들을 하나의 객체로 한꺼번에 가져오기
+        // * .getState(): store의 현재 상태를 가져오는 함수
+        // ❌ 단, useUserStore.getState().getUser() ≠ useUserStore().getUser()
+        // useUserStore.getState()는 store의 상태를 즉시 가져오기만 하는, 실제 상태를 직접 꺼내오는 정적 메서드이고, useUserStore()는 React 컴포넌트에서 store의 상태를 구독하여 리렌더링을 유발하는 훅이기 때문..
+        // -> 리액트 생명주기와 무관하게 단순히 값을 "한 번" 가져오고 싶을 때는 getState으로 상태값을 가져오는 것이 가장 적절
+        const finalUser = useUserStore.getState().getUser();
+        console.log("💿서버로 보낼 user: ", finalUser);
+
+        // 3. 회원가입 API 요청 => DB에 해당 유저데이터 저장!
+        const resSignup = await fetch("/api/auth/signup", {
           method: "POST",
-          body: JSON.stringify({ image: fileUri }),
+          body: JSON.stringify(finalUser),
           headers: { "Content-Type": "application/json" },
         });
 
-        const data = await res.json();
-        imageUrl = data.url;
+        // 💥💥res.json() 호출이 무조건 res.ok보다 먼저 와야 함💥💥
+        // 🖍️이유: 서버가 { message: "User exists already!" }로 응답했어도 그걸 .json()으로 꺼내기 전에 에러를 던져버려서 err.message는 하드코딩된 메시지("회원가입 실패")밖에 안 나와.
+        const dataSignup = await resSignup.json();
+
+        if (!resSignup.ok) {
+          throw new Error(dataSignup.message || "회원가입 실패");
+        }
+
+        return dataSignup.user; // → onSuccess로 전달됨
+      } finally {
+        // ✅ 성공/실패 상관없이 무조건 로딩 OFF
+        setIsLoading(false);
       }
-
-      console.log("✅ nickname:", nickname);
-      console.log("✅ imageUrl:", imageUrl);
-
-      // 2. 최종 user 객체 완성 (유지보수성⬆️)
-      // 🚫
-      // setUser((prev) => ({
-      //   ...prev,
-      //   nickname,
-      //   profileImage: imageUrl,
-      // }));
-
-      // ✅ 위처럼 함수형 업데이트 말고 직접 객체로 업데이트하기
-      setUser({
-        location,
-        username,
-        birthdate,
-        phoneNumber,
-        nickname,
-        profileImage: imageUrl,
-        recentLocations: [],
-        selectedLocation: location,
-      });
-
-      // ✅ getUser로 userStore에 저장된 유저정보들을 하나의 객체로 한꺼번에 가져오기
-      // * .getState(): store의 현재 상태를 가져오는 함수
-      // ❌ 단, useUserStore.getState().getUser() ≠ useUserStore().getUser()
-      // useUserStore.getState()는 store의 상태를 즉시 가져오기만 하는, 실제 상태를 직접 꺼내오는 정적 메서드이고, useUserStore()는 React 컴포넌트에서 store의 상태를 구독하여 리렌더링을 유발하는 훅이기 때문..
-      // -> 리액트 생명주기와 무관하게 단순히 값을 "한 번" 가져오고 싶을 때는 getState으로 상태값을 가져오는 것이 가장 적절
-      const finalUser = useUserStore.getState().getUser();
-      console.log("💿서버로 보낼 user: ", finalUser);
-
-      // 3. 회원가입 API 요청 => DB에 해당 유저데이터 저장!
-      const resSignup = await fetch("/api/auth/signup", {
-        method: "POST",
-        body: JSON.stringify(finalUser),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      // 💥💥res.json() 호출이 무조건 res.ok보다 먼저 와야 함💥💥
-      // 🖍️이유: 서버가 { message: "User exists already!" }로 응답했어도 그걸 .json()으로 꺼내기 전에 에러를 던져버려서 err.message는 하드코딩된 메시지("회원가입 실패")밖에 안 나와.
-      const dataSignup = await resSignup.json();
-
-      if (!resSignup.ok) {
-        throw new Error(dataSignup.message || "회원가입 실패");
-      }
-
-      return dataSignup.user; // → onSuccess로 전달됨
     },
     onSuccess: async (createdUser) => {
       // 4. 회원가입 시, 자동 로그인되도록 로그인 API 요청
@@ -295,6 +305,16 @@ export default function ProfileRegisterPage() {
           </button>
         </div>
       </form>
+
+      {/* 로딩 스피너 */}
+      {isLoading && (
+        <Modal>
+          <div className="flex flex-col gap-10 items-center justify-center">
+            <RingLoader />
+            <span>잠시만 기다려주세요...</span>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
