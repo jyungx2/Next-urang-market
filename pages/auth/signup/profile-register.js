@@ -12,6 +12,7 @@ import { getSession, signIn } from "next-auth/react";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { RingLoader } from "react-spinners";
 import Modal from "@/components/layout/modal";
+import ErrorMsg from "@/components/common/error-msg";
 
 export default function ProfileRegisterPage() {
   const { currentUser } = useCurrentUserStore();
@@ -59,8 +60,13 @@ export default function ProfileRegisterPage() {
   };
 
   // 2️⃣ useForm CODE
-  const { register, handleSubmit } = useForm({
-    defaultValues: { profile: null, nickname: "" },
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: { profileImage: null, nickname: "" },
   });
 
   // 3️⃣ Final API request
@@ -261,6 +267,7 @@ export default function ProfileRegisterPage() {
                         accept="image/*"
                         className="hidden"
                         {...register("profileImage", {
+                          required: "프로필 이미지는 필수입니다.",
                           onChange: handleFileShow,
                         })}
                       />
@@ -277,29 +284,38 @@ export default function ProfileRegisterPage() {
               </button>
             </div>
           </div>
+          <ErrorMsg target={errors.profileImage} />
         </div>
 
-        <div
-          className={`border-2 border-[var(--color-grey-300)] focus-within:border-[var(--color-grey-500)] rounded-2xl px-2 cursor-pointer`}
-        >
-          <input
-            type="text"
-            placeholder="Nickname"
-            className="inputUnset inputCustom"
-            {...register("nickname", {
-              required: "닉네임은 필수입니다.",
-              minLength: {
-                value: 2,
-                message: "2글자 이상 입력하세요.",
-              },
-            })}
-          />
+        <div className="flex flex-col gap-4">
+          <div
+            className={`border-2 border-[var(--color-grey-300)] focus-within:border-[var(--color-grey-500)] rounded-2xl px-2 cursor-pointer`}
+          >
+            <input
+              type="text"
+              placeholder="Nickname"
+              className="inputUnset inputCustom"
+              {...register("nickname", {
+                required: "닉네임은 필수입니다.",
+                minLength: {
+                  value: 2,
+                  message: "2글자 이상 입력하세요.",
+                },
+              })}
+            />
+          </div>
+          <ErrorMsg target={errors.nickname} />
         </div>
 
         <div className="mt-auto">
           <button
             type="submit"
-            className="font-bold h-[4rem] bg-[var(--color-primary-500)] p-4 w-full rounded-lg text-white cursor-pointer hover:bg-[var(--color-primary-700)]"
+            className={`font-bold h-[4rem] bg-[var(--color-primary-500)] p-4 w-full rounded-lg text-white cursor-pointer hover:bg-[var(--color-primary-700)] ${
+              profileFile && watch("nickname")
+                ? ""
+                : "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
+            }`}
+            disabled={!watch("profileImage") || !watch("nickname")}
           >
             Complete sign up
           </button>
