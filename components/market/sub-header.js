@@ -20,45 +20,49 @@ export default function SubHeader() {
 
   const changeSelectedLocation = useMutation({
     mutationFn: async (selectedLocation) => {
-      // 특정 rcode 페이지 이동
+      // 1) 서버 요청만 담당 (throw/return만)
+      // ✅ SERVER 측 selectedLocation 업데이트
+      const res = await fetch(`/api/user/selected-location`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          selectedLocation,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // 서버 메시지 안전 파싱
+        let msg = data?.message || `${res.status} ${res.statusText}`;
+        throw new Error(msg); // ← 반드시 던져야 onError로 감
+      }
+
+      return data; // => onSuccess의 첫 번째 인자(data)로 전달
+    },
+    // 2) 성공 후에만 클라이언트 상태 확정 + 라우팅 + 캐시 무효화
+    onSuccess: async (data, selectedLocation) => {
+      // ✅ 서버 요청 성공 후, CLIENT 측 selectedLocation 업데이트
+      setSelectedLocation(selectedLocation);
+
+      // 유저가 선택한 지역 코드(rcode)에 해당하는 상품 목록 페이지로 이동
       router.push({
         pathname: "/market",
         query: { rcode: selectedLocation.rcode },
       });
 
-      // ✅ CLIENT 측 selectedLocation 업데이트
-      setSelectedLocation(selectedLocation);
-      console.log("🔥", selectedLocation);
-
-      try {
-        // ✅ SERVER 측 selectedLocation 업데이트
-        const res = await fetch(`/api/user/selected-location`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: currentUser.id,
-            selectedLocation,
-          }),
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) throw new Error(data.message);
-
-        // router.push({
-        //   pathname: `/market/${router.query.from}`,
-        //   query: { rcode: selectedLocation.rcode }, // currentUser?.selectedLocation?.rcode ==> 아직 변경(업데이트)되지 않은 Old value.. -> 두번째 클릭 때서야(?) 업데이트된 값 반영됨
-        // });
-
-        console.log("✅ 현재 선택한 위치 변경 완료:", data.message);
-      } catch (err) {
-        console.error("❌ 현재 선택한 위치 변경 실패:", err.message);
-      }
-    },
-    onSuccess: async () => {
+      // 상품 목록 캐시 무효화 -> refetch
       queryClient.invalidateQueries(["products"]);
+      console.log("✅ 현재 선택한 위치 변경 완료:", data.message);
+    },
+    onError: (err) => {
+      // err.message: mutationFn에서 던진 에러 메시지 = "msg" 변수
+      // new Error(<첫 번째 인자>)의 첫 번째 인자 값이 Error 인스턴스의 .message 프로퍼티로 설정됩니다. => 프로퍼티 이름은 항상 .message로 고정
+      console.error("❌ 현재 선택한 위치 변경 실패:", err?.message);
+      alert(err?.message || "요청 중 오류가 발생했어요.");
     },
   });
 
@@ -88,16 +92,20 @@ export default function SubHeader() {
               : "opacity-0 translate-y-0 pointer-events-none"
           }`}
         >
-          <div className="flex flex-col bg-[var(--color-primary-100)] p-4 rounded-2xl gap-5">
-            {currentUser?.recentLocations.map((address) => (
-              <li
-                key={address.id}
-                className="list-none text-[1.6rem] cursor-pointer mr-auto"
-                onClick={() => changeSelectedLocation.mutate(address)}
-              >
-                {address.keyword.slice(-1)}
-              </li>
-            ))}
+          <div className="flex flex-col bg-[var(--color-primary-200)] p-4 rounded-2xl gap-5">
+            {currentUser?.recentLocations.length === 0 ? (
+              <div></div>
+            ) : (
+              currentUser?.recentLocations?.map((address) => (
+                <li
+                  key={address.id}
+                  className="list-none text-[1.6rem] cursor-pointer mr-auto"
+                  onClick={() => changeSelectedLocation.mutate(address)}
+                >
+                  {address.keyword.slice(-1)}
+                </li>
+              ))
+            )}
           </div>
         </div>
       </button>

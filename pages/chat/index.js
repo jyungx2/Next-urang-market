@@ -24,7 +24,7 @@ export default function ChatPage() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen p-6 bg-[var(--color-bg)]">
+    <div className="h-full flex flex-col p-6 bg-[var(--color-bg)]">
       {isNotificationOpen ? (
         <Notification />
       ) : (
@@ -36,5 +36,5 @@ export default function ChatPage() {
 
 // ✅ Layout 적용되도록 getLayout 설정
 ChatPage.getLayout = function haveLayout(page) {
-  return <Layout>{page}</Layout>; // Layout 안 씌움
+  return <Layout>{page}</Layout>;
 };

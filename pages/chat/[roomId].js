@@ -129,5 +129,5 @@ export default function ChatDetailPage() {
 
 // ✅ Layout 적용되도록 getLayout 설정
 ChatDetailPage.getLayout = function haveLayout(page) {
-  return <Layout>{page}</Layout>; // Layout 안 씌움
+  return <Layout>{page}</Layout>;
 };

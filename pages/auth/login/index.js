@@ -12,7 +12,7 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm({
     mode: "onSubmit", // 제출 시 검증(기본값이지만 명시 권장)
-    defaultValues: { username: "", birthdate: "" },
+    defaultValues: { username: "이유랑", birthdate: "991031" },
   });
   const { currentUser } = useCurrentUserStore();
   const router = useRouter();
@@ -69,7 +69,7 @@ export default function LoginPage() {
       </header>
 
       <h1 className="text-[2.4rem] font-bold mb-4">
-        Create an account with your phone number
+        쉽고 간편하게 휴대폰 번호로 가입하세요
       </h1>
 
       <div className="flex gap-4 items-center">
@@ -124,5 +124,5 @@ LoginPage.getLayout = function haveLayout(page) {
     <div className="min-h-screen max-w-[640px] mx-auto bg-[var(--color-com-bg)]">
       {page}
     </div>
-  ); // Layout 안 씌움
+  );
 };

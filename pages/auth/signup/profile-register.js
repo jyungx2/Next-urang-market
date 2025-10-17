@@ -327,7 +327,8 @@ export default function ProfileRegisterPage() {
         <Modal>
           <div className="flex flex-col gap-10 items-center justify-center">
             <RingLoader />
-            <span>잠시만 기다려주세요...</span>
+            <p>계정을 생성 중이에요...</p>
+            <p>조금만 기다려주세요!</p>
           </div>
         </Modal>
       )}

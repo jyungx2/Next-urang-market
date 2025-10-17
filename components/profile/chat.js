@@ -25,7 +25,7 @@ export default function Chat({ chats, isLoading }) {
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col flex-1 gap-8">
       <div className="flex items-center justify-between">
         <h1 className="font-bold text-[2.4rem]">Chats</h1>
         <div className="flex gap-6 items-center">
@@ -49,10 +49,15 @@ export default function Chat({ chats, isLoading }) {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center items-center flex-col min-h-screen bg-[var(--color-bg)] gap-12">
+        <div className="flex justify-center items-center flex-col h-full bg-[var(--color-bg)] gap-12">
           <PropagateLoader color={"#009afa"} />
 
           <p className="font-medium">{`${currentUser?.nickname}님의 채팅 리스트를 가져오고 있어요..`}</p>
+        </div>
+      ) : chats.length === 0 ? (
+        <div className="flex flex-col justify-center items-center h-full bg-[var(--color-bg)] gap-4 font-medium">
+          <p>아직 시작된 채팅이 없어요.</p>
+          <p>첫 거래 대화를 시작해보세요 🙂</p>
         </div>
       ) : (
         <div role="list" className="flex flex-col gap-6">

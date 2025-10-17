@@ -27,7 +27,10 @@ export default function Settings() {
             height={20}
           />
         </button>
-        <button className="font-medium cursor-pointer flex justify-between items-center">
+        <button
+          className="font-medium cursor-pointer flex justify-between items-center"
+          onClick={() => alert("현재 준비중인 기능입니다!")}
+        >
           <span>회원탈퇴</span>
           <Image
             src="/icons/chevron-right.svg"

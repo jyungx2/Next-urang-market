@@ -4,7 +4,7 @@ import CommunityAddPost from "@/components/ui/community-addPost";
 
 export default function CommunityLayout({ children, userLocationSlot }) {
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--color-bg)] relative max-w-[640px]">
+    <div className="flex flex-col h-full bg-[var(--color-bg)] relative">
       <div id="neighborhood_menu" className="flex flex-col gap-8 p-4">
         {userLocationSlot}
         {/* pathname에 포함되어 있는 mainCategory를 넘겨받기 위해 만들어진 Slot */}
@@ -15,7 +15,9 @@ export default function CommunityLayout({ children, userLocationSlot }) {
         <SubCategory />
       </div>
 
-      <div className="flex flex-col grow p-[2rem] pt-0 gap-10">{children}</div>
+      <div className="flex flex-col flex-1 p-[2rem] pt-0 gap-10">
+        {children}
+      </div>
 
       <CommunityAddPost className="bg-amber-400" />
     </div>

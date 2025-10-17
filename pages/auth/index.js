@@ -1,10 +1,21 @@
 import Layout from "@/components/layout/layout";
+import useCurrentUserStore from "@/zustand/currentUserStore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 // pages/index.tsx 또는 app/page.tsx
 export default function AuthPage() {
+  const { currentUser } = useCurrentUserStore();
+
+  useEffect(() => {
+    // 이미 로그인한 경우, /auth로 접근 시도 시, 바로 리턴
+    if (currentUser) {
+      return;
+    }
+  });
+
   const router = useRouter();
   return (
     <main className="flex flex-col items-center justify-between text-white px-4 py-8 min-h-screen">
@@ -47,5 +58,5 @@ AuthPage.getLayout = function haveLayout(page) {
     <div className="min-h-screen max-w-[640px] mx-auto bg-[var(--color-com-bg)]">
       {page}
     </div>
-  ); // Layout 안 씌움
+  );
 };

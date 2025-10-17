@@ -48,8 +48,13 @@ export default function Layout(props) {
   });
 
   return (
-    <div className="max-w-[640px] mx-auto">
-      <main>{props.children}</main>
+    <div className="max-w-[640px] mx-auto flex flex-col min-h-dvh h-dvh overflow-hidden">
+      {/* Layout (최상위 “뚜껑”) */}
+      {/* min-h-dvh h-dvh: 뷰포트 높이에 딱 맞게(넘치지 않게) “뚜껑” 고정 * 👉 아래 바텀 네비가 형제로 붙어도 총 높이가 뷰포트 + 네비로 커지지 않음/}
+      {/* overflow-hidden: 전역(바디) 스크롤 차단 👉 Layout은 전역 스크롤을 끊고(overflow-hidden), MarketPage > main이 실제 세로 스크롤을 담당*/}
+      <main className="flex-1 overflow-y-auto">{props.children}</main>
+      {/* flex-1: 자식 페이지가 이 공간 안에서만 레이아웃/스크롤을 직접 관리하도록*/}
+      {/* 👉 자식 페이지 컴포넌트: MarketPage / CommunityPage / ChatPage*/}
       {!(
         isSidebarOpen ||
         isSearchOpen ||
@@ -63,7 +68,6 @@ export default function Layout(props) {
           <MainNav />
         )
       ) : null}
-
       {/* 상태에 따라 표시되는 전역 UI들 */}
       {isSidebarOpen && (
         <div className="bg-black bg-opacity-50 z-40">

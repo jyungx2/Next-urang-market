@@ -111,6 +111,45 @@ export default function CommunityPage() {
     );
   }
 
+  if (!postData || postData.length === 0) {
+    if (mainCategory === "공지사항") {
+      if (subCategory === "필독공지") {
+        return (
+          <CommunityLayout
+            userLocationSlot={<UserLocation mainCategory={mainSlug} />}
+          >
+            <div className="flex flex-col gap-4 justify-center items-center flex-1 font-medium">
+              <p>아직 등록된 공지사항 내용이 없어요.</p>
+            </div>
+          </CommunityLayout>
+        );
+      } else {
+        return (
+          <CommunityLayout
+            userLocationSlot={<UserLocation mainCategory={mainSlug} />}
+          >
+            <div className="flex flex-col gap-4 justify-center items-center flex-1 font-medium">
+              <p>아직 등록된 업데이트 내용이 없어요.</p>
+            </div>
+          </CommunityLayout>
+        );
+      }
+    }
+
+    if (mainCategory === "워킹홀리데이" || "해외살이" || "해외취업") {
+      return (
+        <CommunityLayout
+          userLocationSlot={<UserLocation mainCategory={mainSlug} />}
+        >
+          <div className="flex flex-col gap-4 justify-center items-center flex-1 font-medium">
+            <p>아직 등록된 게시글이 없어요.</p>
+            <p>첫 번째로 이야기를 남겨보세요 ☀️</p>
+          </div>
+        </CommunityLayout>
+      );
+    }
+  }
+
   // mainCategory(Processed data by a customed function, 한국어 카테고리) 기준으로 렌더링
   if (mainCategory === "공지사항") {
     return (
@@ -171,6 +210,6 @@ export default function CommunityPage() {
 // }
 
 // ✅ Layout 적용되도록 getLayout 설정
-CommunityPage.getLayout = function haveLayout(page) {
-  return <Layout>{page}</Layout>; // Layout 안 씌움
-};
+// CommunityPage.getLayout = function haveLayout(page) {
+//   return { page };
+// };
