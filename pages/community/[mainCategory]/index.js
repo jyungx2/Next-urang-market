@@ -210,6 +210,6 @@ export default function CommunityPage() {
 // }
 
 // ✅ Layout 적용되도록 getLayout 설정
-// CommunityPage.getLayout = function haveLayout(page) {
-//   return { page };
-// };
+CommunityPage.getLayout = function haveLayout(page) {
+  return <Layout>{page}</Layout>;
+};
