@@ -1,13 +1,15 @@
 import Image from "next/image";
 import classes from "./searchPage.module.css";
-import UIContext from "@/store/ui-context";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useRouter } from "next/router";
+import { useSearch } from "@/store/search-context";
 
 export default function SearchPage() {
-  const { toggleSearchPage } = useContext(UIContext);
+  // const { toggleSearchPage } = useContext(UIContext);
+  const { toggleSearch } = useSearch();
+
   const searchInputRef = useRef(null);
   const router = useRouter();
   const { rcode } = router.query;
@@ -35,7 +37,7 @@ export default function SearchPage() {
       query: { rcode, keyword },
     });
     // 같은 페이지(/market)이기 때문에 단순 라우팅으로는 페이지 이동 X -> Context API로 관리하는 검색페이지를 직접 토글해주자!!
-    toggleSearchPage();
+    toggleSearch();
 
     // 2. 최근 검색어에 PATCH 요청
     try {
@@ -111,11 +113,7 @@ export default function SearchPage() {
         onSubmit={(e) => handleSearch(e)}
         className="flex items-center gap-4"
       >
-        <button
-          type="button"
-          className="cursor-pointer"
-          onClick={toggleSearchPage}
-        >
+        <button type="button" className="cursor-pointer" onClick={toggleSearch}>
           <Image
             src="/icons/chevron-left.svg"
             alt="icon"

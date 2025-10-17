@@ -1,4 +1,5 @@
 import ChatItem from "@/components/profile/chat-item";
+import { useNotification } from "@/store/notification-context";
 import UIContext from "@/store/ui-context";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import useSelectedProductStore from "@/zustand/selectedProduct";
@@ -7,7 +8,7 @@ import { useContext } from "react";
 import { PropagateLoader } from "react-spinners";
 
 export default function Chat({ chats, isLoading }) {
-  const { toggleNotificationPage } = useContext(UIContext);
+  const { toggleNotification } = useNotification();
   const { currentUser } = useCurrentUserStore();
   const { setProduct } = useSelectedProductStore();
 
@@ -42,7 +43,7 @@ export default function Chat({ chats, isLoading }) {
             />
           </button>
 
-          <button className="cursor-pointer" onClick={toggleNotificationPage}>
+          <button className="cursor-pointer" onClick={toggleNotification}>
             <Image src="/icons/alarm.svg" alt="icon" width={28} height={28} />
           </button>
         </div>

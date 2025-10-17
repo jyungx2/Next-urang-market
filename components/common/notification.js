@@ -1,14 +1,14 @@
-import UIContext from "@/store/ui-context";
+import { useNotification } from "@/store/notification-context";
 import Image from "next/image";
-import { useContext } from "react";
 
 export default function Notification() {
-  const { toggleNotificationPage } = useContext(UIContext);
+  // const { toggleNotificationPage } = useContext(UIContext);
+  const { toggleNotification } = useNotification();
 
   return (
     <div className="min-h-screen flex flex-col gap-20 text-white bg-[var(--color-com-bg)] p-6">
       <header className="flex justify-between items-center relative border-gray-300">
-        <button className="cursor-pointer" onClick={toggleNotificationPage}>
+        <button className="cursor-pointer" onClick={toggleNotification}>
           <Image
             src="/icons/chevron-left-w.svg"
             alt="icon"

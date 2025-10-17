@@ -1,13 +1,18 @@
-import UIContext from "@/store/ui-context";
+import { useNotification } from "@/store/notification-context";
+import { useSearch } from "@/store/search-context";
+import { useSidebar } from "@/store/sidebar-context";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 export default function SubHeader() {
-  const { toggleSidebar, toggleSearchPage, toggleNotificationPage } =
-    useContext(UIContext);
+  // const { toggleSidebar, toggleSearchPage, toggleNotificationPage } =
+  //   useContext(UIContext);
+  const { toggleSidebar } = useSidebar();
+  const { toggleSearch } = useSearch();
+  const { toggleNotification } = useNotification();
 
   const { currentUser, setSelectedLocation } = useCurrentUserStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -116,7 +121,7 @@ export default function SubHeader() {
             ? "translate-x-0 opacity-100"
             : "translate-x-15 opacity-0 pointer-events-none"
         }`}
-        onClick={toggleSearchPage}
+        onClick={toggleSearch}
       >
         <input
           type="text"
@@ -137,7 +142,7 @@ export default function SubHeader() {
             height={28}
           />
         </button>
-        <button className="cursor-pointer" onClick={toggleNotificationPage}>
+        <button className="cursor-pointer" onClick={toggleNotification}>
           <Image
             src="/icons/alarm.svg"
             alt="menu-icon"

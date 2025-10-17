@@ -2,7 +2,6 @@ import AdsSection from "@/components/main/ads-section";
 import MainHeader from "@/components/main/main-header";
 import PostsSection from "@/components/main/posts-section";
 import SearchForm from "@/components/main/search-form";
-import Sidebar from "@/components/common/sidebar";
 import Slider from "@/components/main/slider";
 import { useContext, useEffect } from "react";
 import Head from "next/head";
@@ -11,6 +10,8 @@ import SearchPage from "@/components/common/searchPage";
 import Layout from "@/components/layout/layout";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useRouter } from "next/router";
+import { useSearch } from "@/store/search-context";
+import { useSidebar } from "@/store/sidebar-context";
 
 export default function Home() {
   const router = useRouter();
@@ -23,7 +24,9 @@ export default function Home() {
     }
   }, []);
 
-  const { isSearchOpen, isSidebarOpen } = useContext(UIContext);
+  // const { isSearchOpen, isSidebarOpen } = useContext(UIContext);
+  const { isSearchOpen } = useSearch();
+  const { isSidebarOpen } = useSidebar();
 
   // 사이드바 오픈시, 스크롤 막는 코드
   useEffect(() => {

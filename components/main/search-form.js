@@ -3,9 +3,10 @@ import classes from "./search-form.module.css";
 import Location from "@/components/layout/location";
 import { useContext } from "react";
 import UIContext from "@/store/ui-context";
+import { useSearch } from "@/store/search-context";
 
 export default function SearchForm() {
-  const { toggleSearchPage } = useContext(UIContext);
+  const { toggleSearch } = useSearch();
 
   return (
     <div className={classes.container}>
@@ -28,7 +29,7 @@ export default function SearchForm() {
               type="text"
               className={`${classes.inputUnset} ${classes.searchInput}`}
               placeholder="검색어를 입력하세요."
-              onFocus={toggleSearchPage}
+              onFocus={toggleSearch}
             />
           </div>
 

@@ -1,16 +1,14 @@
-import MainNav from "@/components/layout/main-nav";
-import { useContext, useEffect } from "react";
-import UIContext from "@/store/ui-context";
-import ProductItemNav from "@/components/layout/productItem-nav";
 import { useRouter } from "next/router";
-import Sidebar from "@/components/common/sidebar";
-import SearchPage from "@/components/common/searchPage";
-import Notification from "@/components/common/notification";
+import { SidebarProvider } from "@/store/sidebar-context";
+import { SearchProvider } from "@/store/search-context";
+import { SettingsProvider } from "@/store/settings-context";
+import { NotificationProvider } from "@/store/notification-context";
+import { SidebarLayer } from "@/components/layer/sidebar";
+import { SearchLayer } from "@/components/layer/search";
+import { NotificationLayer } from "@/components/layer/notification";
+import { NavSwitch } from "@/components/layer/nav-switch";
 
 export default function Layout(props) {
-  const { isSidebarOpen, isSearchOpen, isSettingsOpen, isNotificationOpen } =
-    useContext(UIContext);
-
   const router = useRouter();
 
   // 특정 페이지에서 MainNav를 숨기고 FooterNav를 보여줄 경로 설정
@@ -48,42 +46,64 @@ export default function Layout(props) {
   });
 
   return (
-    <div className="max-w-[640px] mx-auto flex flex-col min-h-dvh h-dvh overflow-hidden">
-      {/* Layout (최상위 “뚜껑”) */}
-      {/* min-h-dvh h-dvh: 뷰포트 높이에 딱 맞게(넘치지 않게) “뚜껑” 고정 * 👉 아래 바텀 네비가 형제로 붙어도 총 높이가 뷰포트 + 네비로 커지지 않음/}
+    <SidebarProvider>
+      <SearchProvider>
+        <SettingsProvider>
+          <NotificationProvider>
+            {/* 실제 요소에 해당하는 최상위 div */}
+            <div className="max-w-[640px] mx-auto flex flex-col min-h-dvh h-dvh overflow-hidden">
+              {/* Layout (최상위 “뚜껑”) */}
+              {/* min-h-dvh h-dvh: 뷰포트 높이에 딱 맞게(넘치지 않게) “뚜껑” 고정 * 👉 아래 바텀 네비가 형제로 붙어도 총 높이가 뷰포트 + 네비로 커지지 않음/}
       {/* overflow-hidden: 전역(바디) 스크롤 차단 👉 Layout은 전역 스크롤을 끊고(overflow-hidden), MarketPage > main이 실제 세로 스크롤을 담당*/}
-      <main className="flex-1 overflow-y-auto">{props.children}</main>
-      {/* flex-1: 자식 페이지가 이 공간 안에서만 레이아웃/스크롤을 직접 관리하도록*/}
-      {/* 👉 자식 페이지 컴포넌트: MarketPage / CommunityPage / ChatPage*/}
-      {!(
-        isSidebarOpen ||
-        isSearchOpen ||
-        isSettingsOpen ||
-        isNotificationOpen ||
-        isHiddenNavPage
-      ) ? (
-        isProductItemNavPage ? (
-          <ProductItemNav />
-        ) : (
-          <MainNav />
-        )
-      ) : null}
-      {/* 상태에 따라 표시되는 전역 UI들 */}
-      {isSidebarOpen && (
-        <div className="bg-black bg-opacity-50 z-40">
-          <Sidebar />
-        </div>
-      )}
-      {isSearchOpen && (
-        <div className="bg-white z-50">
-          <SearchPage />
-        </div>
-      )}
-      {isNotificationOpen && (
-        <div className=" z-50">
-          <Notification />
-        </div>
-      )}
-    </div>
+              <main className="flex-1 overflow-y-auto">{props.children}</main>
+              {/* flex-1: 자식 페이지가 이 공간 안에서만 레이아웃/스크롤을 직접 관리하도록*/}
+              {/* 👉 자식 페이지 컴포넌트: MarketPage / CommunityPage / ChatPage*/}
+
+              {/* ✅ 컨텍스트 소비는 Provider 내부의 자식 컴포넌트에서만 */}
+              <NavSwitch
+                isHiddenNavPage={isHiddenNavPage}
+                isProductItemNavPage={isProductItemNavPage}
+              />
+              {/* {!(
+                isSidebarOpen ||
+                isSearchOpen ||
+                isSettingsOpen ||
+                isNotificationOpen ||
+                isHiddenNavPage
+              ) ? (
+                isProductItemNavPage ? (
+                  <ProductItemNav />
+                ) : (
+                  <MainNav />
+                )
+              ) : null} */}
+
+              {/* 전역 UI 레이어들 — 각 레이어 내부에서 자기 컨텍스트만 구독 */}
+              <SidebarLayer />
+              <SearchLayer />
+              <NotificationLayer />
+
+              {/* 상태에 따라 표시되는 전역 UI들 */}
+              {/* {isSidebarOpen && (
+                <div className="bg-black bg-opacity-50 z-40">
+                  <Sidebar />
+                </div>
+              )}
+
+              {isSearchOpen && (
+                <div className="bg-white z-50">
+                  <SearchPage />
+                </div>
+              )}
+              {isNotificationOpen && (
+                <div className="z-50">
+                  <Notification />
+                </div>
+              )} */}
+            </div>
+          </NotificationProvider>
+        </SettingsProvider>
+      </SearchProvider>
+    </SidebarProvider>
   );
 }

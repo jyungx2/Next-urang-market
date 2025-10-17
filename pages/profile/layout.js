@@ -1,9 +1,9 @@
 import SettingsPage from "@/components/common/settings";
-import UIContext from "@/store/ui-context";
+import { useSettings } from "@/store/settings-context";
 import { useContext } from "react";
 
 export default function ProfileLayout({ children }) {
-  const { isSettingsOpen } = useContext(UIContext);
+  const { isSettingsOpen } = useSettings();
 
   return (
     <>

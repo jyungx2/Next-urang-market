@@ -52,7 +52,7 @@ export default function AuthPage() {
   );
 }
 
-// ✅ Layout 적용되도록 getLayout 설정
+// ✅ Layout 적용 X -> 대신 직접 최대 너비 지정
 AuthPage.getLayout = function haveLayout(page) {
   return (
     <div className="min-h-screen max-w-[640px] mx-auto bg-[var(--color-com-bg)]">

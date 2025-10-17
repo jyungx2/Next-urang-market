@@ -1,16 +1,16 @@
-import UIContext from "@/store/ui-context";
+import { useSettings } from "@/store/settings-context";
 import Image from "next/image";
-import { useContext } from "react";
 
 export default function SettingsPage() {
-  const { toggleSettingsPage } = useContext(UIContext);
+  // const { toggleSettingsPage } = useContext(UIContext);
+  const { toggleSettings } = useSettings();
 
   return (
     <div className="min-h-screen flex flex-col gap-10 text-white bg-[var(--color-com-bg)] p-6">
       <header className="flex justify-center relative border-gray-300">
         <button
           className="absolute left-0 cursor-pointer"
-          onClick={toggleSettingsPage}
+          onClick={toggleSettings}
         >
           <Image
             src="/icons/chevron-left-w.svg"

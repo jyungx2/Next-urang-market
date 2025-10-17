@@ -1,11 +1,11 @@
 import classes from "./sidebar.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import { useContext } from "react";
-import UIContext from "@/store/ui-context";
+import { useSidebar } from "@/store/sidebar-context";
 
 export default function Sidebar() {
-  const { toggleSidebar } = useContext(UIContext);
+  // const { toggleSidebar } = useContext(UIContext);
+  const { toggleSidebar } = useSidebar();
 
   return (
     <div className="flex flex-col gap-10 p-6 min-h-screen bg-[var(--color-com-bg)]">

@@ -1,6 +1,7 @@
 import Notification from "@/components/common/notification";
 import Layout from "@/components/layout/layout";
 import Chat from "@/components/profile/chat";
+import { useNotification } from "@/store/notification-context";
 import UIContext from "@/store/ui-context";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useQuery } from "@tanstack/react-query";
@@ -8,7 +9,8 @@ import { useContext } from "react";
 import { PuffLoader } from "react-spinners";
 
 export default function ChatPage() {
-  const { isNotificationOpen } = useContext(UIContext);
+  // const { isNotificationOpen } = useContext(UIContext);
+  const { isNotificationOpen } = useNotification();
   const { currentUser } = useCurrentUserStore();
 
   // ✅ 로그인한 유저의 userId로 채팅방 목록 요청

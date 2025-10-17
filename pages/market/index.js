@@ -1,17 +1,23 @@
 import SubHeader from "@/components/market/sub-header";
 import ProductsList from "@/components/market/product-list";
-import UIContext from "@/store/ui-context";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import MarketAddPost from "@/components/ui/market-addPost";
 import Layout from "@/components/layout/layout";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { PropagateLoader } from "react-spinners";
 import useCurrentUserStore from "@/zustand/currentUserStore";
+import { useSidebar } from "@/store/sidebar-context";
+import { useSearch } from "@/store/search-context";
+import { useNotification } from "@/store/notification-context";
 
 export default function MarketPage() {
-  const { isSidebarOpen, isSearchOpen, isNotificationOpen } =
-    useContext(UIContext);
+  // const { isSidebarOpen, isSearchOpen, isNotificationOpen } =
+  //   useContext(UIContext);
+  const { isSidebarOpen } = useSidebar();
+  const { isSearchOpen } = useSearch();
+  const { isNotificationOpen } = useNotification();
+
   const { currentUser } = useCurrentUserStore();
   const [isDropUpOpen] = useState(false);
   const router = useRouter();
