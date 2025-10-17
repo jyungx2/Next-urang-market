@@ -1,7 +1,5 @@
 import Image from "next/image";
 import classes from "./main-header.module.css";
-import { useContext } from "react";
-import UIContext from "@/store/ui-context";
 import { useSidebar } from "@/store/sidebar-context";
 
 export default function MainHeader() {

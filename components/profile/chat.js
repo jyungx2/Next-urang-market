@@ -1,6 +1,5 @@
 import ChatItem from "@/components/profile/chat-item";
 import { useNotification } from "@/store/notification-context";
-import UIContext from "@/store/ui-context";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import useSelectedProductStore from "@/zustand/selectedProduct";
 import Image from "next/image";

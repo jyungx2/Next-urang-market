@@ -5,7 +5,6 @@ import SearchForm from "@/components/main/search-form";
 import Slider from "@/components/main/slider";
 import { useContext, useEffect } from "react";
 import Head from "next/head";
-import UIContext from "@/store/ui-context";
 import SearchPage from "@/components/common/searchPage";
 import Layout from "@/components/layout/layout";
 import useCurrentUserStore from "@/zustand/currentUserStore";
@@ -50,7 +49,7 @@ export default function Home() {
       </Head>
 
       <div
-        className={`bg-[var(--color-bg)] min-h-screen min-w-[640px] p-6 pt-0 flex flex-col gap-7 ${
+        className={`bg-[var(--color-bg)] h-full p-6 pt-0 flex flex-col gap-7 ${
           isSidebarOpen || isSearchOpen ? "hidden" : ""
         }`}
       >

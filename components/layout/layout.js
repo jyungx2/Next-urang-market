@@ -7,6 +7,7 @@ import { SidebarLayer } from "@/components/layer/sidebar";
 import { SearchLayer } from "@/components/layer/search";
 import { NotificationLayer } from "@/components/layer/notification";
 import { NavSwitch } from "@/components/layer/nav-switch";
+import { SettingsLayer } from "@/components/layer/settings";
 
 export default function Layout(props) {
   const router = useRouter();
@@ -82,6 +83,7 @@ export default function Layout(props) {
               <SidebarLayer />
               <SearchLayer />
               <NotificationLayer />
+              <SettingsLayer />
 
               {/* 상태에 따라 표시되는 전역 UI들 */}
               {/* {isSidebarOpen && (

@@ -1,19 +1,18 @@
 import MyProfile from "@/components/profile/my-profile";
-import UIContext from "@/store/ui-context";
+import { useSettings } from "@/store/settings-context";
 import Image from "next/image";
-import { useContext } from "react";
 
 export default function Profile() {
-  // const { toggleSettingsPage } = useContext(UIContext);
+  const { toggleSettings } = useSettings();
 
   return (
     <>
       <div className="flex flex-col gap-8">
         <header className="flex justify-between items-center">
           <h1 className="font-bold text-[2.4rem]">My Profile</h1>
-          {/* <button className="cursor-pointer" onClick={toggleSettingsPage}>
+          <button className="cursor-pointer" onClick={toggleSettings}>
             <Image src="/icons/cog-6.svg" alt="icon" width={30} height={30} />
-          </button> */}
+          </button>
         </header>
       </div>
 

@@ -1,12 +1,9 @@
-import Notification from "@/components/common/notification";
+import Notification from "@/components/common/notificationPage";
 import Layout from "@/components/layout/layout";
 import Chat from "@/components/profile/chat";
 import { useNotification } from "@/store/notification-context";
-import UIContext from "@/store/ui-context";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useQuery } from "@tanstack/react-query";
-import { useContext } from "react";
-import { PuffLoader } from "react-spinners";
 
 export default function ChatPage() {
   // const { isNotificationOpen } = useContext(UIContext);

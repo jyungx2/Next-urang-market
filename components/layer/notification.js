@@ -1,6 +1,6 @@
 import React from "react";
 import { useNotification } from "@/store/notification-context";
-import Notification from "@/components/common/notification";
+import Notification from "@/components/common/notificationPage";
 
 export const NotificationLayer = React.memo(function NotificationLayer() {
   // const { isNotificationOpen } = useContext(NotificationContext);

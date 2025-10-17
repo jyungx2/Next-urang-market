@@ -1,4 +1,3 @@
-import { UIContextProvider } from "@/store/ui-context";
 import "@/styles/globals.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // 수동 CSS import 권장
@@ -12,9 +11,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <QueryClientProvider client={client}>
-      <UIContextProvider>
-        {getLayout(<Component {...pageProps} />)}
-      </UIContextProvider>
+      {getLayout(<Component {...pageProps} />)}
     </QueryClientProvider>
   );
 }

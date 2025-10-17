@@ -1,5 +1,5 @@
 import React from "react";
-import SettingsPage from "@/components/common/SettingsPage";
+import Settings from "@/components/common/settingsPage";
 import { useSettings } from "@/store/settings-context";
 
 export const SettingsLayer = React.memo(function SettingsLayer() {
@@ -9,7 +9,7 @@ export const SettingsLayer = React.memo(function SettingsLayer() {
   if (!isSettingsOpen) return null;
   return (
     <div className="bg-black bg-opacity-50 z-40">
-      <SettingsPage />
+      <Settings />
     </div>
   );
 });

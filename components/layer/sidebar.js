@@ -1,6 +1,6 @@
 import React from "react";
 import { useSidebar } from "@/store/sidebar-context";
-import Sidebar from "@/components/common/sidebar";
+import Sidebar from "@/components/common/sidebarPage";
 
 export const SidebarLayer = React.memo(function SidebarLayer() {
   // const { isSidebarOpen } = useContext(SidebarContext);

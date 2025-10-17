@@ -3,11 +3,10 @@ import Services from "@/components/community/services";
 import Settings from "@/components/community/settings";
 import Layout from "@/components/layout/layout";
 import Profile from "@/components/profile/profile";
-import ProfileLayout from "@/pages/profile/layout";
 
 export default function ProfilePage() {
   return (
-    <ProfileLayout>
+    <div className="flex flex-col p-6 bg-[var(--color-bg)] h-full">
       <main className="flex flex-col gap-14">
         <Profile />
 
@@ -15,7 +14,7 @@ export default function ProfilePage() {
         <Activities />
         <Settings />
       </main>
-    </ProfileLayout>
+    </div>
   );
 }
 
