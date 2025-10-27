@@ -84,7 +84,7 @@ export default function MarketPage() {
         <MarketAddPost isOpen={isDropUpOpen} />
 
         {/* 메인 컨텐츠 (제품 리스트) */}
-        <main className="flex flex-1 overflow-y-auto justify-center">
+        <main className="flex flex-1 overflow-y-auto justify-center scrollbar-hide">
           {isLoading ? (
             <div className="flex flex-col justify-center items-center text-center gap-12">
               <PropagateLoader color={"#009afa"} />

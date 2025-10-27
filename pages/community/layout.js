@@ -15,7 +15,7 @@ export default function CommunityLayout({ children, userLocationSlot }) {
         <SubCategory />
       </div>
 
-      <div className="flex flex-col flex-1 p-[2rem] pt-0 gap-10">
+      <div className="flex flex-col flex-1 p-[2rem] pt-0 gap-10 overflow-y-auto scrollbar-hide">
         {children}
       </div>
 

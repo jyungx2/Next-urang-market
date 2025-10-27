@@ -241,10 +241,15 @@ body {
   border: 2px solid #e73434;
 } */
 
-.custom-scroll-hide {
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
-}
-.custom-scroll-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+@layer utilities {
+  .scrollbar-hide {
+    /* Firefox */
+    scrollbar-width: none;
+    /* IE/Edge(레거시) */
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    /* Chrome/Safari */
+    display: none;
+  }
 }

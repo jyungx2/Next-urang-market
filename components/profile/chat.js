@@ -25,7 +25,7 @@ export default function Chat({ chats, isLoading }) {
   }
 
   return (
-    <div className="flex flex-col flex-1 gap-8">
+    <div className="flex flex-col flex-1 gap-8 overflow-y-auto scrollbar-hide">
       <div className="flex items-center justify-between">
         <h1 className="font-bold text-[2.4rem]">Chats</h1>
         <div className="flex gap-6 items-center">

@@ -50,7 +50,7 @@ export default function Home() {
       <div
         className={`bg-[var(--color-bg)] h-full p-6 pt-0 flex flex-col gap-7 ${
           isSidebarOpen || isSearchOpen ? "hidden" : ""
-        } overflow-auto scrollbar-none`}
+        } overflow-auto scrollbar-hide`}
       >
         <MainHeader />
 
