@@ -6,7 +6,6 @@ import { useState } from "react";
 export default function SearchLocationInput({
   onSelect,
   setIsLoading,
-
   searchResults,
   setSearchResults,
 }) {

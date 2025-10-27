@@ -9,7 +9,10 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export default function PostDetailPage({ selectedProduct, relatedListings }) {
+export default function ProductDetailPage({
+  selectedProduct,
+  relatedListings,
+}) {
   const { currentUser } = useCurrentUserStore();
   const router = useRouter();
   const rcode = router.query.rcode;
@@ -241,15 +244,18 @@ export async function getStaticProps(context) {
           ...product,
           // 3) 직렬화 (⚠️ ObjectId/Date는 JSON 직렬화 불가 → 문자열 변환 필요)
           _id: product._id.toString(),
-          createdAt: product.createdAt ? product.createdAt.toISOString() : null,
+          sellerId: product.sellerId?.toString?.() ?? product.sellerId,
+          createdAt: product.createdAt
+            ? new Date(product.createdAt).toISOString()
+            : null,
         },
         relatedListings: relatedListings.map((item) => ({
           ...item,
           _id: item._id.toString(),
-          sellerId:
-            d.sellerId && d.sellerId.toString
-              ? d.sellerId.toString()
-              : undefined,
+          sellerId: item.sellerId?.toString?.() ?? item.sellerId,
+          createdAt: item.createdAt
+            ? new Date(item.createdAt).toISOString()
+            : null,
         })),
       },
       revalidate: 60, // ISR 설정
@@ -307,6 +313,6 @@ export async function getStaticPaths() {
 }
 
 // ✅ Layout 적용되도록 getLayout 설정
-PostDetailPage.getLayout = function haveLayout(page) {
+ProductDetailPage.getLayout = function haveLayout(page) {
   return <Layout>{page}</Layout>;
 };

@@ -3,6 +3,7 @@ import CommentNew from "@/components/community/comment-new";
 import Layout from "@/components/layout/layout";
 import { connectDatabase } from "@/helpers/db-util";
 import { useQuery } from "@tanstack/react-query";
+import { ObjectId } from "mongodb";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -10,7 +11,7 @@ export default function PostDetailPage({ selectedPost }) {
   const router = useRouter();
   const { mainCategory, tab } = router.query;
 
-  const { data, isLoading } = useQuery({
+  const { data: comments, isLoading } = useQuery({
     queryKey: ["comments", selectedPost._id],
     queryFn: async () => {
       const res = await fetch(`/api/posts/comments?postId=${selectedPost._id}`);
@@ -85,7 +86,9 @@ export default function PostDetailPage({ selectedPost }) {
       {/* 댓글 리셋 & 좋아요 섹션 */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-1 items-center">
-          <span className="font-bold text-[1.4rem]">댓글 {data?.length}</span>
+          <span className="font-bold text-[1.4rem]">
+            댓글 {comments?.length}
+          </span>
 
           <button className="cursor-pointer aspect-square bg-[var(--color-grey-50)] p-1 rounded-full">
             <Image
@@ -134,7 +137,7 @@ export default function PostDetailPage({ selectedPost }) {
       {isLoading ? (
         <p className="text-center">Loading...</p>
       ) : (
-        <CommentList comments={data} postId={selectedPost._id} />
+        <CommentList comments={comments} postId={selectedPost._id} />
       )}
     </div>
   );
@@ -156,6 +159,9 @@ export async function getStaticProps(context) {
       .collection("posts")
       .findOne({ _id: new ObjectId(postId) });
 
+    // 🔹 comments 제거 (클라이언트에서 useQuery로 가져오므로)
+    const { comments, ...postWithoutComments } = post;
+
     if (!post) {
       return { notFound: true };
     }
@@ -164,9 +170,9 @@ export async function getStaticProps(context) {
     // ⚠️ Next.js는 getStaticProps 결과(리턴값, props)를 JSON으로 직렬화해서 클라이언트로 전달해줘야 함.
     // MongoDB ObjectId, JS Date는 JSON으로 바로 변환 불가 → 문자열 변환 필요!
     const selectedPost = {
-      ...post,
-      _id: post._id.toString(),
-      createdAt: post.createdAt ? post.createdAt.toISOString() : null,
+      ...postWithoutComments,
+      _id: post._id?.toString?.() ?? post._id,
+      createdAt: post.createdAt ? new Date(post.createdAt).toISOString() : null,
     };
 
     return {
