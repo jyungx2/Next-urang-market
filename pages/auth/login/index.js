@@ -38,9 +38,7 @@ export default function LoginPage() {
 
       useCurrentUserStore.getState().setCurrentUser(session.user);
       console.log(currentUser, "유저 세션: ", session.user);
-
-      // 프로필 페이지로 이동
-      router.push("/profile");
+      router.push("/");
     },
     onSuccess: async () => {},
     onError: (err) => {

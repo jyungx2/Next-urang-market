@@ -24,7 +24,7 @@ export default function LocationSearchPage() {
 
   // ⭐️ SearchLocationInput 리팩토링 ⭐️
   const [searchResults, setSearchResults] = useState([]);
-  const addressRef = useRef();
+  // const addressRef = useRef();
 
   // 🎯 페이지 최초 렌더링시, 서버로부터 유저의 recentLocations 정보 가져와서(GET 요청) 렌더링
   useEffect(() => {
@@ -202,10 +202,10 @@ export default function LocationSearchPage() {
     updateRecentLocationsOverall(location);
 
     // ⭐️ 부모 컴포넌트에서 처리하는 부가적인 작업(이전 페이지에서 정돈되어야 하는 것들.. -> 근데 딱히 없어도 되지 않나? 싶음.. 바로 다른 페이지(/community)로 이동하면...)
-    setTimeout(() => {
-      if (addressRef.current) addressRef.current.value = "";
-      setSearchResults([]);
-    }, 0);
+    // setTimeout(() => {
+    //   if (addressRef.current) addressRef.current.value = "";
+    //   setSearchResults([]);
+    // }, 0);
   };
 
   // 🎯 recentLocations 상태 관리 코드 (C + S)
@@ -349,7 +349,7 @@ export default function LocationSearchPage() {
             handleSelectAddress(fullAddress, rcode)
           }
           setIsLoading={setIsLoading}
-          addressRef={addressRef}
+          // addressRef={addressRef}
           searchResults={searchResults}
           setSearchResults={setSearchResults}
         />

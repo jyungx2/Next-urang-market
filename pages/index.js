@@ -3,9 +3,8 @@ import MainHeader from "@/components/main/main-header";
 import PostsSection from "@/components/main/posts-section";
 import SearchForm from "@/components/main/search-form";
 import Slider from "@/components/main/slider";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import Head from "next/head";
-import SearchPage from "@/components/common/searchPage";
 import Layout from "@/components/layout/layout";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useRouter } from "next/router";
@@ -51,7 +50,7 @@ export default function Home() {
       <div
         className={`bg-[var(--color-bg)] h-full p-6 pt-0 flex flex-col gap-7 ${
           isSidebarOpen || isSearchOpen ? "hidden" : ""
-        }`}
+        } overflow-auto scrollbar-none`}
       >
         <MainHeader />
 
