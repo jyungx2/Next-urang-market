@@ -153,7 +153,7 @@ export default function LocationSearchPage() {
       >
         <div
           className="cursor-pointer"
-          onClick={() => changeSelectedLocationOverall(location)}
+          onClick={() => updateSelectedLocationOverall(location)}
         >
           {location.keyword.slice(-2).join(" ")}
         </div>
@@ -195,7 +195,7 @@ export default function LocationSearchPage() {
     setSelectedLocation(location); // Zustand 상태 업데이트
 
     // ✅ SERVER 측 selectedLocation 업데이트
-    changeSelectedLocationOverall(location);
+    updateSelectedLocationOverall(location);
 
     // 🔥 유저가 직접 검색하고 난 뒤에는 최근이용지역에 반영 필수
     // ✅ CLIENT & SERVER 측 recentLocations 상태 업데이트
@@ -211,28 +211,6 @@ export default function LocationSearchPage() {
   // 🎯 recentLocations 상태 관리 코드 (C + S)
   const updateRecentLocationsOverall = async (location) => {
     const newRecentAddress = location;
-    // ✨newList라는 최신 배열을 직접 만들어서✨
-    // 1. 클라이언트 측 상태값을 이걸로 변경하고 => setRecentLocations(newList)
-    // 2. 서버에 보낼 최신 데이터도 이걸로 보내자 =>  recentLocations: newList,
-    const newRecentList = (() => {
-      const exists = currentUser?.recentLocations?.some(
-        (loc) => loc.keyword.join() === newRecentAddress.keyword.join()
-      );
-      if (exists) return currentUser?.recentLocations;
-      return [...currentUser?.recentLocations, newRecentAddress].slice(-3); // push(): 기존 배열을 직접 수정해버려서 리액트나 zustand는 값이 안바꼈다고 판단.. 업데이트 무시 & 렌더링 x => [...]으로 아예 새로운 배열을 만들어 새로운 참조값을 만들어 렌더링 정상 동작 하도록 불변성 유지하는 방식으로 상태 업데이트! (📍불변성 유지 = 원래 값을 직접 수정 하지 않고, 새로운 값을 만들어서 교체하는 것)
-    })();
-
-    // ✅ CLIENT 측 recentLocations 업데이트
-    setRecentLocations(newRecentList); // ❓ 아래에서 recentLocations를 바꿔줬으니까 굳이 여기서 해줄 필요 없는거 아닌가?
-
-    // 💥⚠️객체 전체를 갱신해줄 필요⚠️💥
-    setCurrentUser({ ...currentUser, recentLocations: newRecentList });
-    // 위의 코드를 써주지 않으면, zustand는 상태가 변경되었는지 판단할 때, === 비교만 하기 때문에, 내부 속성(recentLocations 배열값)이 바뀌어도 currentUser 객체 자체가 동일하다면 React는 렌더링을 다시 하지 않으므로, currentUser 객체가 얕은 비교로 변경되지 않았다고 판단하여 렌더링을 다시 하지 x -> 아무리 setRecentLocations로 배열을 newList를 추가해 업데이트해줘도, 화면 상에 렌더링 되지 않음!
-    // => 따라서, currentUser 자체를 업데이트해줌으로써 깊은 복사를 통해 currentUser 객체의 참조 자체를 바꿔주어 zustand가 변경 사항을 감지하고 리렌더링하도록 한다.
-
-    // ⚠️ GPS로 인증한 위치만 location으로 등록할건지, 아니면 그냥 사용자가 단순히 현재 선택한, 인증되지 않은 위치도 location으로 등록할건지...=> 우리동네 = location이기 떄문에 내위치(GPS) 버튼 결과값만 location으로 등록되도록 하자! => 따라서 아래 코드는 지워야함..
-    // setNewLocation(newItem); // 🔥 zustand currentUser.location 업데이트
-
     // ✅ SERVER 측 recentLocations 업데이트
     try {
       const res = await fetch(`/api/user/recent-locations`, {
@@ -243,13 +221,27 @@ export default function LocationSearchPage() {
         body: JSON.stringify({
           userId: currentUser.id,
           recentLocation: newRecentAddress,
-          //  // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
-          //   // 📌 api routes파일에서 PATCH 요청으로 $push, $each 메소드 이용해 요소 하나씩 받아서 recentLocations: [] 빈 배열에 넣는 방식이므로 newList가 아닌, newItem을 전달.. (250423 - 노션필기참고)
+          // ✅ 업데이트된 상태값 직접 전송 ... 그렇지 않고 그냥 recentLocations(useState값)을 보내버리면 🔥아무리 setRecentLocations로 상태변경 했어도 이 시점에서는 업데이트 이전 값을 기억하기 때문에🔥 아직 업데이트되지 못한 상태값이 서버에 전송되어짐!
+          // 📌 api routes파일에서 PATCH 요청으로 $push, $each 메소드 이용해 요소 하나씩 받아서 recentLocations: [] 빈 배열에 넣는 방식이므로 newList가 아닌, newItem을 전달.. (250423 - 노션필기참고)
         }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
+
+      // ✨newList라는 최신 배열을 직접 만들어서✨
+      // 1. 클라이언트 측 상태값을 이걸로 변경하고 => setRecentLocations(newList)
+      // 2. 서버에 보낼 최신 데이터도 이걸로 보내자 =>  recentLocations: newList,
+      const newRecentList = (() => {
+        const exists = currentUser?.recentLocations?.some(
+          (loc) => loc.keyword.join() === newRecentAddress.keyword.join()
+        );
+        if (exists) return currentUser?.recentLocations;
+        return [...currentUser?.recentLocations, newRecentAddress].slice(-10); // push(): 기존 배열을 직접 수정해버려서 리액트나 zustand는 값이 안바꼈다고 판단.. 업데이트 무시 & 렌더링 x => [...]으로 아예 새로운 배열을 만들어 새로운 참조값을 만들어 렌더링 정상 동작 하도록 불변성 유지하는 방식으로 상태 업데이트! (📍불변성 유지 = 원래 값을 직접 수정 하지 않고, 새로운 값을 만들어서 교체하는 것)
+      })();
+
+      // ✅ CLIENT 측 recentLocations 업데이트
+      setRecentLocations(newRecentList);
 
       console.log("✅ 최근 위치 저장 성공");
     } catch (err) {
@@ -277,7 +269,7 @@ export default function LocationSearchPage() {
 
       // 🔥내위치 바꾸면, 선택된 위치도 같이 바꿔줘야 한다! (그 반대는 x)
       // ✅ CLIENT & SERVER 측 selectedLocation 업데이트
-      changeSelectedLocationOverall(newLocation);
+      updateSelectedLocationOverall(newLocation);
       // +post 버튼 추가시 별도의 인증절차 거치지 않도록 isVerified === true로 바뀐 주소객체로 상태 변경
 
       const data = await res.json();
@@ -290,7 +282,7 @@ export default function LocationSearchPage() {
   };
 
   // 🎯 selectedLocations 상태 관리 코드 (C + S)
-  const changeSelectedLocationOverall = async (selectedLocation) => {
+  const updateSelectedLocationOverall = async (selectedLocation) => {
     try {
       // ✅ SERVER 측 selectedLocation 업데이트
       const res = await fetch(`/api/user/selected-location`, {
@@ -394,7 +386,7 @@ export default function LocationSearchPage() {
               <div
                 className="text-[1.6rem] cursor-pointer"
                 onClick={() =>
-                  changeSelectedLocationOverall(currentUser?.location)
+                  updateSelectedLocationOverall(currentUser?.location)
                 }
               >
                 {currentUser?.location.keyword.slice(-2).join(" ")}

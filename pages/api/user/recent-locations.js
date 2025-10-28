@@ -45,7 +45,7 @@ export default async function handler(req, res) {
         $push: {
           recentLocations: {
             $each: [recentLocation],
-            $slice: -3, // 최신 3개만 유지
+            $slice: -10, // 최신 10개만 유지
           },
         },
       }
