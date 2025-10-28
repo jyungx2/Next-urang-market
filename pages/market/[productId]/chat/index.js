@@ -37,7 +37,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col ">
       <header className="flex flex-col sticky top-0 left-0 right-0 z-50">
         <div className="flex justify-center items-center relative p-4 bg-gray-100 border-b border-gray-200">
           <button

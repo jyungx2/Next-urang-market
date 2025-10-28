@@ -132,7 +132,7 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
 
   return (
     <>
-      <main className="flex-1 overflow-y-auto p-4 bg-[var(--color-bg)]">
+      <main className="flex-1 overflow-y-auto p-4 bg-[var(--color-bg)] scrollbar-hide">
         {messages.map((msg, i) => {
           const isMe = msg.senderId === senderId;
 

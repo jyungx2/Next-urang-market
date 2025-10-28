@@ -45,8 +45,8 @@ export default function ChatDetailPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="flex flex-col sticky top-0 left-0 right-0 z-50">
-        <div className="flex justify-center items-center relative p-4 bg-gray-100 border-b border-gray-200">
+      <header className="flex flex-col sticky top-0 left-0 right-0 z-50 ">
+        <div className="flex justify-center items-center relative p-6 bg-gray-100 border-b border-gray-200">
           <button
             className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 p-4"
             onClick={() => router.back()}

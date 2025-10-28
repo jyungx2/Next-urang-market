@@ -327,7 +327,7 @@ export default function LocationSearchPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col gap-2 bg-[var(--color-bg)]">
+    <div className="min-h-screen flex flex-col gap-2 bg-[var(--color-bg)] ">
       <div className="grid grid-cols-3 items-center p-4 font-bold border-b border-[var(--color-grey-200)]">
         <button
           className="justify-self-start cursor-pointer"
