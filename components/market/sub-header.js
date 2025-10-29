@@ -107,7 +107,7 @@ export default function SubHeader() {
                   className="list-none text-[1.6rem] cursor-pointer mr-auto"
                   onClick={() => changeSelectedLocation.mutate(address)}
                 >
-                  {address.keyword.slice(-1)}
+                  {address?.keyword?.slice(-1)}
                 </li>
               ))
             )}
