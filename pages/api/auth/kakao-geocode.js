@@ -2,6 +2,16 @@ export default async function handler(req, res) {
   if (req.method !== "GET")
     return res.status(405).json({ error: "Method not allowed" });
 
+  // ✅ 프로덕션에서 키가 undefined/null인지 먼저 확인
+  const key = process.env.KAKAO_REST_API_KEY;
+  if (!key) {
+    // vercel env 미설정 / 오타 / 재배포 누락
+    return res.status(500).json({
+      message: "KAKAO_REST_API_KEY not found at runtime (production)",
+      hint: "Vercel Settings > Environment Variables에 Production 스코프로 설정 후 Redeploy 필요",
+    });
+  }
+
   const { lat, lng } = req.query;
 
   const apiUrl = `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${lng}&y=${lat}`;
