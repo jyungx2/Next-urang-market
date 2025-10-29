@@ -3,10 +3,12 @@
 워킹홀리데이 준비부터 해외생활, 취업 후기까지 —</br> 해외살이를 한 번쯤 꿈꿨던 분들이 한 곳에서 모두 연결되는 공간입니다😉
 
 ### ❗NOTICE️
-⚠️ 회원가입 시 휴대폰 번호는 '01000000000'으로 진행해 주시고, 비밀번호는 '123456'을 입력해주세요.
-> 테스트 번호 안내 (CoolSMS)
-  현재 CoolSMS의 요금제 이슈로 인해, 문자 인증은 테스트용 번호에서만 가능합니다.</br>
-  회원가입 시 아래 번호 외에는 인증이 제한됩니다.
+⚠️ 현재 CoolSMS의 요금제 이슈로 인해, 문자 인증은 테스트용 번호에서만 가능합니다.</br>
+   회원가입 시 휴대폰 번호는 '01000000000'으로 진행해 주시고, 비밀번호는 '123456'을 입력해주세요.</br>
+   회원가입 시 아래 번호 외에는 인증이 제한됩니다.</br>
+  ✅ 허용된 테스트 번호: 01000000000</br>
+  ✅ 인증번호: 123456</br>
+  🚫 실제 휴대폰 번호로는 인증이 불가하며, 추후 요금제 변경 시 제한이 해제될 예정입니다.</br>
 
 <!-- 💚 테스트용 번호 (CoolSMS 개발자 문서 기준)
 if (phoneNumber !== "01000000000") {
@@ -15,9 +17,17 @@ return res
 .json({ message: "테스트는 01000000000만 가능합니다." });
 } -->
 
-✅ 허용된 테스트 번호: 01000000000</br>
-✅ 인증번호: 123456</br>
-🚫 실제 휴대폰 번호로는 인증이 불가하며, 추후 요금제 변경 시 제한이 해제될 예정입니다.</br>
+### 🧭 기술 스택
+  - Frontend: Next.js 14 (Page Router), React, Javascript
+  - Backend: Next.js API Routes, MongoDB + Mongoose
+  - Styling: Tailwind CSS, Module CSS
+  - State Management: Zustand
+  - Deployment: Vercel
+  - Image Upload: Cloudinary
+  - Auth: JWT 기반 + CoolSMS (추후 Redis 연동 예정)
+  - Realtime API: Socket.IO
+  - Payment: Stripe
+  
 ---
 
 ### 🚀 주요 구현 기능
@@ -63,17 +73,3 @@ return res
 #### 6. 프로필
 - 커뮤니티 카테고리 바로가기 및 로그아웃 기능 지원</br>
 > ⚠️ ‘나의 활동’ / 회원탈퇴 기능 미구현
-
----
-
-### 🧭 기술 스택
-- Frontend: Next.js 14 (Page Router), React, Javascript
-- Backend: Next.js API Routes, MongoDB + Mongoose
-- Styling: Tailwind CSS, Module CSS
-- State Management: Zustand
-- Deployment: Vercel
-
-- Image Upload: Cloudinary
-- Auth: JWT 기반 + CoolSMS (추후 Redis 연동 예정)
-- Realtime API: Socket.IO
-- Payment: Stripe
