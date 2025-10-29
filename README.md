@@ -2,6 +2,8 @@
 해외 거주 한인을 위한 중고거래 & 커뮤니티 플랫폼
 워킹홀리데이 준비부터 해외생활, 취업 후기까지 —</br> 해외살이를 한 번쯤 꿈꿨던 분들이 한 곳에서 모두 연결되는 공간입니다😉
 > 👉 사이트 바로가기: https://next-urang-market.vercel.app/
+> 👉 프로젝트 상세보기: https://my-portfolio-three-xi-44.vercel.app/blog/urang-market
+
 
 ### ❗NOTICE️
 ⚠️ 현재 CoolSMS의 요금제 이슈로 인해, 문자 인증은 테스트용 번호에서만 가능합니다.</br>
