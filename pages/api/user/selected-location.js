@@ -9,10 +9,19 @@ export default async function handler(req, res) {
   if (req.method === "PATCH") {
     const { userId, selectedLocation } = req.body;
 
-    await db.collection("users").updateOne(
+    await db.collection("users").findOneAndUpdate(
       { _id: new ObjectId(userId) },
-      { $set: { selectedLocation } } // selectedLocation: 객체 형태의 데이터 (keyword, isVerified 속성 담고 있는)
+      { $set: { selectedLocation } }, // selectedLocation: 객체 형태의 데이터 (keyword, isVerified 속성 담고 있는)
+      {
+        returnDocument: "after",
+        projection: { selectedLocation: 1 },
+      }
     );
-    return res.status(200).json({ message: "현재 선택한 위치 변경 완료" });
+    return res
+      .status(200)
+      .json({
+        selectedLocation: selectedLocation ?? {},
+        message: "현재 선택한 위치 변경 완료",
+      });
   }
 }

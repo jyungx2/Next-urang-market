@@ -9,10 +9,17 @@ export default async function handler(req, res) {
   if (req.method === "PATCH") {
     const { userId, location } = req.body;
 
-    await db
-      .collection("users")
-      .updateOne({ _id: new ObjectId(userId) }, { $set: { location } });
+    await db.collection("users").findOneAndUpdate(
+      { _id: new ObjectId(userId) },
+      { $set: { location } },
+      {
+        returnDocument: "after",
+        projection: { location: 1 },
+      }
+    );
 
-    return res.status(200).json({ message: "현재 나의 위치 수정 완료" });
+    return res
+      .status(200)
+      .json({ location: location ?? {}, message: "현재 나의 위치 수정 완료" });
   }
 }
