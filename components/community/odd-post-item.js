@@ -19,7 +19,7 @@ export default function OddPostItem({
           <span>{title}</span>
           <div className="flex gap-3 text-[1.4rem]">
             <span>{writer}</span>
-            <span>{createdAt.split("T")[0]}</span>
+            <span>{createdAt?.split("T")[0]}</span>
             <span>조회 {views || 1}</span>
           </div>
         </div>
@@ -38,7 +38,7 @@ export default function OddPostItem({
               className="bg-[var(--color-secondary-800)] rounded-4xl flex flex-col gap-2 p-6 justify-center items-center"
             >
               <span className="font-bold text-[var(--color-grey-bg)]">
-                {comments.length || 0}
+                {comments?.length || 0}
               </span>
               <span className="text-[1.4rem] text-white">댓글</span>
             </Link>

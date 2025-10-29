@@ -140,9 +140,9 @@ export default function ProductDetailPage({
               {selectedProduct?.location}
             </p>
           </div>
-          <div className="ml-auto text-blue-500 font-bold bg-blue-200 p-3 rounded-4xl">
+          {/* <div className="ml-auto text-blue-500 font-bold bg-blue-200 p-3 rounded-4xl">
             36.5℃
-          </div>
+          </div> */}
         </div>
 
         {/* 상품 정보 */}
@@ -150,7 +150,7 @@ export default function ProductDetailPage({
           <div className="flex flex-col gap-4">
             <h1 className="text-4xl font-bold">{selectedProduct?.title}</h1>
             <p className="text-gray-500 text-2xl">
-              <span className="underline">Womens Accessories</span> ·{" "}
+              <span className="underline">[카테고리]</span> ·{" "}
               {getTimeAgo(selectedProduct?.createdAt)}
             </p>
             <p className="mt-8 text-3xl font-medium">
@@ -202,14 +202,14 @@ export default function ProductDetailPage({
           <RelatedListings items={relatedListings} />
         </div>
 
-        <div className="flex flex-col gap-4 mt-10 border-t p-6 px-0 font-bold">
+        {/* <div className="flex flex-col gap-4 mt-10 border-t p-6 px-0 font-bold">
           <header className="flex justify-between items-center">
             <h2 className="font-bold text-[2rem]">
               &apos;{currentUser?.nickname}&apos;님, have you seen these?
             </h2>
           </header>
           <RelatedListings />
-        </div>
+        </div> */}
       </main>
     </div>
   );

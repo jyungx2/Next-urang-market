@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function RelatedListings({ items }) {
   if (!items || items.length === 0) {
-    return <p className="text-gray-400">No other listings</p>;
+    return <p className="text-gray-400">No other listings yet</p>;
   }
 
   return (
