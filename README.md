@@ -19,13 +19,13 @@
 ### 🧭 기술 스택
   - Frontend: Next.js 14 (Page Router), React, Javascript
   - Backend: Next.js API Routes, MongoDB + Mongoose
-  - Styling: Tailwind CSS, Module CSS
-  - State Management: Zustand
+  - Styling: Tailwind CSS, CSS Modules
+  - State Management: Zustand, Context API
   - Deployment: Vercel
   - Image Upload: Cloudinary
   - Auth: JWT 기반 + CoolSMS (추후 Redis 연동 예정)
-  - Realtime API: Socket.IO
-  - Payment: Stripe
+  - Real-time API: Socket.IO
+  - Payment: Stripe API
   
 ---
 
