@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Activities() {
   return (
     <div className="gap-6 items-center p-6 rounded-2xl bg-[var(--color-primary-50)]">
-      <h2 className="mb-6 font-bold text-[2rem]">Activity</h2>
+      <h2 className="mb-6 font-bold text-[2rem]">나의 활동</h2>
       <div className="flex flex-col gap-6">
         <button
           className="font-medium cursor-pointer flex justify-between items-center"

@@ -13,7 +13,7 @@ export default function Settings() {
 
   return (
     <div className="gap-6 items-center p-6 rounded-2xl bg-[var(--color-primary-50)]">
-      <h2 className="mb-6 font-bold text-[2rem]">Settings</h2>
+      <h2 className="mb-6 font-bold text-[2rem]">회원 관리</h2>
       <div className="flex flex-col gap-6">
         <button
           className="font-medium cursor-pointer flex justify-between items-center"

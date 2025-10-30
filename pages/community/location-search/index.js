@@ -80,7 +80,7 @@ export default function LocationSearchPage() {
               isVerified: true,
               rcode,
             };
-            updateMyLocation(newItem);
+            updateMyLocation.mutate(newItem);
             // router.back();
           } catch (err) {
             console.error("❌ 위치 요청 실패:", err);

@@ -8,7 +8,7 @@ export default function Services() {
 
   return (
     <div className="gap-6 items-center p-6 rounded-2xl bg-[var(--color-primary-50)]">
-      <h2 className="mb-6 font-bold text-[2rem]">Services</h2>
+      <h2 className="mb-6 font-bold text-[2rem]">바로 가기</h2>
       <div className="grid grid-cols-2 items-center gap-6">
         <button
           className="font-medium cursor-pointer flex items-center gap-4"

@@ -10,6 +10,7 @@ export default function Sidebar() {
   const { toggleSidebar } = useSidebar();
   const router = useRouter();
   const { currentUser } = useCurrentUserStore();
+  console.log("dsdas", currentUser);
 
   const handleUndeveloped = () => {
     alert("현재 개발 중인 페이지입니다.");
