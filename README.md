@@ -20,7 +20,9 @@
   - Frontend: Next.js 14 (Page Router), React, Javascript
   - Backend: Next.js API Routes, MongoDB + Mongoose
   - Styling: Tailwind CSS, CSS Modules
-  - State Management: Zustand, Context API
+  - State Management
+    - Client State: Zustand, Context API
+    - Server State: TanStack Query
   - Deployment: Vercel
   - Image Upload: Cloudinary
   - Auth: JWT 기반 + CoolSMS (추후 Redis 연동 예정)
