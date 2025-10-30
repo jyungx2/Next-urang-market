@@ -1,5 +1,5 @@
 ## 🌍 유랑마켓 (Urang Market)
-“당근마켓을 모티브로 한, 교민 맞춤형 글로벌 커뮤니티 서비스”
+“당근마켓을 모티브로 한, 교민 맞춤형 글로벌 커뮤니티 서비스”  
 워킹홀리데이 준비부터 해외생활, 취업 후기까지 —</br> 해외살이를 한 번쯤 꿈꿨던 분들이 한 곳에서 모두 연결되는 공간입니다😉
 > 👉 사이트 바로가기: https://next-urang-market.vercel.app/</br>
 > 👉 프로젝트 상세보기: https://my-portfolio-three-xi-44.vercel.app/blog/urang-market</br>
