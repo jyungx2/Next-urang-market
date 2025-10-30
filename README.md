@@ -1,55 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+## 🌍 유랑마켓 (Urang Market)
+당근마켓을 모티브로 한, 해외 거주 한인을 위한 중고거래 & 커뮤니티 플랫폼입니다.</br> 
 
-## Getting Started
+워킹홀리데이 준비부터 해외생활, 취업 후기까지 —</br> 
+전 세계 곳곳의 교민들, 그리고 해외살이를 한 번쯤 꿈꾸는 모든 분들이 한 곳에서 서로 연결되고 소통하는 공간입니다.</br> 
+낯선 나라에서도 따뜻한 거래가 이어지는 곳, 유랑마켓과 함께하세요✨</br> 
+> 👉 사이트 바로가기: https://next-urang-market.vercel.app/</br>
+> 👉 프로젝트 상세보기: https://my-portfolio-three-xi-44.vercel.app/blog/urang-market</br>
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### ❗NOTICE️
+⚠️ 현재 CoolSMS의 요금제 이슈로 인해, 문자 인증은 테스트용 번호에서만 가능합니다.</br>
+  > ✅ 허용된 테스트 번호: 01000000000</br>
+  > ✅ 인증번호: 123456</br>
+  > 🚫 실제 휴대폰 번호로는 인증이 불가하며, 추후 요금제 변경 시 제한이 해제될 예정입니다.</br>
+  
+  회원가입 시 위의 테스트 번호 외에는 인증이 제한되오니,</br>
+  휴대폰 번호는 '01000000000'으로 진행해 주시고, 비밀번호는 '123456'을 입력해주세요.</br>
 
-1. 회원가입 시 휴대폰번호는 '01000000000'으로 진행해주시고, 비밀번호는 '123456'을 입력해주세요.
-   ⚠️ 테스트 번호 안내 (CoolSMS)
-   현재 CoolSMS의 요금제 이슈로 인해, 문자 인증은 테스트용 번호에서만 가능합니다.
-   회원가입 시 아래 번호 외에는 인증이 제한됩니다.
+---
 
-<!-- 💚 테스트용 번호 (CoolSMS 개발자 문서 기준)
-if (phoneNumber !== "01000000000") {
-return res
-.status(400)
-.json({ message: "테스트는 01000000000만 가능합니다." });
-} -->
+### 🧭 기술 스택
+  - Frontend: Next.js 14 (Page Router), React, JavaScript
+  - Backend: Next.js API Routes, MongoDB + Mongoose
+  - Styling: Tailwind CSS, CSS Modules
+  - State Management
+    - Client State: Zustand, Context API
+    - Server State: TanStack Query
+  - Deployment: Vercel
+  - Image Upload: Cloudinary
+  - Auth: NextAuth.js + CoolSMS (추후 Redis 연동 예정)
+  - Real-time API: Socket.IO
+  - Payment: Stripe API
+  
+---
 
-✅ 허용된 테스트 번호: 01000000000
-✅ 인증번호: 123456
-🚫 실제 휴대폰 번호로는 인증이 불가하며, 추후 요금제 변경 시 제한이 해제될 예정입니다.
+### 📘 유랑마켓 이용 가이드
+1. 회원가입 및 로그인
+   - 위치 설정 → 본인 인증 → 프로필 등록의 3단계 절차를 거쳐 자동 로그인됩니다.
+   > ⚠️ 현재는 개발용 **임시 전화번호 010-0000-0000 / 비밀번호 1234**만 사용 가능합니다. (CoolSMS 무료 한도 초과)
 
-# Next-urang-market
+2. 홈페이지
+   - 메인 페이지에서는 워킹홀리데이 준비, 해외 경험담, 해외 취업 후기 등의 게시글을 한눈에 확인할 수 있습니다.
 
-Urang Market – Next.js 14(Page Router) | React | TypeScript | Tailwind CSS | Zustand | MongoDB | Vercel 🚀
+4. 사고팔고
+   - 원하는 중고 물품을 검색하거나 직접 등록할 수 있습니다.
+   - 마음에 드는 상품을 찾았다면, 상세페이지의 실시간 채팅 기능을 통해 판매자와 바로 소통할 수 있습니다.
+   - 카드 결제를 이용해 상품을 구매할 수 있으며, 관심 있는 상품은 하트 버튼을 눌러 위시리스트에 추가할 수 있습니다.
+  
+5. 커뮤니티
+   - 공지사항, 해외살이, 워킹홀리데이, 해외취업 등 다양한 메인 카테고리의 게시글을 확인할 수 있습니다.
+   - 오른쪽 하단의 +Post 버튼을 눌러 새 게시글을 등록할 수 있으며,
+   - 다른 사용자의 게시글에 댓글을 작성하거나 좋아요 / 싫어요 버튼을 눌러 의견을 표현할 수 있습니다.
+  
+6. 채팅
+   - 채팅 페이지에서는 거래 중인 상품의 채팅 목록을 한눈에 확인할 수 있습니다.
+   - 상품 상세페이지에서 메시지를 보내면 채팅방이 자동으로 생성되며, 재접속 시 채팅 목록에서 해당 대화방을 찾아 판매자와 다시 대화를 이어갈 수 있습니다.
+     
+8. 프로필
+   - 프로필 페이지에서는 각 커뮤니티 카테고리로 이동할 수 있는 바로가기 탭과 로그아웃 기능을 이용할 수 있습니다.
+   - 바로가기 섹션을 통해 유랑마켓 내 다양한 페이지로 쉽게 이동할 수 있습니다.
 
-🚀 Urang Market - 중고거래를 더 쉽고 빠르게!
-Urang Market은 사용자 친화적인 중고거래 플랫폼으로, 실시간 채팅, 알림 시스템, 지역 기반 검색 기능을 제공합니다.
+---
 
-## 🔹 핵심 기능
+### 🚀 주요 구현 기능
+#### 1. 회원가입 & 인증 (`/auth`)
+- 3단계 인증 절차: 위치 설정 → 본인 인증 → 프로필 등록  
+- 회원가입 완료 시 자동 로그인 처리</br>
 
-📌 즉시 등록 & 거래: 간편한 상품 등록과 빠른 거래<br>
-💬 실시간 채팅: 실시간으로 구매자/판매자와 소통<br>
-🔔 알림 시스템: 관심 상품, 채팅, 거래 업데이트 알림<br>
-📍 지역 기반 검색: 내 주변의 중고물품을 손쉽게 찾기<br>
+#### 2. 홈 페이지 (`/`)
+- 최근 검색어 기능 구현 완료
+- 추천 검색어 / 위치 설정 버튼 미구현
+- 워킹홀리데이·해외경험담·취업후기 섹션을 커뮤니티 게시글 기반으로 SSG 렌더링 예정 (SEO/성능 최적화)
 
-## 🔹 기술 스택
+#### 3. 사고팔고 (`/market`)
+- 검색 / 위시리스트 / 채팅 기능 구현 완료
+- 선택한 동네(rcode) 기준으로 거래 게시글 필터링 예정</br>
+> ⚠️ 결제 시스템은 현재 카드 결제만 지원</br>
+> ⚠️ 공유 / 알림 / 메뉴 버튼 기능은 미구현 상태
 
-- Frontend: Next.js 14 (Page Router), React, TypeScript
-- Backend: Next.js API Routes, MongoDB
-- Styling: Tailwind CSS, Module CSS
-- State Management: Zustand
-- Deployment: Vercel
+#### 4. 커뮤니티 (`/community`)
+- 메인 카테고리(공지사항 / 해외살이 / 워킹홀리데이 / 해외취업)
+   - 각 메인 카테고리별 2~3개 서브 카테고리
+   - mainCategory, subCategory, rcode를 query parameter로 관리
+   - useQuery의 queryKey로 캐싱하여 렌더링 최적화
 
-📌 Urang Market과 함께 스마트한 중고거래를 경험해보세요! 🚀
+- 게시글 등록 
+   - 전역 상태(currentUser.selectedLocation.isVerified)로 위치 인증 여부 검사
+   - 불일치 시 실시간 위치로 자동 갱신
+   - Tiptap 기반 에디터로 게시글 작성 (SSR/CSR 모두 대응)
+   - 게시글 등록 시 main/subCategory 선택 가능
+   - 댓글, 좋아요/싫어요, 게시글 삭제 기능 구현 완료
+
+> ⚠️ 미구현 기능:
+>   - 이모지/사진 업로드
+>   - 댓글 좋아요/싫어요
+>   - 공지사항 작성 권한 제한(관리자 전용 예정)
+
+#### 5. 채팅 (`/chat`)
+- 거래 상세페이지에서 채팅 시작 시 자동으로 채팅방 생성
+- 재접속 시 채팅 목록 페이지에서 이전 대화방 확인 가능</br>
+> ⚠️ 필터링 / 북마크 / 알림 기능은 미구현 상태
+
+#### 6. 프로필 (`/profile`)
+- 커뮤니티 카테고리 바로가기 및 로그아웃 기능 지원</br>
+> ⚠️ ‘나의 활동’ / 회원탈퇴 기능 미구현
