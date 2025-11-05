@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // 수동 CSS import 권장
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
 config.autoAddCss = false;
 
 export default function App({ Component, pageProps }) {
@@ -11,7 +12,9 @@ export default function App({ Component, pageProps }) {
 
   return (
     <QueryClientProvider client={client}>
-      {getLayout(<Component {...pageProps} />)}
+      <SessionProvider session={pageProps.session}>
+        {getLayout(<Component {...pageProps} />)}
+      </SessionProvider>
     </QueryClientProvider>
   );
 }

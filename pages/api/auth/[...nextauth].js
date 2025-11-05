@@ -6,6 +6,11 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: 60 * 60 * 12, // 세션 만료: 12시간
+    updateAge: 60 * 5, // 활동 시 5분마다 갱신(슬라이딩 만료)
+  },
+  jwt: {
+    maxAge: 60 * 60 * 12, // JWT 자체 만료도 세션과 맞춤
   },
   providers: [
     CredentialProvider({

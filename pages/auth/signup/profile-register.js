@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 // import { uploadImage } from "@/pages/api/auth/cloudinary"; // ❌pages/api/auth/cloudinary.js는 API Route (서버 전용) 파일이고, 그걸 import해서 클라이언트 컴포넌트에서 직접 사용하면 절대 안 돼.❌
 import useUserStore from "@/zustand/userStore";
 import { useForm } from "react-hook-form";
-import { getSession, signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { RingLoader } from "react-spinners";
 import Modal from "@/components/layout/modal";
@@ -24,12 +24,28 @@ export default function ProfileRegisterPage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { resetUser, setCurrentUser } = useUserStore();
+  const { data: session } = useSession(); // ✅ NextAuth의 세션 상태 구독
+
+  // ☑️ NextAuth 내부 흐름
+  // 1. 미들웨어/보호 로직이 비로그인 사용자를 **/auth/login?callbackUrl=<원래경로>**로 보냄
+  // 2. 로그인 페이지에서 signIn() 호출 시 callbackUrl을 넘기면, NextAuth가 성공 후 자동으로 그 곳으로 이동시켜 줌
+  const callbackUrl = router.query.callbackUrl || "/"; // callbackUrl: 바로 NextAuth에서 로그인 성공 후 돌아갈 곳을 표준으로 담는 파라미터. NextAuth의 미들웨어에 의해 로그인 안한 사용자가 접근한 페이지 URL에 callbackUrl 이름의 필드값으로 자동으로 붙여지며, 로그인 후 그 URL로 돌아가게 됨
 
   useEffect(() => {
     if (previewUrl) {
       console.log("🔍 미리보기 URL 생성됨:", previewUrl);
     }
   }, [previewUrl]);
+
+  // 🚧 세션이 변경될 때마다 전역상태 동기화
+  // (로그인 성공 후 자동 갱신되면 이 effect가 알아서 반응)
+  useEffect(() => {
+    if (session?.user) {
+      setCurrentUser(session.user);
+      console.log("세션 변경 감지:", session.user);
+    }
+  }, [session, setCurrentUser]);
 
   // 1️⃣ 프로필 이미지 UI
   const handleToggle = () => {
@@ -165,10 +181,10 @@ export default function ProfileRegisterPage() {
       // signIn(): fetch()처럼 Response 객체(json 호출해서 JSON 데이터(body)를 파싱해야 실제 데이터 얻음)를 반환하지 않고, 일반 JS객체를 반환 -> json() 함수 사용 쓰면 안됨.
       // ex) {ok: true, status: 200, url:"/api/auth/callback/credentials?callbackUrl=..."}
       const resLogin = await signIn("phoneLogin", {
-        redirect: false,
+        redirect: true, // false: NextAuth에 의한 자동 리다이렉트 방지
         username: createdUser.username,
         phoneNumber: createdUser.phoneNumber,
-        // callbackUrl: "/profile", => redirect: true일 때, 로그인 성공하면 해당 Url로 자동 이동 (만약 redirect: false이면 callbackUrl 작성해도 이동 x)
+        callbackUrl, // => redirect: true일 때, 로그인 성공하면 해당 Url로 자동 이동 (만약 redirect: false이면 callbackUrl 작성해도 이동 x)
       });
 
       if (!resLogin || !resLogin.ok) {
@@ -179,22 +195,37 @@ export default function ProfileRegisterPage() {
       console.log("자동로그인 성공 😊", resLogin);
 
       // 회원가입 완료 시, 임시저장소(useStore) 초기화
-      useUserStore.getState().resetUser();
+      resetUser();
 
       // 자동로그인 성공 시, next-auth의 session에 저장된 유저정보를 영구저장소(currentUserStore)에 세팅
-      // 📍getSession(): 현재 로그인된 사용자의 세션 정보를 클라이언트에서 가져오는 함수
-      // 📍session.user: [...nextauth].js 파일 내 authorize()에서 리턴한 유효한 DB 사용자 객체 (signIn 성공 시 session에 자동으로 저장되기 때문에 언제든 getSession()으로 꺼내쓸 수 있음)
-      let session = await getSession();
+      // getSession()과 useSession()은 둘 다 NextAuth의 세션 정보를 가져오는 함수지만, 사용 위치(서버 vs 클라이언트) 와 동작 방식(즉시/반응형)이 다르다.
 
-      if (!session) {
-        await new Promise((r) => setTimeout(r, 300)); // 300ms 대기
-        session = await getSession(); // 재시도
-      }
-      useCurrentUserStore.getState().setCurrentUser(session.user); // ✅ 로그인 유저 상태 저장
+      // 📍getSession(): 현재 로그인된 사용자의 세션 정보를 서버 or 클라이언트에서 가져오는 함수
+      // - 비동기 함수로, 호출 시점에 세션 정보를 한 번 가져온다. (정적 조회) => ❌ 자동으로 갱신되지 않음. 호출 시점의 세션만 반환
+      // - getServerSideProps, getToken, fetch 로 API 보호할 때, 주로 로그인 직후나 특정 이벤트 발생 시점에 세션 정보를 얻고자 할 때 사용된다.
+
+      // 📍useSession(): React 컴포넌트 내에서 NextAuth의 세션 상태를 구독하는 훅
+      // - 클라이언트 전용 훅으로, 컴포넌트가 렌더링될 때마다 최신 세션 정보를 제공한다. (반응형 조회) => ✅ 자동 갱신됨 (로그인/로그아웃 시 자동 리렌더)
+      // - 세션이 변경되면(예: 로그인/로그아웃) 컴포넌트가 자동으로 다시 렌더링되어 최신 세션 상태를 반영한다.
+      // - 주로 클라이언트 컴포넌트에서 현재 로그인된 사용자 정보를 표시하거나, 인증 상태에 따라 UI를 동적으로 변경할 때 사용된다.
+      // const session = await getSession();
+      // * session.user: [...nextauth].js 파일 내 authorize()에서 리턴한 유효한 DB 사용자 객체 (signIn 성공 시 session에 자동으로 저장되기 때문에 언제든 getSession()으로 꺼내쓸 수 있음)
+
+      // ☑️ 세션 동기화 (가끔 늦게 갱신되니 한 번 재시도)      // ☑️ 세션 동기화 (가끔 늦게 갱신되니 한 번 재시도):
+      // let session = await getSession();
+      // if (!session) {
+      //   await new Promise((r) => setTimeout(r, 300)); // 300ms 대기
+      //   session = await getSession(); // 재시도
+      // }
+
+      // 🚧 useEffect에서 처리하도록 변경
+      // setCurrentUser(session.user); // ✅ 로그인 유저 상태 저장
+
       console.log(currentUser, "유저 세션: ", session.user); // React 컴포넌트 내 currentUser 값은 다음 렌더링 사이클에서야 업데이트된 값을 반영하기 때문에 여전히 💥currentUser === null💥
 
-      // 5. 프로필 페이지로 이동
-      router.push("/profile");
+      // 5. 유저가 머물렀던 페이지로 이동
+      router.replace(callbackUrl);
+      console.log("성공적으로 로그인 되었습니다. 😊", resLogin);
     },
     onError: (err) => {
       console.error(err);

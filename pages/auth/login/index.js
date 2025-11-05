@@ -1,8 +1,9 @@
 import useCurrentUserStore from "@/zustand/currentUserStore";
 import { useMutation } from "@tanstack/react-query";
-import { getSession, signIn } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
@@ -14,33 +15,52 @@ export default function LoginPage() {
     mode: "onSubmit", // 제출 시 검증(기본값이지만 명시 권장)
     defaultValues: { username: "이유랑", birthdate: "991031" },
   });
-  const { currentUser } = useCurrentUserStore();
+  // const { currentUser } = useCurrentUserStore();
+  const setCurrentUser = useCurrentUserStore((s) => s.setCurrentUser);
   const router = useRouter();
+  const callbackUrl = router.query.callbackUrl || "/";
+  const { data: session } = useSession(); // ✅ NextAuth의 세션 상태 구독
+
+  // 🚧 세션이 변경될 때마다 전역상태 동기화
+  // (로그인 성공 후 자동 갱신되면 이 effect가 알아서 반응)
+  useEffect(() => {
+    if (session?.user) {
+      setCurrentUser(session.user);
+      console.log("세션 변경 감지:", session.user);
+    }
+  }, [session, setCurrentUser]);
 
   const login = useMutation({
+    // 1) 서버 호출만 담당 (redirect: false로 NextAuth가 자동 이동하지 않게)
     mutationFn: async (registeredUser) => {
       const res = await signIn("phoneLogin", {
         redirect: false,
         username: registeredUser.username,
         birthdate: registeredUser.birthdate,
+        callbackUrl, // ✅ 성공 시 돌아갈 곳을 명시
       });
 
       // res.error: 로그인 실패 시 서버에서 보내는 에러 메시지
+      // NextAuth는 { ok?: boolean; error?: string | null } 반환
       if (!res.ok) throw new Error(res.error || "로그인에 실패했습니다.");
-
-      console.log("성공적으로 로그인 되었습니다. 😊", res);
-
-      let session = await getSession();
-      if (!session) {
-        await new Promise((r) => setTimeout(r, 300)); // 300ms 대기
-        session = await getSession(); // 재시도
-      }
-
-      useCurrentUserStore.getState().setCurrentUser(session.user);
-      console.log(currentUser, "유저 세션: ", session.user);
-      router.push("/");
     },
-    onSuccess: async () => {},
+    // 2) 성공 후 사이드이펙트 (세션 다시 읽기 + 전역상태 반영 + 라우팅)
+    onSuccess: () => {
+      // ☑️ 세션 동기화 (가끔 늦게 갱신되니 한 번 재시도): 세션 갱신: getSession()이 바로 갱신 안될 때가 있어 200–300ms 한 번 재시도 정도는 실무에서 자주 둔다.
+      // let session = await getSession();
+      // if (!session) {
+      //   await new Promise((r) => setTimeout(r, 300)); // 300ms 대기
+      //   session = await getSession(); // 재시도
+      // }
+
+      // 🚧 대신 useSession() 훅을 쓰면 자동 갱신 이벤트에 맞춰 렌더가 갱신되므로 수동 호출을 줄일 수 있어 편리, 즉, useSession() 기반 자동 세션 갱신이 되어서 getSession()을 수동으로 반복 호출할 필요가 없어짐!
+      // 👉 세션 갱신은 useSession()이 자동으로 처리하므로 별도의 getSession()이나 setTimeout() 불필요✅
+      // setCurrentUser(session.user); // useEffect에서 처리하도록 변경
+
+      // 3) 유저가 머물렀던 페이지로 이동
+      router.replace(callbackUrl);
+      alert("성공적으로 로그인 되었습니다. 😊");
+    },
     onError: (err) => {
       alert(err.message);
     },
