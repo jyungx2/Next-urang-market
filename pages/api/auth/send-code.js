@@ -45,8 +45,8 @@ export default async function handler(req, res) {
 
   if (isTestNumber) {
     // 1. Redis에 저장 (테스트도 인증 흐름 검증을 위해 저장!)
-    const EXPIRE_TIME = Number(process.env.SMS_CODE_EXPIRES || 180);
-    await redis.set(phoneNumber, verificationCode, "EX", EXPIRE_TIME);
+    // const EXPIRE_TIME = Number(process.env.SMS_CODE_EXPIRES || 180);
+    await redis.set(phoneNumber, verificationCode, { ex: 180 });
 
     // 2. 문자 전송 없이 바로 성공 응답
     return res.status(200).json({
@@ -78,7 +78,7 @@ export default async function handler(req, res) {
 
       // 2. Redis에 인증번호 저장 (⏰ 만료 시간 180초)
       //  Redis는 "만료된 키"를 자동으로 삭제하니까 Redis는 TTL 내장 기능 덕분에 아주 깔끔하게 처리 가능.
-      await redis.set(phoneNumber, verificationCode, "EX", 180);
+      await redis.set(phoneNumber, verificationCode, { ex: 180 });
 
       return res.status(200).json({ message: "인증번호 전송 완료" });
     } catch (error) {

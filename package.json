@@ -23,6 +23,7 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "@upstash/redis": "^1.35.8",
     "bcryptjs": "^3.0.2",
     "classnames": "^2.5.1",
     "cloudinary": "^2.6.0",
