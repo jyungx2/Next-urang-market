@@ -60,8 +60,8 @@ export default function PaymentSuccessPage() {
 
   return (
     <div className="p-10 text-center">
-      <h1 className="text-3xl font-bold mb-4">✅ 결제 성공!</h1>
-      <p>3초 후 채팅방으로 돌아갑니다...</p>
+      <h1 className="text-4xl font-bold mb-4">🎉 결제 성공! 🎉</h1>
+      <p>잠시후 채팅방으로 이동합니다...</p>
     </div>
   );
 }

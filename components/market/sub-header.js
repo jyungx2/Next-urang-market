@@ -98,7 +98,7 @@ export default function SubHeader() {
           }`}
         >
           <div className="flex flex-col bg-[var(--color-primary-200)] p-4 rounded-2xl gap-5">
-            {currentUser?.recentLocations.length === 0 ? (
+            {currentUser?.recentLocations?.length === 0 ? (
               <div></div>
             ) : (
               currentUser?.recentLocations?.map((address) => (

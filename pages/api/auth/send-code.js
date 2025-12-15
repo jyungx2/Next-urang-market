@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   if (!phoneNumber)
     return res.status(400).json({ error: "전화번호가 필요합니다" });
 
-  const isDev = process.env.NODE_ENV !== "production";
+  // const isDev = process.env.NODE_ENV !== "production";
   // NODE_ENV는 직접 .env.local에 지정할 필요는 없고, Next.js가 내부적으로 자동으로 설정해주는 값.
   // next dev -> process.env.NODE_ENV === "development"
   // next build + next start -> "production"
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     ? "123456"
     : Math.floor(100000 + Math.random() * 900000).toString();
 
-  if (isDev && isTestNumber) {
+  if (isTestNumber) {
     // 1. Redis에 저장 (테스트도 인증 흐름 검증을 위해 저장!)
     const EXPIRE_TIME = Number(process.env.SMS_CODE_EXPIRES || 180);
     await redis.set(phoneNumber, verificationCode, "EX", EXPIRE_TIME);
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       mockCode: verificationCode,
     });
   } else {
-    // 🔥 실제 배포 시에 실행되는 실제 사용자 전화번호로 문자가 전송되는 로직
+    // 🔥 요금제 갱신 후에 실행되는 실제 사용자 전화번호로 문자가 전송되는 로직
     // 1. 인증번호 문자 전송
     // 🚨✅ coolsms.default is not a constructor
     const messageService = coolsms();

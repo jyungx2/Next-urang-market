@@ -88,7 +88,7 @@ export default function SocketClient({ roomId, senderId, chatRoom }) {
       });
     });
 
-    // 4. 언마운트 시 연결 해제
+    // 4. 언마운트 시 연결
     return () => {
       socketRef.current?.off("receiveMessage");
       socketRef.current?.disconnect(); // 💥 1️⃣ 마운트 후 0.1초 안에 productId가 바뀌거나, 부모 컴포넌트가 리렌더되면서 <SocketClient />가 unmount → remount 됨
