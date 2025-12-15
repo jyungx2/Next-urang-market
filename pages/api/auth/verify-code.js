@@ -16,11 +16,7 @@ export default async function handler(req, res) {
   // 🔥 Redis는 set할 때(send-code.js) "EX 180" 옵션을 줬기 때문에 180초(3분) 뒤에 자동으로 이 key가 삭제됨!
   // 따라서 유효 시간이 지났다면 get 결과는 null(= undefined)로 반환됨
   const storedCode = await redis.get(phoneNumber);
-  if (!storedCode || storedCode !== code) {
-    return res
-      .status(400)
-      .json({ error: "인증번호가 일치하지 않거나 만료되었습니다." });
-  }
+  console.log("storedCode:", storedCode, "input:", code);
 
   // ✅ 인증 실패 조건: 저장된 값이 (만료돼서 or 처음부터) 없거나, 입력한 코드가 일치하지 않는 경우
   if (!storedCode || storedCode !== code) {
