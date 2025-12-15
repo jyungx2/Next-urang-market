@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   // ✅ Redis에서 해당 번호로 저장된 인증번호 가져오기
   // 🔥 Redis는 set할 때(send-code.js) "EX 180" 옵션을 줬기 때문에 180초(3분) 뒤에 자동으로 이 key가 삭제됨!
   // 따라서 유효 시간이 지났다면 get 결과는 null(= undefined)로 반환됨
-  // const storedCode = await redis.get(phoneNumber);
+  const storedCode = await redis.get(phoneNumber);
   const saved = String(storedCode ?? "").trim();
   const input = String(code ?? "").trim();
 
