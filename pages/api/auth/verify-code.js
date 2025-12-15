@@ -15,23 +15,22 @@ export default async function handler(req, res) {
   // ✅ Redis에서 해당 번호로 저장된 인증번호 가져오기
   // 🔥 Redis는 set할 때(send-code.js) "EX 180" 옵션을 줬기 때문에 180초(3분) 뒤에 자동으로 이 key가 삭제됨!
   // 따라서 유효 시간이 지났다면 get 결과는 null(= undefined)로 반환됨
-  const storedCode = await redis.get(phoneNumber);
+  // const storedCode = await redis.get(phoneNumber);
   const saved = String(storedCode ?? "").trim();
   const input = String(code ?? "").trim();
 
-  console.log(
-    "stored:",
-    JSON.stringify(saved),
-    "input:",
-    JSON.stringify(input)
-  );
-  console.log("types:", typeof storedCode, typeof code);
-  // ✅ 인증 실패 조건: 저장된 값이 (만료돼서 or 처음부터) 없거나, 입력한 코드가 일치하지 않는 경우
-  if (!storedCode || storedCode !== code) {
+  if (!saved || saved !== input) {
     return res
       .status(400)
       .json({ error: "인증번호가 일치하지 않거나 만료되었습니다." });
   }
+
+  // ✅ 인증 실패 조건: 저장된 값이 (만료돼서 or 처음부터) 없거나, 입력한 코드가 일치하지 않는 경우
+  // if (!storedCode || storedCode !== code) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: "인증번호가 일치하지 않거나 만료되었습니다." });
+  // }
 
   // ✅ 인증 성공 후 Redis에서 해당 key 삭제 (선택사항: 일회용 코드니까 지우는 게 좋음)
   await redis.del(phoneNumber);
