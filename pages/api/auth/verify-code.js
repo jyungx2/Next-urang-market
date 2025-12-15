@@ -25,6 +25,14 @@ export default async function handler(req, res) {
       .json({ error: "인증번호가 일치하지 않거나 만료되었습니다." });
   }
 
+  console.log(
+    "stored:",
+    JSON.stringify(saved),
+    "input:",
+    JSON.stringify(input)
+  );
+  console.log("types:", typeof storedCode, typeof code);
+
   // ✅ 인증 실패 조건: 저장된 값이 (만료돼서 or 처음부터) 없거나, 입력한 코드가 일치하지 않는 경우
   // if (!storedCode || storedCode !== code) {
   //   return res
