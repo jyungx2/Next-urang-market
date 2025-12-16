@@ -25,6 +25,7 @@ export const authOptions = {
       },
       async authorize(credentials) {
         console.log("🔥 credentials:", credentials);
+        const code = String(credentials?.code ?? "").trim();
 
         const client = await connectDatabase();
         const usersCollection = client
@@ -32,7 +33,7 @@ export const authOptions = {
           .collection("users");
 
         // 1️⃣ 자동 로그인 (회원가입 직후): code 없이 요청 들어옴
-        if (credentials.phoneNumber && !credentials.code) {
+        if (credentials.phoneNumber && code === "") {
           // ✨ credentials는 로그인 시 사용자가 입력한 값 => 인증되지 않은 정보가 session에 들어갈 수 있는 위험⭕️ & 사용자가 악의적으로 다른 nickname을 넣었을 때도 session에 저장될 수 있는 문제🚫 => credentials를 이용해 DB에서 유저를 찾는 용도로만 씀!
           // ✨ user는 그걸 바탕으로 DB에서 찾은 실제 유저 정보 => 검증된 안전한 정보✅
           const user = await usersCollection.findOne({

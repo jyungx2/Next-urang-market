@@ -4,6 +4,7 @@ import { useState } from "react";
 
 // ⭐️단순히 "입력받고", "검색 결과를 보여주고", "선택 시 부모 콜백 호출"만 하는 구조로 리팩토링 (4/24)⭐️
 export default function SearchLocationInput({
+  addressRef,
   onSelect,
   setIsLoading,
   searchResults,
@@ -48,6 +49,7 @@ export default function SearchLocationInput({
     <>
       <div className="relative flex-grow rounded-2xl bg-[var(--color-grey-200)] p-1">
         <input
+          ref={addressRef}
           value={inputValue}
           onChange={handleChange}
           type="text"

@@ -15,7 +15,9 @@ import Modal from "@/components/layout/modal";
 import ErrorMsg from "@/components/common/error-msg";
 
 export default function ProfileRegisterPage() {
-  const { currentUser } = useCurrentUserStore();
+  const { currentUser, setCurrentUser } = useCurrentUserStore();
+  const { resetUser } = useUserStore();
+
   const { location, username, birthdate, phoneNumber, setUser } =
     useUserStore(); // ✅ 여기서 미리 호출
   const [profileFile, setProfileFile] = useState(null); // ⬅️ Cloudinary 업로드용 File 객체
@@ -24,7 +26,7 @@ export default function ProfileRegisterPage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { resetUser, setCurrentUser } = useUserStore();
+
   const { data: session } = useSession(); // ✅ NextAuth의 세션 상태 구독
 
   // ☑️ NextAuth 내부 흐름
@@ -181,13 +183,16 @@ export default function ProfileRegisterPage() {
       // signIn(): fetch()처럼 Response 객체(json 호출해서 JSON 데이터(body)를 파싱해야 실제 데이터 얻음)를 반환하지 않고, 일반 JS객체를 반환 -> json() 함수 사용 쓰면 안됨.
       // ex) {ok: true, status: 200, url:"/api/auth/callback/credentials?callbackUrl=..."}
       const resLogin = await signIn("phoneLogin", {
-        redirect: true, // false: NextAuth에 의한 자동 리다이렉트 방지
+        redirect: false, // false: NextAuth에 의한 자동 리다이렉트 방지
+        // 🚧 redirect: true → “페이지 이동이 곧 성공/실패 결과” (반환값 신뢰 X)
+        // 🚧 redirect: false → “반환값으로 성공/실패 판단” (이동은 네가 함)
         username: createdUser.username,
         phoneNumber: createdUser.phoneNumber,
-        callbackUrl, // => redirect: true일 때, 로그인 성공하면 해당 Url로 자동 이동 (만약 redirect: false이면 callbackUrl 작성해도 이동 x)
+        // callbackUrl, // => redirect: true일 때, 로그인 성공하면 해당 Url로 자동 이동 (만약 redirect: false이면 callbackUrl 작성해도 이동 x)
       });
+      console.log("🔎 signIn result:", resLogin);
 
-      if (!resLogin || !resLogin.ok) {
+      if (!resLogin?.ok) {
         console.error("자동 로그인 실패", resLogin);
         alert("자동 로그인에 실패했습니다.");
         return;
@@ -196,7 +201,6 @@ export default function ProfileRegisterPage() {
 
       // 회원가입 완료 시, 임시저장소(useStore) 초기화
       resetUser();
-
       // 자동로그인 성공 시, next-auth의 session에 저장된 유저정보를 영구저장소(currentUserStore)에 세팅
       // getSession()과 useSession()은 둘 다 NextAuth의 세션 정보를 가져오는 함수지만, 사용 위치(서버 vs 클라이언트) 와 동작 방식(즉시/반응형)이 다르다.
 
@@ -221,11 +225,12 @@ export default function ProfileRegisterPage() {
       // 🚧 useEffect에서 처리하도록 변경
       // setCurrentUser(session.user); // ✅ 로그인 유저 상태 저장
 
-      console.log(currentUser, "유저 세션: ", session.user); // React 컴포넌트 내 currentUser 값은 다음 렌더링 사이클에서야 업데이트된 값을 반영하기 때문에 여전히 💥currentUser === null💥
+      console.log(currentUser, "유저 세션: ", session?.user); // React 컴포넌트 내 currentUser 값은 다음 렌더링 사이클에서야 업데이트된 값을 반영하기 때문에 여전히 💥currentUser === null💥
 
       // 5. 유저가 머물렀던 페이지로 이동
       router.replace(callbackUrl);
       console.log("성공적으로 로그인 되었습니다. 😊", resLogin);
+      alert("성공적으로 회원가입 및 로그인 되었습니다. 😊");
     },
     onError: (err) => {
       console.error(err);
