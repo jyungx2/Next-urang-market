@@ -113,6 +113,7 @@ export default function AddPostModal({
               );
 
               // 📖 위치 인증 성공했으므로 글작성 페이지로 이동
+              setShowModal(false); // 모달 닫기
               router.push("/community/post/new");
             } else {
               setIsLocationMatched(false); // 매칭 실패 상태로 변경
