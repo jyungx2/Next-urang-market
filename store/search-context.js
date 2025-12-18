@@ -15,7 +15,6 @@ export function SearchProvider({ children }) {
     () => ({ isSearchOpen: open, toggleSearch: toggle }),
     [open, toggle]
   );
-
   return (
     <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
   );

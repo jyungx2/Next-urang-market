@@ -11,7 +11,6 @@ import { SettingsLayer } from "@/components/layer/settings";
 
 export default function Layout(props) {
   const router = useRouter();
-  const pathname = router.pathname;
 
   // 특정 페이지에서 MainNav를 숨기고 FooterNav를 보여줄 경로 설정
   // const hideMainNavPages = ["/market/[postId]"]; // 여기에 특정 페이지 추가
@@ -38,13 +37,13 @@ export default function Layout(props) {
   // ✅ 현재 경로가 `ProductItemNav`를 표시해야 하는지 확인
   const isProductItemNavPage = productItemNavPages.some((path) => {
     const regex = new RegExp(`^${path.replace(/\[.*?\]/, "[^/]+")}$`);
-    return regex.test(pathname);
+    return regex.test(router.pathname);
   });
 
   // ✅ 현재 경로가 `hiddenNavPages`에 포함되면 `null` 반환
   const isHiddenNavPage = hiddenNavPages.some((path) => {
     const regex = new RegExp(`^${path.replace(/\[.*?\]/, "[^/]+")}$`);
-    return regex.test(pathname);
+    return regex.test(router.pathname);
   });
 
   return (
@@ -63,7 +62,7 @@ export default function Layout(props) {
               {/* flex-1: 자식 페이지가 이 공간 안에서만 레이아웃/스크롤을 직접 관리하도록*/}
               {/* 👉 자식 페이지 컴포넌트: MarketPage / CommunityPage / ChatPage*/}
 
-              {/* RE) 컨텍스트 소비는 Provider 내부의 자식 컴포넌트에서만 */}
+              {/* ✅ 컨텍스트 소비는 Provider 내부의 자식 컴포넌트에서만 */}
               <NavSwitch
                 isHiddenNavPage={isHiddenNavPage}
                 isProductItemNavPage={isProductItemNavPage}
@@ -82,7 +81,7 @@ export default function Layout(props) {
                 )
               ) : null} */}
 
-              {/* RE) 전역 UI 레이어들 — 각 레이어 내부에서 자기 컨텍스트만 구독 */}
+              {/* 전역 UI 레이어들 — 각 레이어 내부에서 자기 컨텍스트만 구독 */}
               <SidebarLayer />
               <SearchLayer />
               <NotificationLayer />
@@ -100,7 +99,6 @@ export default function Layout(props) {
                   <SearchPage />
                 </div>
               )}
-
               {isNotificationOpen && (
                 <div className="z-50">
                   <Notification />
